@@ -33,33 +33,33 @@ package body Bullfrog.Containers.Circular_Buffer is
    --************************* Buffer Implementation *************************--
    --*************************************************************************--
 
-   function Is_Empty (Buffer : Buffer_Type) return Boolean is
+   function Is_Empty (Self : Buffer) return Boolean is
    begin
-      return Buffer.Get_Index = Buffer.Put_Index;
+      return Self.Get_Index = Self.Put_Index;
    end Is_Empty;
 
-   function Not_Empty(Buffer : Buffer_Type) return Boolean is
+   function Not_Empty(Self : Buffer) return Boolean is
    begin
-      return Buffer.Get_Index /= Buffer.Put_Index;
+      return Self.Get_Index /= Self.Put_Index;
    end Not_Empty;
 
-   function Is_Full  (Buffer : Buffer_Type) return Boolean is
-      Get_Index : Buffer_Index_Type := Buffer.Get_Index;
+   function Is_Full  (Self : Buffer) return Boolean is
+      Get_Index : Buffer_Index := Self.Get_Index;
    begin
       if Get_Index = 0 then
-         return Buffer.Put_Index = Buffer.Buffer_Size;
+         return Self.Put_Index = Self.Max_Size;
       else
-         return (Get_Index - Buffer.Put_Index) = 1;
+         return (Get_Index - Self.Put_Index) = 1;
       end if;
    end Is_Full;
 
-   function Not_Full (Buffer : Buffer_Type) return Boolean is
-      Get_Index : Buffer_Index_Type := Buffer.Get_Index;
+   function Not_Full (Self : Buffer) return Boolean is
+      Get_Index : Buffer_Index := Self.Get_Index;
    begin
       if Get_Index = 0 then
-         return Buffer.Put_Index /= Buffer.Buffer_Size;
+         return Self.Put_Index /= Self.Max_Size;
       else
-         return (Get_Index - Buffer.Put_Index) /= 1;
+         return (Get_Index - Self.Put_Index) /= 1;
       end if;
    end Not_Full;
 
@@ -71,10 +71,10 @@ package body Bullfrog.Containers.Circular_Buffer is
 
    package body Consumer is
 
-      function  Get(Buffer : in out Buffer_Type) return Item_Type is
+      function  Get(Source : in out Buffer) return Item_Type is
          Value : Item_Type;
       begin
-         if Get(Buffer,Value) then
+         if Get(Source,Value) then
             return Value;
          else
             raise Container_Empty;
@@ -82,41 +82,41 @@ package body Bullfrog.Containers.Circular_Buffer is
       end Get;
 
       function  Get
-         (Buffer : in out Buffer_Type;
+         (Source : in out Buffer;
           Value  :    out Item_Type)
           return Boolean
       is
-         Get_Index : Buffer_Index_Type := Buffer.Get_Index;
+         Get_Index : Buffer_Index := Source.Get_Index;
       begin
 
-         if Get_Index = Buffer.Put_Index then
+         if Get_Index = Source.Put_Index then
             return False;
          end if;
 
-         Value := Buffer.Data(Get_Index);
+         Value := Source.Data(Get_Index);
 
-         if Get_Index = Buffer.Buffer_Size then
+         if Get_Index = Source.Max_Size then
             Get_Index := 0;
          else
             Get_Index := Get_Index + 1;
          end if;
 
-         Buffer.Get_Index := Get_Index;
+         Source.Get_Index := Get_Index;
 
          return True;
 
       end Get;
 
-      procedure Get(Buffer : in out Buffer_Type; Value : out Item_Type) is
+      procedure Get(Source : in out Buffer; Value : out Item_Type) is
       begin
-         if not Get(Buffer,Value) then
+         if not Get(Source,Value) then
             raise Container_Empty;
          end if;
       end Get;
 
-      procedure Reset(Buffer : in out Buffer_Type) is
+      procedure Reset(Target : in out Buffer) is
       begin
-         Buffer.Get_Index := Buffer.Put_Index;
+         Target.Get_Index := Target.Put_Index;
       end Reset;
 
    end Consumer;
@@ -128,37 +128,37 @@ package body Bullfrog.Containers.Circular_Buffer is
    package body Producer is
 
       function Put
-         (Buffer : in out Buffer_Type;
+         (Target : in out Buffer;
           Value  : in     Item_Type)
           return Boolean
       is
-         Put_Index : Buffer_Index_Type := Buffer.Put_Index;
+         Put_Index : Buffer_Index := Target.Put_Index;
       begin
 
-         Buffer.Data(Put_Index) := Value;
+         Target.Data(Put_Index) := Value;
 
-         if Put_Index = Buffer.Buffer_Size then
+         if Put_Index = Target.Max_Size then
             Put_Index := 0;
          else
             Put_Index := Put_Index + 1;
          end if;
 
-         if Put_Index = Buffer.Get_Index then
+         if Put_Index = Target.Get_Index then
             --  Full so don't update index
             return False;
          else
-            Buffer.Put_Index := Put_Index;
+            Target.Put_Index := Put_Index;
             return True;
          end if;
       end Put;
 
 
       procedure Put
-         (Buffer : in out Buffer_Type;
+         (Target : in out Buffer;
           Value  : in     Item_Type)
       is
       begin
-         if Put(Buffer,Value) = False then
+         if Put(Target,Value) = False then
             raise Container_Full;
          end if;
       end Put;

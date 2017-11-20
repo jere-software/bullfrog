@@ -1,5 +1,6 @@
 with Bullfrog.Tests.Smart_Access.Main;
 with Bullfrog.Tests.Smart_Access_Node;
+with Bullfrog.Containers.Circular_Buffer;
 
 procedure Test_Smart_Access is
    Tree : Bullfrog.Tests.Smart_Access_Node.Tree;

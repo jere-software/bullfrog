@@ -46,40 +46,40 @@ package Bullfrog.Containers.Circular_Buffer is
    --*************************************************************************--
 
    -- This type must be modular and atomic for the implementation
-   type Buffer_Index_Type is mod 2**32;
+   type Buffer_Index is mod 2**32;
 
    -- This type defines the acceptable values for Buffer_Type.Buffer_Size
-   subtype Buffer_Size_Type
-      is Buffer_Index_Type range 1 .. Buffer_Index_Type'Last;
+   subtype Buffer_Size
+      is Buffer_Index range 1 .. Buffer_Index'Last;
 
    -- This type is meant to be a shared memory space between a consumer
    -- and a producer
-   type Buffer_Type
+   type Buffer
 
       -- This discriminant defines the usable size of the buffer
-      (Buffer_Size  : Buffer_Size_Type)
+      (Max_Size  : Buffer_Size)
 
-   is limited private;
+   is tagged limited private;
 
    -----------------------------------------------------------------------------
    -- Returns True if the buffer is empty and False otherwise
    -----------------------------------------------------------------------------
-   function Is_Empty (Buffer : Buffer_Type) return Boolean;
+   function Is_Empty (Self : Buffer) return Boolean;
 
    -----------------------------------------------------------------------------
    -- Returns True if the buffer is not empty and False otherwise
    -----------------------------------------------------------------------------
-   function Not_Empty(Buffer : Buffer_Type) return Boolean;
+   function Not_Empty(Self : Buffer) return Boolean;
 
    -----------------------------------------------------------------------------
    -- Returns True if the buffer is full and False otherwise
    -----------------------------------------------------------------------------
-   function Is_Full  (Buffer : Buffer_Type) return Boolean;
+   function Is_Full  (Self : Buffer) return Boolean;
 
    -----------------------------------------------------------------------------
    -- Returns True if the buffer is not full and False otherwise
    -----------------------------------------------------------------------------
-   function Not_Full (Buffer : Buffer_Type) return Boolean;
+   function Not_Full (Self : Buffer) return Boolean;
 
 
 
@@ -96,7 +96,7 @@ package Bullfrog.Containers.Circular_Buffer is
       -- may only calls Finalize when the buffer is leaves scope or a new item
       -- is added to the same physical location as the one retrieved.
       --------------------------------------------------------------------------
-      function  Get(Buffer : in out Buffer_Type) return Item_Type;
+      function  Get(Source : in out Buffer) return Item_Type;
 
       --------------------------------------------------------------------------
       -- Returns the oldest item from the buffer.  Returns False if there are
@@ -106,7 +106,7 @@ package Bullfrog.Containers.Circular_Buffer is
       -- retrieved.
       --------------------------------------------------------------------------
       function  Get
-         (Buffer : in out Buffer_Type;
+         (Source : in out Buffer;
           Value  :    out Item_Type)
           return Boolean;
 
@@ -116,14 +116,14 @@ package Bullfrog.Containers.Circular_Buffer is
       -- may only calls Finalize when the buffer is leaves scope or a new item
       -- is added to the same physical location as the one retrieved.
       --------------------------------------------------------------------------
-      procedure Get(Buffer : in out Buffer_Type; Value : out Item_Type);
+      procedure Get(Source : in out Buffer; Value : out Item_Type);
 
       --------------------------------------------------------------------------
       -- Resets to buffer to be empty.  Note that the buffer's copy of the
       -- items may only call Finalize when the buffer is leaves scope or new
       -- items are added to the same physical location as the ones retrieved.
       --------------------------------------------------------------------------
-      procedure Reset(Buffer : in out Buffer_Type);
+      procedure Reset(Target : in out Buffer);
 
    end Consumer;
 
@@ -140,7 +140,7 @@ package Bullfrog.Containers.Circular_Buffer is
       -- if there was no room.
       --------------------------------------------------------------------------
       function Put
-         (Buffer : in out Buffer_Type;
+         (Target : in out Buffer;
           Value  : in     Item_Type)
           return Boolean;
 
@@ -149,7 +149,7 @@ package Bullfrog.Containers.Circular_Buffer is
       -- room to put the item.
       --------------------------------------------------------------------------
       procedure Put
-         (Buffer : in out Buffer_Type;
+         (Target : in out Buffer;
           Value  : in     Item_Type);
 
    end Producer;
@@ -157,22 +157,22 @@ package Bullfrog.Containers.Circular_Buffer is
 private
 
    -- Type of the actual data array held by a buffer
-   type Item_Array is array(Buffer_Index_Type range <>) of Item_Type;
+   type Item_Array is array(Buffer_Index range <>) of Item_Type;
 
-   type Buffer_Type
-      (Buffer_Size  : Buffer_Size_Type)
+   type Buffer
+      (Max_Size  : Buffer_Size)
    is tagged limited record
 
       -- Actual Data in the buffer.  Needs to be volatile
-      Data : Item_Array(0..Buffer_Size); pragma Volatile(Data);
+      Data : Item_Array(0..Max_Size); pragma Volatile(Data);
 
       -- Index used exclusively by a producer to add elements to the buffer
       -- This needs to be Atomic.
-      Put_Index : Buffer_Index_Type := 0; pragma Atomic(Put_Index);
+      Put_Index : Buffer_Index := 0; pragma Atomic(Put_Index);
 
       -- Index used exclusively by a consumer to remove elements from
       -- the buffer.  This needs to be Atomic.
-      Get_Index : Buffer_Index_Type := 0; pragma Atomic(Get_Index);
+      Get_Index : Buffer_Index := 0; pragma Atomic(Get_Index);
 
    end record;
 
