@@ -145,7 +145,8 @@ package body Bullfrog.Tests.Smart_Access_Node is
 
 
       -- Break potential circular reference first
-      Root.Reference.Left := Left.Reference.Right;
+      Root.Reference.Left.Set_Null;
+      Root.Reference.Left.Swap(Left.Reference.Right);
 
       -- Move the root
       Left.Reference.Right := Root;
@@ -176,7 +177,8 @@ package body Bullfrog.Tests.Smart_Access_Node is
       end if;
 
       -- Break potential circular reference first
-      Root.Reference.Right := Right.Reference.Left;
+      Root.Reference.Right.Set_Null;
+      Root.Reference.Right.Swap(Right.Reference.Left);
 
       -- Move the root
       Right.Reference.Left := Root;
