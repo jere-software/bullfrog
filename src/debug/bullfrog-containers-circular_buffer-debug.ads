@@ -33,10 +33,10 @@ package Bullfrog.Containers.Circular_Buffer.Debug is
 
 
 
-   function Put_Index(Buffer : Buffer_Type) return Buffer_Index_Type;
-   function Get_Index(Buffer : Buffer_Type) return Buffer_Index_Type;
+   function Put_Index(Source : Buffer) return Buffer_Index;
+   function Get_Index(Source : Buffer) return Buffer_Index;
 
-   type Element_Status_Type is
+   type Element_Status is
       (Both_Indexes,
        Put_Index,
        Get_Index,
@@ -44,16 +44,16 @@ package Bullfrog.Containers.Circular_Buffer.Debug is
        No_Element,
        Out_Of_Bounds);
 
-   function Element_Status
-      (Buffer : Buffer_Type;
-       Index  : Buffer_Index_Type)
-       return Element_Status_Type;
+   function Current_Element_Status
+      (Source : Buffer;
+       Index  : Buffer_Index)
+       return Element_Status;
 
    Index_Out_Of_Bounds : exception;
 
    function View
-      (Buffer : Buffer_Type;
-       Index  : Buffer_Index_Type)
+      (Source : Buffer;
+       Index  : Buffer_Index)
        return Item_Type;
 
 

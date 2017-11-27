@@ -29,56 +29,56 @@
 
 package body Bullfrog.Containers.Circular_Buffer.Debug is
 
-   function Put_Index(Buffer : Buffer_Type) return Buffer_Index_Type is
+   function Put_Index(Source : Buffer) return Buffer_Index is
    begin
-      return Buffer.Put_Index;
+      return Source.Put_Index;
    end Put_Index;
-   function Get_Index(Buffer : Buffer_Type) return Buffer_Index_Type is
+   function Get_Index(Source : Buffer) return Buffer_Index is
    begin
-      return Buffer.Get_Index;
+      return Source.Get_Index;
    end Get_Index;
 
-   function Element_Status
-      (Buffer : Buffer_Type;
-       Index  : Buffer_Index_Type)
-          return Element_Status_Type
+   function Current_Element_Status
+      (Source : Buffer;
+       Index  : Buffer_Index)
+          return Element_Status
    is
    begin
-      if Index > Buffer.Buffer_Size then
+      if Index > Source.Max_Size then
          return Out_Of_Bounds;
-      elsif Index = Buffer.Get_Index then
-         if Index = Buffer.Put_Index then
+      elsif Index = Source.Get_Index then
+         if Index = Source.Put_Index then
             return Both_Indexes;
          else
             return Get_Index;
          end if;
-      elsif Index = Buffer.Put_Index then
+      elsif Index = Source.Put_Index then
          return Put_Index;
-      elsif Buffer.Get_Index <= Buffer.Put_Index then
-         if Index < Buffer.Get_Index or Index > Buffer.Put_Index then
+      elsif Source.Get_Index <= Source.Put_Index then
+         if Index < Source.Get_Index or Index > Source.Put_Index then
             return No_Element;
          else
             return Some_Element;
          end if;
       else
-         if Index < Buffer.Get_Index and Index > Buffer.Put_Index then
+         if Index < Source.Get_Index and Index > Source.Put_Index then
             return No_Element;
          else
             return Some_Element;
          end if;
       end if;
-   end Element_Status;
+   end Current_Element_Status;
 
    function View
-      (Buffer : Buffer_Type;
-       Index  : Buffer_Index_Type)
+      (Source : Buffer;
+       Index  : Buffer_Index)
           return Item_Type
    is
    begin
-      if Index > Buffer.Buffer_Size then
+      if Index > Source.Max_Size then
          raise Index_Out_Of_Bounds;
       end if;
-      return Buffer.Data(Index);
+      return Source.Data(Index);
    end View;
 
 end Bullfrog.Containers.Circular_Buffer.Debug;
