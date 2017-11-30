@@ -38,7 +38,7 @@ package body Bullfrog.Tests.Smart_Access is
                         else
                            Integer'Image(Obj.Reference.Value));
    begin
-      return ("Shared: " & TT_Debug.Print(Obj) & " => " & Temp);
+      return ("Shared: " & TT_Debug.To_String(Obj) & " => " & Temp);
    end To_String;
    function To_String(Obj : TT.Weak_Access)   return String is
       Shared : TT.Shared_Access := TT.Make.Shared_Access(Obj);
@@ -49,7 +49,7 @@ package body Bullfrog.Tests.Smart_Access is
                                     else
                                        Integer'Image(Shared.Reference.Value));
    begin
-      return ("Weak:   " & TT_Debug.Print(Obj) & " => " & Temp);
+      return ("Weak:   " & TT_Debug.To_String(Obj) & " => " & Temp);
    end To_String;
    function To_String(Obj : TT.Unique_Access) return String is
       Temp : String := (if
@@ -59,7 +59,7 @@ package body Bullfrog.Tests.Smart_Access is
                         else
                            Integer'Image(Obj.Reference.Value));
    begin
-      return ("Unique: " & TT_Debug.Print(Obj) & " => " & Temp);
+      return ("Unique: " & TT_Debug.To_String(Obj) & " => " & Temp);
    end To_String;
 
 end Bullfrog.Tests.Smart_Access;

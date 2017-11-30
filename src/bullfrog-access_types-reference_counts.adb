@@ -24,16 +24,16 @@
 --  this  unit  does not  by itself cause  the resulting executable to be   --
 --  covered by the GNU General Public License. This exception does not      --
 --  however invalidate any other reasons why the executable file might be   --
---  covered by the  GNU Public License.                                     --
+--  covered by the GNU Public License.                                      --
 ------------------------------------------------------------------------------
 
 package body Bullfrog.Access_Types.Reference_Counts is
 
    -- Implementation for incrementing the value
-   procedure Increment(Count : in out Count_Type) with Inline;
-   procedure Increment(Count : in out Count_Type) is
+   procedure Increment(Count : in out Basic_Count) with Inline;
+   procedure Increment(Count : in out Basic_Count) is
    begin
-      if Count = Count_Type'Last then
+      if Count = Basic_Count'Last then
          raise Count_Overflow;
       end if;
       if Count /= 0 then
@@ -42,17 +42,17 @@ package body Bullfrog.Access_Types.Reference_Counts is
    end Increment;
 
    -- Implementation for decrementing the value
-   procedure Decrement(Count : in out Count_Type) with Inline;
-   procedure Decrement(Count : in out Count_Type) is
+   procedure Decrement(Count : in out Basic_Count) with Inline;
+   procedure Decrement(Count : in out Basic_Count) is
    begin
-      if Count = Count_Type'First then
+      if Count = Basic_Count'First then
          raise Count_Underflow;
       end if;
 
       Count := Count - 1;
    end Decrement;
 
-   function Get(Count : Reference_Count) return Count_Type is
+   function Get(Count : Reference_Count) return Basic_Count is
    begin
       case Count.Atomic is
          when True =>  return Count.Protected_Impl.Get;
@@ -68,26 +68,26 @@ package body Bullfrog.Access_Types.Reference_Counts is
       end case;
    end Increment;
 
-   function Post_Increment(Count : in out Reference_Count) return Count_Type is
+   function Post_Increment(Count : in out Reference_Count) return Basic_Count is
    begin
       case Count.Atomic is
          when True =>
-            return Value : Count_Type do
+            return Value : Basic_Count do
                Count.Protected_Impl.Post_Increment(Value);
             end return;
          when False =>
-            return Value : Count_Type do
+            return Value : Basic_Count do
                Value := Count.Impl;
                Increment(Count.Impl);
             end return;
       end case;
    end Post_Increment;
 
-   function Pre_Increment(Count : in out Reference_Count) return Count_Type is
+   function Pre_Increment(Count : in out Reference_Count) return Basic_Count is
    begin
       case Count.Atomic is
          when True =>
-            return Value : Count_Type do
+            return Value : Basic_Count do
                Count.Protected_Impl.Pre_Increment(Value);
             end return;
          when False =>
@@ -104,26 +104,26 @@ package body Bullfrog.Access_Types.Reference_Counts is
       end case;
    end Decrement;
 
-   function Post_Decrement(Count : in out Reference_Count) return Count_Type is
+   function Post_Decrement(Count : in out Reference_Count) return Basic_Count is
    begin
       case Count.Atomic is
          when True =>
-            return Value : Count_Type do
+            return Value : Basic_Count do
                Count.Protected_Impl.Post_Decrement(Value);
             end return;
          when False =>
-            return Value : Count_Type do
+            return Value : Basic_Count do
                Value := Count.Impl;
                Decrement(Count.Impl);
             end return;
       end case;
    end Post_Decrement;
 
-   function Pre_Decrement(Count : in out Reference_Count) return Count_Type is
+   function Pre_Decrement(Count : in out Reference_Count) return Basic_Count is
    begin
       case Count.Atomic is
          when True =>
-            return Value : Count_Type do
+            return Value : Basic_Count do
                Count.Protected_Impl.Pre_Decrement(Value);
             end return;
          when False =>
@@ -134,7 +134,7 @@ package body Bullfrog.Access_Types.Reference_Counts is
 
    protected body Atomic_Reference_Count is
 
-      function Get return Count_Type is
+      function Get return Basic_Count is
       begin
          return Count;
       end Get;
@@ -144,13 +144,13 @@ package body Bullfrog.Access_Types.Reference_Counts is
          Increment(Count);
       end Increment;
 
-      procedure Post_Increment(Value : out Count_Type) is
+      procedure Post_Increment(Value : out Basic_Count) is
       begin
          Value := Count;
          Increment(Count);
       end Post_Increment;
 
-      procedure Pre_Increment(Value : out Count_Type) is
+      procedure Pre_Increment(Value : out Basic_Count) is
       begin
          Increment(Count);
          Value := Count;
@@ -161,13 +161,13 @@ package body Bullfrog.Access_Types.Reference_Counts is
          Decrement(Count);
       end Decrement;
 
-      procedure Post_Decrement(Value : out Count_Type) is
+      procedure Post_Decrement(Value : out Basic_Count) is
       begin
          Value := Count;
          Decrement(Count);
       end Post_Decrement;
 
-      procedure Pre_Decrement(Value : out Count_Type) is
+      procedure Pre_Decrement(Value : out Basic_Count) is
       begin
          Decrement(Count);
          Value := Count;

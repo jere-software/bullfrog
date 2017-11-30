@@ -24,7 +24,7 @@
 --  this  unit  does not  by itself cause  the resulting executable to be   --
 --  covered by the GNU General Public License. This exception does not      --
 --  however invalidate any other reasons why the executable file might be   --
---  covered by the  GNU Public License.                                     --
+--  covered by the GNU Public License.                                      --
 ------------------------------------------------------------------------------
 
 -- This package creates a Circular Buffer (FIFO) of a specified item type.
@@ -41,9 +41,9 @@ package Bullfrog.Containers.Circular_Buffer is
 
    pragma Pure;
 
-   --*************************************************************************--
-   --************************* Buffer Implementation *************************--
-   --*************************************************************************--
+   -----------------------------------------------------------------------------
+   -- Buffer Implementation
+   -----------------------------------------------------------------------------
 
    -- This type must be modular and atomic for the implementation
    type Buffer_Index is mod 2**32;
@@ -61,93 +61,73 @@ package Bullfrog.Containers.Circular_Buffer is
 
    is tagged limited private;
 
-   -----------------------------------------------------------------------------
    -- Returns True if the buffer is empty and False otherwise
-   -----------------------------------------------------------------------------
    function Is_Empty (Self : Buffer) return Boolean;
 
-   -----------------------------------------------------------------------------
    -- Returns True if the buffer is not empty and False otherwise
-   -----------------------------------------------------------------------------
    function Not_Empty(Self : Buffer) return Boolean;
 
-   -----------------------------------------------------------------------------
    -- Returns True if the buffer is full and False otherwise
-   -----------------------------------------------------------------------------
    function Is_Full  (Self : Buffer) return Boolean;
 
-   -----------------------------------------------------------------------------
    -- Returns True if the buffer is not full and False otherwise
-   -----------------------------------------------------------------------------
    function Not_Full (Self : Buffer) return Boolean;
 
 
 
-   --*************************************************************************--
-   --************************ Consumer Implementation ************************--
-   --*************************************************************************--
+   -----------------------------------------------------------------------------
+   -- Consumer Implementation
+   -----------------------------------------------------------------------------
 
    -- Package used to retrieve items from a buffer.
    package Consumer is
 
-      --------------------------------------------------------------------------
       -- Returns the oldest item from the buffer.  Raises Container_Empty if
       -- there are no items to return.  Note that the buffer's copy of the item
       -- may only calls Finalize when the buffer is leaves scope or a new item
       -- is added to the same physical location as the one retrieved.
-      --------------------------------------------------------------------------
       function  Get(Source : in out Buffer) return Item_Type;
 
-      --------------------------------------------------------------------------
       -- Returns the oldest item from the buffer.  Returns False if there are
       -- no items to return and True if successful.  Note that the buffer's
       -- copy of the item may only call Finalize when the buffer is leaves
       -- scope or a new item is added to the same physical location as the one
       -- retrieved.
-      --------------------------------------------------------------------------
       function  Get
          (Source : in out Buffer;
           Value  :    out Item_Type)
           return Boolean;
 
-      --------------------------------------------------------------------------
       -- Returns the oldest item from the buffer.  Raises Container_Empty if
       -- there are no items to return.  Note that the buffer's copy of the item
       -- may only calls Finalize when the buffer is leaves scope or a new item
       -- is added to the same physical location as the one retrieved.
-      --------------------------------------------------------------------------
       procedure Get(Source : in out Buffer; Value : out Item_Type);
 
-      --------------------------------------------------------------------------
       -- Resets to buffer to be empty.  Note that the buffer's copy of the
       -- items may only call Finalize when the buffer is leaves scope or new
       -- items are added to the same physical location as the ones retrieved.
-      --------------------------------------------------------------------------
       procedure Reset(Target : in out Buffer);
 
    end Consumer;
 
 
-   --*************************************************************************--
-   --************************ Producer Implementation ************************--
-   --*************************************************************************--
+   -----------------------------------------------------------------------------
+   -- Producer Implementation
+   -----------------------------------------------------------------------------
 
    -- Package used to add items to a buffer
    package Producer is
 
-      --------------------------------------------------------------------------
       -- Puts a new item on the buffer.  Returns True if successful or False
       -- if there was no room.
-      --------------------------------------------------------------------------
       function Put
          (Target : in out Buffer;
           Value  : in     Item_Type)
           return Boolean;
 
-      --------------------------------------------------------------------------
       -- Puts a new item on the buffer.  Raises Container_Full if there is no
       -- room to put the item.
-      --------------------------------------------------------------------------
       procedure Put
          (Target : in out Buffer;
           Value  : in     Item_Type);

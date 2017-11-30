@@ -24,7 +24,7 @@
 --  this  unit  does not  by itself cause  the resulting executable to be   --
 --  covered by the GNU General Public License. This exception does not      --
 --  however invalidate any other reasons why the executable file might be   --
---  covered by the  GNU Public License.                                     --
+--  covered by the GNU Public License.                                      --
 ------------------------------------------------------------------------------
 
 
@@ -72,7 +72,7 @@ package Bullfrog.Access_Types.Smart_Access is
    for Constant_Item_Access'Storage_Pool use Item_Access'Storage_Pool;
 
    -- Basic counting type for the underlying reference count
-   subtype Count_Type is Bullfrog.Access_Types.Reference_Counts.Count_Type;
+   subtype Basic_Count is Bullfrog.Access_Types.Reference_Counts.Basic_Count;
 
    -- This Smart_Access type provides reference counting semantics.  It can
    -- be copied and will automatically handle deallocating the held access
@@ -336,13 +336,13 @@ package Bullfrog.Access_Types.Smart_Access is
       -- reference.
       function Use_Count
          (Self : in Shared_Access)
-          return Count_Type;
+          return Basic_Count;
 
       -- Returns the number of Weak_Access objects (+1) that manage this
       -- reference
       function Weak_Count
          (Self : in Shared_Access)
-          return Count_Type;
+          return Basic_Count;
 
 
 
@@ -350,32 +350,33 @@ package Bullfrog.Access_Types.Smart_Access is
       -- reference.
       function Use_Count
          (Self : in Weak_Access)
-          return Count_Type;
+          return Basic_Count;
 
       -- Returns the number of Weak_Access objects (+1) that manage this
       -- reference
       function Weak_Count
          (Self : in Weak_Access)
-          return Count_Type;
+          return Basic_Count;
 
    end Utilities;
 
 private
 
    -- Container for the two reference counts
-   type Counts_Type is record
+   type Counts is record
       Strong : Reference_Counts.Reference_Count(Atomic_Increment);
       Weak   : Reference_Counts.Reference_Count(Atomic_Increment);
    end record;
 
    -- Access type for the counts container
-   type Counts_Access is access Counts_Type;
+   type Counts_Access is access Counts;
    for Counts_Access'Storage_Pool use Item_Access'Storage_Pool;
 
 
    -----------------------------------------------------------------------------
    -- Shared_Access type
    -----------------------------------------------------------------------------
+
    type Shared_Access is new Ada.Finalization.Controlled with
       record
          Item_Reference   : Item_Access   := null;
@@ -386,6 +387,7 @@ private
    -----------------------------------------------------------------------------
    -- Weak_Access type
    -----------------------------------------------------------------------------
+
    type Weak_Access is new Ada.Finalization.Controlled with
       record
          Item_Reference   : Item_Access   := null;
@@ -396,6 +398,7 @@ private
    -----------------------------------------------------------------------------
    -- Unique_Access type
    -----------------------------------------------------------------------------
+
    type Unique_Access is new Ada.Finalization.Limited_Controlled with
       record
          Item_Reference : Item_Access := null;

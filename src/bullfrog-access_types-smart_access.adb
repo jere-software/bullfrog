@@ -24,7 +24,7 @@
 --  this  unit  does not  by itself cause  the resulting executable to be   --
 --  covered by the GNU General Public License. This exception does not      --
 --  however invalidate any other reasons why the executable file might be   --
---  covered by the  GNU Public License.                                     --
+--  covered by the GNU Public License.                                      --
 ------------------------------------------------------------------------------
 
 
@@ -32,7 +32,7 @@ with Ada.Unchecked_Deallocation;
 
 package body Bullfrog.Access_Types.Smart_Access is
 
-   use type Bullfrog.Access_Types.Reference_Counts.Count_Type;
+   use type Bullfrog.Access_Types.Reference_Counts.Basic_Count;
 
    -----------------------------------------------------------------------------
    -- Shared_Access type
@@ -113,7 +113,7 @@ package body Bullfrog.Access_Types.Smart_Access is
       use Access_Types.Reference_Counts;
 
       procedure Free is new Ada.Unchecked_Deallocation
-         (Object => Counts_Type,
+         (Object => Counts,
           Name   => Counts_Access);
 
    begin
@@ -195,7 +195,7 @@ package body Bullfrog.Access_Types.Smart_Access is
 
       use Access_Types.Reference_Counts;
       procedure Free is new Ada.Unchecked_Deallocation
-         (Object => Counts_Type,
+         (Object => Counts,
           Name   => Counts_Access);
 
    begin
@@ -279,7 +279,7 @@ package body Bullfrog.Access_Types.Smart_Access is
       is
       begin
          Target.Finalize;
-         Target.Counts_Reference := new Counts_Type;
+         Target.Counts_Reference := new Counts;
          Target.Item_Reference   := Source;
       exception
          when others =>
@@ -327,7 +327,7 @@ package body Bullfrog.Access_Types.Smart_Access is
       begin
          Target.Finalize;
          if Source.Item_Reference /= null then
-            Target.Counts_Reference := new Counts_Type;
+            Target.Counts_Reference := new Counts;
             Target.Item_Reference   := Source.Item_Reference;
             Source.Item_Reference   := null;
          end if;
@@ -340,7 +340,7 @@ package body Bullfrog.Access_Types.Smart_Access is
       begin
          return (Ada.Finalization.Controlled with
                  Item_Reference   => Source,
-                 Counts_Reference => new Counts_Type);
+                 Counts_Reference => new Counts);
       exception
          when others =>
             declare
@@ -385,7 +385,7 @@ package body Bullfrog.Access_Types.Smart_Access is
                     Counts_Reference => null);
          else
             return Target : Smart_Access.Shared_Access do
-               Target.Counts_Reference := new Counts_Type;
+               Target.Counts_Reference := new Counts;
                Target.Item_Reference   := Source.Item_Reference;
                Source.Item_Reference   := null;
             end return;
@@ -487,11 +487,11 @@ package body Bullfrog.Access_Types.Smart_Access is
 
       function Use_Count
          (Self : in Shared_Access)
-          return Count_Type
+          return Basic_Count
       is
       begin
          if Self.Counts_Reference = null then
-            return Count_Type'First;
+            return Basic_Count'First;
          else
             return Reference_Counts.Get(Self.Counts_Reference.Strong);
          end if;
@@ -499,11 +499,11 @@ package body Bullfrog.Access_Types.Smart_Access is
 
       function Weak_Count
          (Self : in Shared_Access)
-          return Count_Type
+          return Basic_Count
       is
       begin
          if Self.Counts_Reference = null then
-            return Count_Type'First;
+            return Basic_Count'First;
          else
             return Reference_Counts.Get(Self.Counts_Reference.Weak);
          end if;
@@ -513,11 +513,11 @@ package body Bullfrog.Access_Types.Smart_Access is
 
       function Use_Count
          (Self : in Weak_Access)
-          return Count_Type
+          return Basic_Count
       is
       begin
          if Self.Counts_Reference = null then
-            return Count_Type'First;
+            return Basic_Count'First;
          else
             return Reference_Counts.Get(Self.Counts_Reference.Strong);
          end if;
@@ -525,11 +525,11 @@ package body Bullfrog.Access_Types.Smart_Access is
 
       function Weak_Count
          (Self : in Weak_Access)
-          return Count_Type
+          return Basic_Count
       is
       begin
          if Self.Counts_Reference = null then
-            return Count_Type'First;
+            return Basic_Count'First;
          else
             return Reference_Counts.Get(Self.Counts_Reference.Weak);
          end if;

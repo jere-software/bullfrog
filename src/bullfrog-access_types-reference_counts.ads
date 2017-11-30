@@ -24,7 +24,7 @@
 --  this  unit  does not  by itself cause  the resulting executable to be   --
 --  covered by the GNU General Public License. This exception does not      --
 --  however invalidate any other reasons why the executable file might be   --
---  covered by the  GNU Public License.                                     --
+--  covered by the GNU Public License.                                      --
 ------------------------------------------------------------------------------
 
 -- This package provides reference count types needed for smart access types
@@ -33,34 +33,34 @@ package Bullfrog.Access_Types.Reference_Counts is
    pragma Pure;
 
    -- Basic count type for reference counting
-   type Count_Type is mod 2**32;
+   type Basic_Count is mod 2**32;
 
-   -- Occurs if trying to decrement a Count_Type variable past 'First
+   -- Occurs if trying to decrement a Basic_Count variable past 'First
    Count_Underflow : exception;
 
-   -- Occurs if trying to increment a Count_Type variable past 'Last
+   -- Occurs if trying to increment a Basic_Count variable past 'Last
    Count_Overflow  : exception;
 
    -- Main reference count type of the package
    type Reference_Count(Atomic : Boolean) is limited private;
 
    -- Gets the current value of the reference count
-   function Get(Count : Reference_Count) return Count_Type
+   function Get(Count : Reference_Count) return Basic_Count
       with Inline;
 
    -- Increment the value by 1
-   -- Does not increment if the value is Count_Type'First
+   -- Does not increment if the value is Basic_Count'First
    procedure Increment(Count : in out Reference_Count)
       with Inline;
 
    -- Increment the value by 1 and return the original value
-   -- Does not increment if the value is Count_Type'First
-   function Post_Increment(Count : in out Reference_Count) return Count_Type
+   -- Does not increment if the value is Basic_Count'First
+   function Post_Increment(Count : in out Reference_Count) return Basic_Count
       with Inline;
 
    -- Increment the value by 1 and return the final value
-   -- Does not increment if the value is Count_Type'First
-   function Pre_Increment(Count : in out Reference_Count) return Count_Type
+   -- Does not increment if the value is Basic_Count'First
+   function Pre_Increment(Count : in out Reference_Count) return Basic_Count
       with Inline;
 
    -- Decrement the value by 1
@@ -68,11 +68,11 @@ package Bullfrog.Access_Types.Reference_Counts is
       with Inline;
 
    -- Decrement the value by 1 and return the original value
-   function Post_Decrement(Count : in out Reference_Count) return Count_Type
+   function Post_Decrement(Count : in out Reference_Count) return Basic_Count
       with Inline;
 
    -- Decrement the value by 1 and return the final value
-   function Pre_Decrement(Count : in out Reference_Count) return Count_Type
+   function Pre_Decrement(Count : in out Reference_Count) return Basic_Count
       with Inline;
 
 private
@@ -81,32 +81,32 @@ private
    protected type Atomic_Reference_Count is
 
       -- Gets the current value of the reference count
-      function Get return Count_Type;
+      function Get return Basic_Count;
 
       -- Increment the value by 1
-      -- Does not increment if the value is Count_Type'First
+      -- Does not increment if the value is Basic_Count'First
       procedure Increment;
 
       -- Increment the value by 1 and return the original value
-      -- Does not increment if the value is Count_Type'First
-      procedure Post_Increment(Value : out Count_Type);
+      -- Does not increment if the value is Basic_Count'First
+      procedure Post_Increment(Value : out Basic_Count);
 
       -- Increment the value by 1 and return the final value
-      -- Does not increment if the value is Count_Type'First
-      procedure Pre_Increment(Value : out Count_Type);
+      -- Does not increment if the value is Basic_Count'First
+      procedure Pre_Increment(Value : out Basic_Count);
 
       -- Decrement the value by 1
       procedure Decrement;
 
       -- Decrement the value by 1 and return the original value
-      procedure Post_Decrement(Value : out Count_Type);
+      procedure Post_Decrement(Value : out Basic_Count);
 
       -- Decrement the value by 1 and return the final value
-      procedure Pre_Decrement(Value : out Count_Type);
+      procedure Pre_Decrement(Value : out Basic_Count);
 
    private
 
-      Count : Count_Type := Count_Type'First + 1;
+      Count : Basic_Count := Basic_Count'First + 1;
 
    end Atomic_Reference_Count;
 
@@ -117,7 +117,7 @@ private
          when True =>
             Protected_Impl : Atomic_Reference_Count;
          when False =>
-            Impl           : Count_Type := Count_Type'First + 1;
+            Impl           : Basic_Count := Basic_Count'First + 1;
       end case;
    end record;
 
