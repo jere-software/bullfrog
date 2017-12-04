@@ -72,8 +72,7 @@ package Bullfrog.Access_Types.Simple_Smart_Access is
 
    -- This Smart_Access type provides reference counting semantics.  It can
    -- be copied and will automatically handle deallocating the held access
-   -- variable.  Do not create circular references with this type.  Instead
-   -- use Weak_Access types to break any circular connections.
+   -- variable.
    subtype Shared_Access is Core.Shared_Access;
 
    -- This Smart_Access type is the "goto" access manager for most situations.
