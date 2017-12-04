@@ -293,10 +293,10 @@ package Bullfrog.Access_Types.Smart_Access is
           Source : in out Smart_Access.Unique_Access);
       function Shared_Access
          (Source : in not null Item_Access)
-       return Smart_Access.Shared_Access;
+          return Smart_Access.Shared_Access;
       function Shared_Access
          (Source : in Smart_Access.Weak_Access)
-       return Smart_Access.Shared_Access;
+          return Smart_Access.Shared_Access;
       function Shared_Access
          (Source : in out Smart_Access.Unique_Access)
           return Smart_Access.Shared_Access;

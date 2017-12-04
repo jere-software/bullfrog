@@ -230,7 +230,7 @@ package Bullfrog.Access_Types.Simple_Smart_Access is
             Inline => True;
       function Shared_Access
          (Source : in not null Item_Access)
-       return Simple_Smart_Access.Shared_Access
+          return Simple_Smart_Access.Shared_Access
          with
             Inline => True;
       function Shared_Access
@@ -278,7 +278,7 @@ package Bullfrog.Access_Types.Simple_Smart_Access is
           renames Core.Make.Shared_Access;
       function Shared_Access
          (Source : in not null Item_Access)
-       return Simple_Smart_Access.Shared_Access
+          return Simple_Smart_Access.Shared_Access
           renames Core.Make.Shared_Access;
       function Shared_Access
          (Source : in out Simple_Smart_Access.Unique_Access)
