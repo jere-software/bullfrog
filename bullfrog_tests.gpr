@@ -2,10 +2,7 @@ project Bullfrog_Tests is
 
    for Source_Dirs use ("src/**");
    for Object_Dir use "obj";
-   for Main use
-      ("test_smart_access.adb",
-       "test_circular_buffer",
-       "test_library_compilation.adb");
+   for Main use ("test_smart_access.adb", "test_circular_buffer", "test_library_compilation.adb");
    for Exec_Dir use "exec";
 
    package Ide is
@@ -17,7 +14,7 @@ project Bullfrog_Tests is
    end Builder;
 
    package Compiler is
-      for Switches ("ada") use ("-g", "-g");
+      for Switches ("ada") use ("-g", "-g", "-gnato", "-fstack-check", "-gnat12");
    end Compiler;
 
    package Linker is
