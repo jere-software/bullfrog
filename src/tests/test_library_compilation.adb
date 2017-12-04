@@ -7,6 +7,7 @@ with Bullfrog.Access_Types.Reference_Counts;
 with Bullfrog.Access_Types.References;
 with Bullfrog.Access_Types.Smart_Access;
 with Bullfrog.Access_Types.Smart_Access.Debug;
+with Bullfrog.Access_Types.Simple_Smart_Access;
 with Bullfrog.Tests;
 with Bullfrog.Tests.Smart_Access;
 with Bullfrog.Tests.Smart_Access.Main;
