@@ -45,7 +45,7 @@ generic
    type Item_Access is access Item_Type;
 
    -- A finalization procedure to be called when all
-   -- refernces to the Item_Access variable are gone.
+   -- references to the Item_Access variable are gone.
    -- The client should never manually call this procedure.
    with procedure Finalize(Memory : in out Item_Access);
 
