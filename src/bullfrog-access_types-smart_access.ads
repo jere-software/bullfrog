@@ -75,20 +75,26 @@ package Bullfrog.Access_Types.Smart_Access is
    subtype Basic_Count is Bullfrog.Access_Types.Reference_Counts.Basic_Count;
 
    -- This Smart_Access type provides reference counting semantics.  It can
-   -- be copied and will automatically handle deallocating the held access
-   -- variable.  Do not create circular references with this type.  Instead
-   -- use Weak_Access types to break any circular connections.
+   -- be copied and will automatically handle finalizing the held resource.
+   -- Do not create circular references with this type.  Instead use
+   -- Weak_Access types to break any such connections.
    type Shared_Access is new Ada.Finalization.Controlled with private;
 
-   -- This Smart_Access type provides minimal utility and mainly exists to
-   -- help manage circular references.  If a Weak_Access variable exists
-   -- and points to the same object as a Shared_Access type, then the
-   -- reference count object associated with them will not finalize until
-   -- all Weak_Access types and Shared_Access types have finalized.
-   type Weak_Access is new Ada.Finalization.Controlled with private;
+   -- This Smart_Access type provides a "non-owning" link to a resource that
+   -- is controlled by one or more Shared_Access objects.  It cannot directly
+   -- manage or manipulate the resource and must be promoted to a
+   -- Shared_Access object (via Make.Shared_Access) in order to do so.
+   -- It's primary usage is to break potential circular references that can
+   -- cause problems for Shared_Access objects.  When a Shared_Access object
+   -- is not null and is used to create a Weak_Access object (through
+   -- Make.Weak_Access), the newly created Weak_Access object is considered
+   -- "assigned" to that Shared_Access object's resource.  It remains
+   -- "assigned" even if all of the Shared_Access objects managing the
+   -- resource are finalized (which finalizes the resource as well).
+  type Weak_Access is new Ada.Finalization.Controlled with private;
 
    -- This Smart_Access type is the "goto" access manager for most situations.
-   -- Only one Unique_Access variable can hold a reference at a time.
+   -- Only one Unique_Access variable can hold a resource at a time.
    -- Ownership can be transferred to other Unique_Access variables when
    -- desired.
    type Unique_Access is new Ada.Finalization.Limited_Controlled with private;
@@ -177,17 +183,17 @@ package Bullfrog.Access_Types.Smart_Access is
    -- Weak_Access type
    -----------------------------------------------------------------------------
 
-   -- Releases the Weak_Access object's control of the reference count.  The
-   -- Weak_Access object is set to null.  If it was the last Weak_Access
-   -- object in control of the reference count, the reference count is
-   -- finalized.  The presence of any number of Shared_Access objects counts
-   -- as one Weak_Access in this context.
-   procedure Set_Null
+   -- Releases the Weak_Access object's assignment to a Shared_Access resource.
+   -- If it was the last Weak_Access object assigned to a Shared_Access
+   -- object's resource and there are no Shared_Access objects currently
+   -- managing the resource, the internal reference counts are finalized.
+   procedure Remove_Assignment
       (Self : in out Weak_Access)
       with
          Inline => True;
 
-   -- Compares two objects
+   -- Compares two Weak_Access objects.  Returns True if they are assigned to
+   -- the same Shared_Access object's resource or are both unassigned.
    overriding
    function "="
       (Left,Right : Weak_Access)
@@ -195,21 +201,17 @@ package Bullfrog.Access_Types.Smart_Access is
       with
          Inline => True;
 
-   -- Returns True if the object holds a null reference.  Take care if the
-   -- result is False.  If a result of False is mandatory, consider creating
-   -- a Shared_Access object from the Weak_Access object and check Is_Null
-   -- with it.
-   function Is_Null
+   -- Returns True if the object is assigned to a Shared_Access object's
+   -- resource.
+   function Is_Assigned
       (Self : in Weak_Access)
        return Boolean
       with
          Inline => True;
 
-   -- Returns True if the object does not hold a null reference.  Take care
-   -- if the result is True.  If a result of True is mandatory, consider
-   -- creating a Shared_Access object from the Weak_Access object and check
-   -- Not_Null with it.
-   function Not_Null
+   -- Returns True if the object is not assigned to a Shared_Access object's
+   -- resource.
+   function Not_Assigned
       (Self : in Weak_Access)
        return Boolean
       with
@@ -357,6 +359,22 @@ package Bullfrog.Access_Types.Smart_Access is
       function Weak_Count
          (Self : in Weak_Access)
           return Basic_Count;
+
+      -- Returns True if the Weak_Access object is assigned to the
+      -- Shared_Access object's resource.
+      function Is_Assigned_To
+         (Weak   : in Weak_Access;
+          Shared : in Shared_Access)
+          return Boolean
+         with Inline => True;
+
+      -- Returns True if the Weak_Access object is not assigned to the
+      -- Shared_Access object's resource.
+      function Not_Assigned_To
+         (Weak   : in Weak_Access;
+          Shared : in Shared_Access)
+          return Boolean
+         with Inline => True;
 
    end Utilities;
 

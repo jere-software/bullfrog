@@ -133,7 +133,7 @@ package body Bullfrog.Access_Types.Smart_Access is
    -- Weak_Access type
    -----------------------------------------------------------------------------
 
-   procedure Set_Null
+   procedure Remove_Assignment
       (Self : in out Weak_Access)
        renames Finalize;
 
@@ -146,25 +146,22 @@ package body Bullfrog.Access_Types.Smart_Access is
       return Left.Counts_Reference = Right.Counts_Reference;
    end "=";
 
-   function Is_Null
+   function Is_Assigned
       (Self : in Weak_Access)
        return Boolean
    is
    begin
-      return
-         Self.Counts_Reference = null
-         or else Reference_Counts.Get(Self.Counts_Reference.Strong) = 0;
-   end Is_Null;
+      return Self.Counts_Reference /= null;
+   end Is_Assigned;
 
-   function Not_Null
+   function Not_Assigned
       (Self : in Weak_Access)
        return Boolean
    is
    begin
       return
-         Self.Counts_Reference /= null
-         and then Reference_Counts.Get(Self.Counts_Reference.Strong) > 0;
-   end Not_Null;
+         Self.Counts_Reference = null;
+   end Not_Assigned;
 
    procedure Swap
       (Left, Right : in out Weak_Access)
@@ -534,6 +531,27 @@ package body Bullfrog.Access_Types.Smart_Access is
             return Reference_Counts.Get(Self.Counts_Reference.Weak);
          end if;
       end Weak_Count;
+
+
+      function Is_Assigned_To
+         (Weak   : in Weak_Access;
+          Shared : in Shared_Access)
+          return Boolean
+      is
+      begin
+         return Weak.Counts_Reference /= null
+            and Weak.Counts_Reference =  Shared.Counts_Reference;
+      end Is_Assigned_To;
+
+      function Not_Assigned_To
+         (Weak   : in Weak_Access;
+          Shared : in Shared_Access)
+          return Boolean
+      is
+      begin
+         return Weak.Counts_Reference =  null
+            or  Weak.Counts_Reference /= Shared.Counts_Reference;
+      end Not_Assigned_To;
 
    end Utilities;
 
