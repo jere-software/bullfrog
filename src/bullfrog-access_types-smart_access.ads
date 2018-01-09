@@ -80,18 +80,17 @@ package Bullfrog.Access_Types.Smart_Access is
    -- Weak_Access types to break any such connections.
    type Shared_Access is new Ada.Finalization.Controlled with private;
 
-   -- This Smart_Access type provides a "non-owning" link to a resource that
-   -- is controlled by one or more Shared_Access objects.  It cannot directly
-   -- manage or manipulate the resource and must be promoted to a
-   -- Shared_Access object (via Make.Shared_Access) in order to do so.
-   -- It's primary usage is to break potential circular references that can
-   -- cause problems for Shared_Access objects.  When a Shared_Access object
-   -- is not null and is used to create a Weak_Access object (through
-   -- Make.Weak_Access), the newly created Weak_Access object is considered
-   -- "assigned" to that Shared_Access object's resource.  It remains
-   -- "assigned" even if all of the Shared_Access objects managing the
-   -- resource are finalized (which finalizes the resource as well).
-  type Weak_Access is new Ada.Finalization.Controlled with private;
+   -- This Smart_Access type provides indirect access to a resource. By
+   -- itself, it cannot view or modify the resource, but must be promoted to
+   -- a Shared_Access object (via Make.Shared_Access) in order to do so.
+   -- When a Shared_Access object is not null and is used to create a
+   -- Weak_Access object (via Make.Weak_Access), the newly created Weak_Access
+   -- object is considered "assigned" to that Shared_Access object's resource.
+   -- It remains "assigned" even if all of the Shared_Access objects managing
+   -- the resource are finalized (which finalizes the resource as well).
+   -- Objects of type Weak_Access are used to create handles or break circular
+   -- references for Shared_Access objects.
+   type Weak_Access is new Ada.Finalization.Controlled with private;
 
    -- This Smart_Access type is the "goto" access manager for most situations.
    -- Only one Unique_Access variable can hold a resource at a time.
@@ -340,8 +339,9 @@ package Bullfrog.Access_Types.Smart_Access is
          (Self : in Shared_Access)
           return Basic_Count;
 
-      -- Returns the number of Weak_Access objects (+1) that manage this
-      -- reference
+      -- Returns the number of Weak_Access objects that manage this
+      -- reference.  If any Shared_Access objects manage this resource,
+      -- a value of 1 is added to the count.
       function Weak_Count
          (Self : in Shared_Access)
           return Basic_Count;
@@ -354,8 +354,9 @@ package Bullfrog.Access_Types.Smart_Access is
          (Self : in Weak_Access)
           return Basic_Count;
 
-      -- Returns the number of Weak_Access objects (+1) that manage this
-      -- reference
+      -- Returns the number of Weak_Access objects that manage this
+      -- reference.  If any Shared_Access objects manage this resource,
+      -- a value of 1 is added to the count.
       function Weak_Count
          (Self : in Weak_Access)
           return Basic_Count;
@@ -366,7 +367,8 @@ package Bullfrog.Access_Types.Smart_Access is
          (Weak   : in Weak_Access;
           Shared : in Shared_Access)
           return Boolean
-         with Inline => True;
+         with
+            Inline => True;
 
       -- Returns True if the Weak_Access object is not assigned to the
       -- Shared_Access object's resource.
@@ -374,7 +376,8 @@ package Bullfrog.Access_Types.Smart_Access is
          (Weak   : in Weak_Access;
           Shared : in Shared_Access)
           return Boolean
-         with Inline => True;
+         with
+            Inline => True;
 
    end Utilities;
 
