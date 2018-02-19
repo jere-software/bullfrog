@@ -31,7 +31,8 @@
 generic
 
    -- This is the type that the references will reflect
-   type Item_Type(<>);
+   -- NOTE:  when GNAT bugs fixed, this will be changed to incomplete type
+   type Item_Type(<>) is limited private;
 
 package Bullfrog.Access_Types.References is
 
