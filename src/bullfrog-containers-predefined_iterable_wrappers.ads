@@ -124,6 +124,24 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
              Iterators          => Iterators,
              Iterate            => Container_Pkg.Iterate);
 
+      package Constant_Forward is
+         new Containers.Iterable_Wrappers.Constant_Forward
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Iterate);
+
+      package Constant_Reversible is
+         new Containers.Iterable_Wrappers.Constant_Reversible
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Container_Pkg.Iterate);
+
    end Vectors;
 
    -- Doubly_Linked_Lists implementation
@@ -189,6 +207,24 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
              Iterators          => Iterators,
              Iterate            => Container_Pkg.Iterate);
 
+      package Constant_Forward is
+         new Containers.Iterable_Wrappers.Constant_Forward
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Iterate);
+
+      package Constant_Reversible is
+         new Containers.Iterable_Wrappers.Constant_Reversible
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Container_Pkg.Iterate);
+
    end Doubly_Linked_Lists;
 
    -- Hashed_Maps implementation
@@ -234,6 +270,15 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
              Cursor_Type        => Cursor_Type,
              References         => References,
              Reference          => Reference,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Container_Pkg.Iterate);
+
+      package Constant_Forward is
+         new Containers.Iterable_Wrappers.Constant_Forward
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
              Constant_Reference => Constant_Reference,
              Iterators          => Iterators,
              Iterate            => Container_Pkg.Iterate);
@@ -303,6 +348,24 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
              Iterators          => Iterators,
              Iterate            => Container_Pkg.Iterate);
 
+      package Constant_Forward is
+         new Containers.Iterable_Wrappers.Constant_Forward
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Iterate);
+
+      package Constant_Reversible is
+         new Containers.Iterable_Wrappers.Constant_Reversible
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Container_Pkg.Iterate);
+
    end Ordered_Maps;
 
    -- Hashed_Sets implementation
@@ -321,14 +384,6 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          Container_Pkg.Set_Iterator_Interfaces;
 
       -- Proxy functions needed
-      function Reference
-         (Container : aliased in out Container_Type;
-          Cursor    :                Cursor_Type)
-          return References.Not_Null_Reference
-      is (raise Ada.Assertions.Assertion_Error
-          with "Reference not supported for Hashed_Sets")
-      with Inline;
-
       function Constant_Reference
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
@@ -340,15 +395,15 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
       with Inline;
 
       -- The actual predefined packages
-      package Forward is
-         new Containers.Iterable_Wrappers.Forward
+      package Constant_Forward is
+         new Containers.Iterable_Wrappers.Constant_Forward
             (Container_Type     => Container_Type,
              Cursor_Type        => Cursor_Type,
              References         => References,
-             Reference          => Reference,
              Constant_Reference => Constant_Reference,
              Iterators          => Iterators,
              Iterate            => Container_Pkg.Iterate);
+
    end Hashed_Sets;
 
    -- Ordered_Sets implementation
@@ -367,14 +422,6 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          Container_Pkg.Set_Iterator_Interfaces;
 
       -- Proxy functions needed
-      function Reference
-         (Container : aliased in out Container_Type;
-          Cursor    :                Cursor_Type)
-          return References.Not_Null_Reference
-      is (raise Ada.Assertions.Assertion_Error
-          with "Reference not supported for Ordered_Sets")
-      with Inline;
-
       function Constant_Reference
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
@@ -392,22 +439,20 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
       with Inline;
 
       -- The actual predefined packages
-      package Forward is
-         new Containers.Iterable_Wrappers.Forward
+      package Constant_Forward is
+         new Containers.Iterable_Wrappers.Constant_Forward
             (Container_Type     => Container_Type,
              Cursor_Type        => Cursor_Type,
              References         => References,
-             Reference          => Reference,
              Constant_Reference => Constant_Reference,
              Iterators          => Iterators,
              Iterate            => Iterate);
 
-      package Reversible is
-         new Containers.Iterable_Wrappers.Reversible
+      package Constant_Reversible is
+         new Containers.Iterable_Wrappers.Constant_Reversible
             (Container_Type     => Container_Type,
              Cursor_Type        => Cursor_Type,
              References         => References,
-             Reference          => Reference,
              Constant_Reference => Constant_Reference,
              Iterators          => Iterators,
              Iterate            => Container_Pkg.Iterate);
@@ -457,6 +502,15 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
              Cursor_Type        => Cursor_Type,
              References         => References,
              Reference          => Reference,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Container_Pkg.Iterate);
+
+      package Constant_Forward is
+         new Containers.Iterable_Wrappers.Constant_Forward
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
              Constant_Reference => Constant_Reference,
              Iterators          => Iterators,
              Iterate            => Container_Pkg.Iterate);
@@ -522,6 +576,24 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
              Cursor_Type        => Cursor_Type,
              References         => References,
              Reference          => Reference,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Container_Pkg.Iterate);
+
+      package Constant_Forward is
+         new Containers.Iterable_Wrappers.Constant_Forward
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Iterate);
+
+      package Constant_Reversible is
+         new Containers.Iterable_Wrappers.Constant_Reversible
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
              Constant_Reference => Constant_Reference,
              Iterators          => Iterators,
              Iterate            => Container_Pkg.Iterate);
@@ -592,6 +664,24 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
              Iterators          => Iterators,
              Iterate            => Container_Pkg.Iterate);
 
+      package Constant_Forward is
+         new Containers.Iterable_Wrappers.Constant_Forward
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Iterate);
+
+      package Constant_Reversible is
+         new Containers.Iterable_Wrappers.Constant_Reversible
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Container_Pkg.Iterate);
+
    end Indefinite_Doubly_Linked_Lists;
 
    -- Indefinite_Hashed_Maps implementation
@@ -638,6 +728,15 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
              Cursor_Type        => Cursor_Type,
              References         => References,
              Reference          => Reference,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Container_Pkg.Iterate);
+
+      package Constant_Forward is
+         new Containers.Iterable_Wrappers.Forward
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
              Constant_Reference => Constant_Reference,
              Iterators          => Iterators,
              Iterate            => Container_Pkg.Iterate);
@@ -708,6 +807,24 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
              Iterators          => Iterators,
              Iterate            => Container_Pkg.Iterate);
 
+      package Constant_Forward is
+         new Containers.Iterable_Wrappers.Constant_Forward
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Iterate);
+
+      package Constant_Reversible is
+         new Containers.Iterable_Wrappers.Constant_Reversible
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Container_Pkg.Iterate);
+
    end Indefinite_Ordered_Maps;
 
    -- Indefinite_Hashed_Sets implementation
@@ -727,14 +844,6 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          Container_Pkg.Set_Iterator_Interfaces;
 
       -- Proxy functions needed
-      function Reference
-         (Container : aliased in out Container_Type;
-          Cursor    :                Cursor_Type)
-          return References.Not_Null_Reference
-      is (raise Ada.Assertions.Assertion_Error
-          with "Reference not supported for Indefinite_Hashed_Sets")
-      with Inline;
-
       function Constant_Reference
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
@@ -746,15 +855,15 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
       with Inline;
 
       -- The actual predefined packages
-      package Forward is
-         new Containers.Iterable_Wrappers.Forward
+      package Constant_Forward is
+         new Containers.Iterable_Wrappers.Constant_Forward
             (Container_Type     => Container_Type,
              Cursor_Type        => Cursor_Type,
              References         => References,
-             Reference          => Reference,
              Constant_Reference => Constant_Reference,
              Iterators          => Iterators,
              Iterate            => Container_Pkg.Iterate);
+
    end Indefinite_Hashed_Sets;
 
    -- Indefinite_Ordered_Sets implementation
@@ -774,14 +883,6 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          Container_Pkg.Set_Iterator_Interfaces;
 
       -- Proxy functions needed
-      function Reference
-         (Container : aliased in out Container_Type;
-          Cursor    :                Cursor_Type)
-          return References.Not_Null_Reference
-      is (raise Ada.Assertions.Assertion_Error
-          with "Reference not supported for Indefinite_Ordered_Sets")
-      with Inline;
-
       function Constant_Reference
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
@@ -799,22 +900,20 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
       with Inline;
 
       -- The actual predefined packages
-      package Forward is
-         new Containers.Iterable_Wrappers.Forward
+      package Constant_Forward is
+         new Containers.Iterable_Wrappers.Constant_Forward
             (Container_Type     => Container_Type,
              Cursor_Type        => Cursor_Type,
              References         => References,
-             Reference          => Reference,
              Constant_Reference => Constant_Reference,
              Iterators          => Iterators,
              Iterate            => Iterate);
 
-      package Reversible is
-         new Containers.Iterable_Wrappers.Reversible
+      package Constant_Reversible is
+         new Containers.Iterable_Wrappers.Constant_Reversible
             (Container_Type     => Container_Type,
              Cursor_Type        => Cursor_Type,
              References         => References,
-             Reference          => Reference,
              Constant_Reference => Constant_Reference,
              Iterators          => Iterators,
              Iterate            => Container_Pkg.Iterate);
@@ -865,6 +964,15 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
              Cursor_Type        => Cursor_Type,
              References         => References,
              Reference          => Reference,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Container_Pkg.Iterate);
+
+      package Constant_Forward is
+         new Containers.Iterable_Wrappers.Constant_Forward
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
              Constant_Reference => Constant_Reference,
              Iterators          => Iterators,
              Iterate            => Container_Pkg.Iterate);
@@ -930,6 +1038,24 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
              Cursor_Type        => Cursor_Type,
              References         => References,
              Reference          => Reference,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Container_Pkg.Iterate);
+
+      package Constant_Forward is
+         new Containers.Iterable_Wrappers.Constant_Forward
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Iterate);
+
+      package Constant_Reversible is
+         new Containers.Iterable_Wrappers.Constant_Reversible
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
              Constant_Reference => Constant_Reference,
              Iterators          => Iterators,
              Iterate            => Container_Pkg.Iterate);
@@ -1000,6 +1126,24 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
              Iterators          => Iterators,
              Iterate            => Container_Pkg.Iterate);
 
+      package Constant_Forward is
+         new Containers.Iterable_Wrappers.Constant_Forward
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Iterate);
+
+      package Constant_Reversible is
+         new Containers.Iterable_Wrappers.Constant_Reversible
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Container_Pkg.Iterate);
+
    end Bounded_Doubly_Linked_Lists;
 
    -- Bounded_Hashed_Maps implementation
@@ -1046,6 +1190,15 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
              Cursor_Type        => Cursor_Type,
              References         => References,
              Reference          => Reference,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Container_Pkg.Iterate);
+
+      package Constant_Forward is
+         new Containers.Iterable_Wrappers.Constant_Forward
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
              Constant_Reference => Constant_Reference,
              Iterators          => Iterators,
              Iterate            => Container_Pkg.Iterate);
@@ -1116,6 +1269,24 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
              Iterators          => Iterators,
              Iterate            => Container_Pkg.Iterate);
 
+      package Constant_Forward is
+         new Containers.Iterable_Wrappers.Constant_Forward
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Iterate);
+
+      package Constant_Reversible is
+         new Containers.Iterable_Wrappers.Constant_Reversible
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Container_Pkg.Iterate);
+
    end Bounded_Ordered_Maps;
 
    -- Bounded_Hashed_Sets implementation
@@ -1135,14 +1306,6 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          Container_Pkg.Set_Iterator_Interfaces;
 
       -- Proxy functions needed
-      function Reference
-         (Container : aliased in out Container_Type;
-          Cursor    :                Cursor_Type)
-          return References.Not_Null_Reference
-      is (raise Ada.Assertions.Assertion_Error
-          with "Reference not supported for Bounded_Hashed_Sets")
-      with Inline;
-
       function Constant_Reference
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
@@ -1154,15 +1317,15 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
       with Inline;
 
       -- The actual predefined packages
-      package Forward is
-         new Containers.Iterable_Wrappers.Forward
+      package Constant_Forward is
+         new Containers.Iterable_Wrappers.Constant_Forward
             (Container_Type     => Container_Type,
              Cursor_Type        => Cursor_Type,
              References         => References,
-             Reference          => Reference,
              Constant_Reference => Constant_Reference,
              Iterators          => Iterators,
              Iterate            => Container_Pkg.Iterate);
+
    end Bounded_Hashed_Sets;
 
    -- Bounded_Ordered_Sets implementation
@@ -1182,14 +1345,6 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          Container_Pkg.Set_Iterator_Interfaces;
 
       -- Proxy functions needed
-      function Reference
-         (Container : aliased in out Container_Type;
-          Cursor    :                Cursor_Type)
-          return References.Not_Null_Reference
-      is (raise Ada.Assertions.Assertion_Error
-          with "Reference not supported for Bounded_Ordered_Sets")
-      with Inline;
-
       function Constant_Reference
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
@@ -1207,22 +1362,20 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
       with Inline;
 
       -- The actual predefined packages
-      package Forward is
-         new Containers.Iterable_Wrappers.Forward
+      package Constant_Forward is
+         new Containers.Iterable_Wrappers.Constant_Forward
             (Container_Type     => Container_Type,
              Cursor_Type        => Cursor_Type,
              References         => References,
-             Reference          => Reference,
              Constant_Reference => Constant_Reference,
              Iterators          => Iterators,
              Iterate            => Iterate);
 
-      package Reversible is
-         new Containers.Iterable_Wrappers.Reversible
+      package Constant_Reversible is
+         new Containers.Iterable_Wrappers.Constant_Reversible
             (Container_Type     => Container_Type,
              Cursor_Type        => Cursor_Type,
              References         => References,
-             Reference          => Reference,
              Constant_Reference => Constant_Reference,
              Iterators          => Iterators,
              Iterate            => Container_Pkg.Iterate);
@@ -1273,6 +1426,15 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
              Cursor_Type        => Cursor_Type,
              References         => References,
              Reference          => Reference,
+             Constant_Reference => Constant_Reference,
+             Iterators          => Iterators,
+             Iterate            => Container_Pkg.Iterate);
+
+      package Constant_Forward is
+         new Containers.Iterable_Wrappers.Constant_Forward
+            (Container_Type     => Container_Type,
+             Cursor_Type        => Cursor_Type,
+             References         => References,
              Constant_Reference => Constant_Reference,
              Iterators          => Iterators,
              Iterate            => Container_Pkg.Iterate);

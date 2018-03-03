@@ -31,7 +31,7 @@ procedure Test_Generic_Iteration is
 
    generic
       with package Forward
-         is new Bullfrog.Containers.Iterable_Wrappers.Forward(<>);
+         is new Bullfrog.Containers.Iterable_Wrappers.Constant_Forward(<>);
       with function To_Integer
          (Source : Forward.Element_Type)
           return Integer is <>;
@@ -57,7 +57,7 @@ procedure Test_Generic_Iteration is
 
    generic
       with package Reversible
-         is new Bullfrog.Containers.Iterable_Wrappers.Reversible(<>);
+         is new Bullfrog.Containers.Iterable_Wrappers.Constant_Reversible(<>);
       with function To_Integer
          (Source : Reversible.Element_Type)
           return Integer is <>;
@@ -144,36 +144,36 @@ procedure Test_Generic_Iteration is
    end To_Integer;
 
    package Forward_Vectors is new Test_Forward
-      (Iterable_Vectors.Forward,
+      (Iterable_Vectors.Constant_Forward,
        To_Integer,
        Add_Integer);
    package Forward_Doubly_Linked_Lists is new Test_Forward
-      (Iterable_Doubly_Linked_Lists.Forward,
+      (Iterable_Doubly_Linked_Lists.Constant_Forward,
        To_Integer,
        Add_Integer);
    package Forward_Ordered_Maps is new Test_Forward
-      (Iterable_Ordered_Maps.Forward,
+      (Iterable_Ordered_Maps.Constant_Forward,
        To_Integer,
        Add_Integer);
    package Forward_Ordered_Sets is new Test_Forward
-      (Iterable_Ordered_Sets.Forward,
+      (Iterable_Ordered_Sets.Constant_Forward,
        To_Integer,
        Add_Integer);
 
    package Reversible_Vectors is new Test_Reversible
-      (Iterable_Vectors.Reversible,
+      (Iterable_Vectors.Constant_Reversible,
        To_Integer,
        Add_Integer);
    package Reversible_Doubly_Linked_Lists is new Test_Reversible
-      (Iterable_Doubly_Linked_Lists.Reversible,
+      (Iterable_Doubly_Linked_Lists.Constant_Reversible,
        To_Integer,
        Add_Integer);
    package Reversible_Ordered_Maps is new Test_Reversible
-      (Iterable_Ordered_Maps.Reversible,
+      (Iterable_Ordered_Maps.Constant_Reversible,
        To_Integer,
        Add_Integer);
    package Reversible_Ordered_Sets is new Test_Reversible
-      (Iterable_Ordered_Sets.Reversible,
+      (Iterable_Ordered_Sets.Constant_Reversible,
        To_Integer,
        Add_Integer);
 
@@ -199,11 +199,11 @@ procedure Test_Generic_Iteration is
    end To_Integer;
 
    package Test_FC is new Test_Forward
-      (Iter_C_Vectors.Forward,
+      (Iter_C_Vectors.Constant_Forward,
        To_Integer,
        Add_Integer);
    package Test_RC is new Test_Reversible
-      (Iter_C_Vectors.Reversible,
+      (Iter_C_Vectors.Constant_Reversible,
        To_Integer,
        Add_Integer);
 

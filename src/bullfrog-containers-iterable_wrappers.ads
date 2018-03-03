@@ -309,4 +309,222 @@ package Bullfrog.Containers.Iterable_Wrappers is
 
    end Reversible;
 
+   -- This provides the formal type specification needed to do forward constant
+   -- iteration of a container in a generic.  The cost of using this package
+   -- includes:
+   --    1. Use of 2 proxy packages to setup
+   --    2. Possible extra assignments of access variables
+   --    3. Dereferencing of a container access varable for each element
+   --       usage.
+   generic
+
+      -- This is the container to be iterated over.
+      type Container_Type(<>) is limited private;
+
+      -- This is the needed Cursor type used to access elements in a
+      -- container.
+      type Cursor_Type(<>) is limited private;
+
+      -- This provides formal references types, which is needed in
+      -- a generic formal parameter.
+      with package References is new Access_Types.References(<>);
+
+      -- This operation must be supplied to provide constant element access for
+      -- iteration.  For containers that are already iterable, this is the
+      -- operation defined for the attribute Constant_Indexing
+      with function Constant_Reference
+         (Container : aliased Container_Type;
+          Cursor    : Cursor_Type)
+          return References.Not_Null_Constant_Reference
+         is <>;
+
+      -- This provides formal iterator interface types, which is needed
+      -- in a generic formal parameter.  It must use the same Cursor type
+      -- as specified above.
+      with package Iterators is new Ada.Iterator_Interfaces
+         (Cursor => Cursor_Type,
+          others => <>);
+
+      -- This operation must be supplied to provide a default iterator
+      -- from a container.  For containers that are already iterable,
+      -- this is the operation defined for the attribute Default_Iterator
+      with function Iterate
+         (Container : Container_Type)
+          return Iterators.Forward_Iterator'Class
+         is <>;
+
+   package Constant_Forward is
+
+      -- This is the type of Element housed in the Container_Type
+      subtype Element_Type is References.Item_Type;
+
+      -- This type provides an iterable wrapper for a container in a
+      -- generic.  It must be created using the function Iterable
+      type Wrapper(<>) is tagged limited private
+         with
+            Default_Iterator  => Default_Iterator,
+            Constant_Indexing => Constant_Indexing,
+            Iterator_Element  => Element_Type;
+
+      -- This function provides a means to get the starting iterator from
+      -- the container.  It is assigned to the Default_Iterator attribute.
+      function Default_Iterator
+         (Container : Wrapper)
+          return Iterators.Forward_Iterator'Class
+         with Inline;
+
+      -- This function provides a constant reference to a given element
+      -- It is assigned to the Constant_Indexing attribute.
+      function Constant_Indexing
+         (Container : aliased Wrapper;
+          Cursor    : Cursor_Type)
+          return References.Not_Null_Constant_Reference
+         with Inline;
+
+      -- This function is used to create an iterable wrapper for a container.
+      -- Common Usage:
+      --    for E of Iterable(Container_Object) loop
+      --       E.Do_Things;
+      --    end loop;
+      function Iterable
+         (Container : aliased in out Container_Type)
+          return Wrapper
+         with Inline;
+
+   private
+
+      type Wrapper
+         (Container_Access : not null access Container_Type)
+      is tagged limited null record;
+
+      function Default_Iterator
+         (Container : Wrapper)
+          return Iterators.Forward_Iterator'Class
+      is (Iterate(Container.Container_Access.all));
+
+      function Constant_Indexing
+         (Container : aliased Wrapper;
+          Cursor    : Cursor_Type)
+          return References.Not_Null_Constant_Reference
+      is (Raw_Access =>
+             Constant_Reference
+                (Container => Container.Container_Access.all,
+                 Cursor    => Cursor).Raw_Access);
+
+      function Iterable
+         (Container : aliased in out Container_Type)
+          return Wrapper
+      is (Container_Access => Container'Access);
+
+   end Constant_Forward;
+
+   -- This provides the formal type specification needed to do reversible
+   -- constant iteration of a container in a generic.  The cost of using this
+   -- package includes:
+   --    1. Use of 2 proxy packages to setup
+   --    2. Possible extra assignments of access variables
+   --    3. Dereferencing of a container access varable for each element
+   --       usage.
+   generic
+
+      -- This is the container to be iterated over.
+      type Container_Type(<>) is limited private;
+
+      -- This is the needed Cursor type used to access elements in a
+      -- container.
+      type Cursor_Type(<>) is limited private;
+
+      -- This provides formal references types, which is needed in
+      -- a generic formal parameter.
+      with package References is new Access_Types.References(<>);
+
+      -- This operation must be supplied to provide constant element access for
+      -- iteration.  For containers that are already iterable, this is the
+      -- operation defined for the attribute Constant_Indexing
+      with function Constant_Reference
+         (Container : aliased Container_Type;
+          Cursor    : Cursor_Type)
+          return References.Not_Null_Constant_Reference
+         is <>;
+
+      -- This provides formal iterator interface types, which is needed
+      -- in a generic formal parameter.  It must use the same Cursor type
+      -- as specified above.
+      with package Iterators is new Ada.Iterator_Interfaces
+         (Cursor => Cursor_Type,
+          others => <>);
+
+      -- This operation must be supplied to provide a default iterator
+      -- from a container.  For containers that are already iterable,
+      -- this is the operation defined for the attribute Default_Iterator
+      with function Iterate
+         (Container : Container_Type)
+          return Iterators.Reversible_Iterator'Class
+         is <>;
+
+   package Constant_Reversible is
+
+      -- This is the type of Element housed in the Container_Type
+      subtype Element_Type is References.Item_Type;
+
+      -- This type provides an iterable wrapper for a container in a
+      -- generic.  It must be created using the function Iterable
+      type Wrapper(<>) is tagged limited private
+         with
+            Default_Iterator  => Default_Iterator,
+            Constant_Indexing => Constant_Indexing,
+            Iterator_Element  => Element_Type;
+
+      -- This function provides a means to get the starting iterator from
+      -- the container.  It is assigned to the Default_Iterator attribute.
+      function Default_Iterator
+         (Container : Wrapper)
+          return Iterators.Reversible_Iterator'Class
+         with Inline;
+
+      -- This function provides a constant reference to a given element
+      -- It is assigned to the Constant_Indexing attribute.
+      function Constant_Indexing
+         (Container : aliased Wrapper;
+          Cursor    : Cursor_Type)
+          return References.Not_Null_Constant_Reference
+         with Inline;
+
+      -- This function is used to create an iterable wrapper for a container.
+      -- Common Usage:
+      --    for E of Iterable(Container_Object) loop
+      --       E.Do_Things;
+      --    end loop;
+      function Iterable
+         (Container : aliased in out Container_Type)
+          return Wrapper
+         with Inline;
+
+   private
+
+      type Wrapper
+         (Container_Access : not null access Container_Type)
+      is tagged limited null record;
+
+      function Default_Iterator
+         (Container : Wrapper)
+          return Iterators.Reversible_Iterator'Class
+      is (Iterate(Container.Container_Access.all));
+
+      function Constant_Indexing
+         (Container : aliased Wrapper;
+          Cursor    : Cursor_Type)
+          return References.Not_Null_Constant_Reference
+      is (Raw_Access =>
+             Constant_Reference
+                (Container => Container.Container_Access.all,
+                 Cursor    => Cursor).Raw_Access);
+
+      function Iterable
+         (Container : aliased in out Container_Type)
+          return Wrapper
+      is (Container_Access => Container'Access);
+
+   end Constant_Reversible;
+
 end Bullfrog.Containers.Iterable_Wrappers;
