@@ -231,5 +231,15 @@ begin
       Put("Maps    - ");  Reversible_Ordered_Maps.Run(Map);
       Put("Sets    - ");  Reversible_Ordered_Sets.Run(Set);
    end;
+   declare
+      Vector : C_Vectors.Vector;
+   begin
+      Put("Composite 1 - "); Test_FC.Run(Vector);
+   end;
+   declare
+      Vector : C_Vectors.Vector;
+   begin
+      Put("Composite 1 - "); Test_RC.Run(Vector);
+   end;
 
 end Test_Generic_Iteration;
