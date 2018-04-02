@@ -95,6 +95,15 @@ package body Bullfrog.Access_Types.Smart_Access is
       Right.Counts_Reference := Temp_Counts;
    end Swap;
 
+   procedure Move (Target, Source : in out Shared_Access) is
+   begin
+      Target.Finalize;
+      Target.Item_Reference   := Source.Item_Reference;
+      Target.Counts_Reference := Source.Counts_Reference;
+      Source.Item_Reference   := null;
+      Source.Counts_Reference := null;
+   end Move;
+
    overriding
    procedure Adjust
       (Self : in out Shared_Access)
@@ -175,6 +184,15 @@ package body Bullfrog.Access_Types.Smart_Access is
       Right.Counts_Reference := Temp_Counts;
    end Swap;
 
+   procedure Move (Target, Source : in out Weak_Access) is
+   begin
+      Target.Finalize;
+      Target.Item_Reference   := Source.Item_Reference;
+      Target.Counts_Reference := Source.Counts_Reference;
+      Source.Item_Reference   := null;
+      Source.Counts_Reference := null;
+   end Move;
+
    overriding
    procedure Adjust
       (Self : in out Weak_Access)
@@ -254,6 +272,13 @@ package body Bullfrog.Access_Types.Smart_Access is
       Left.Item_Reference  := Right.Item_Reference;
       Right.Item_Reference := Temp_Reference;
    end Swap;
+
+   procedure Move (Target, Source : in out Unique_Access) is
+   begin
+      Target.Finalize;
+      Target.Item_Reference   := Source.Item_Reference;
+      Source.Item_Reference   := null;
+   end Move;
 
    overriding
    procedure Finalize

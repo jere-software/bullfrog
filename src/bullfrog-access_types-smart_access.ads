@@ -173,6 +173,11 @@ package Bullfrog.Access_Types.Smart_Access is
    -- operations.
    procedure Swap (Left, Right : in out Shared_Access);
 
+   -- Moves one Shared_Access object into another, destroying the
+   -- source object in the process.  This requires a call to
+   -- Finalize but not to Adjust.
+   procedure Move (Target, Source : in out Shared_Access);
+
    -- Override for Ada.Finalization.Controlled
    overriding procedure Adjust  (Self : in out Shared_Access);
    overriding procedure Finalize(Self : in out Shared_Access);
@@ -222,6 +227,11 @@ package Bullfrog.Access_Types.Smart_Access is
    -- operations.
    procedure Swap(Left, Right : in out Weak_Access);
 
+   -- Moves one Weak_Access object into another, destroying the
+   -- source object in the process.  This requires a call to
+   -- Finalize but not to Adjust.
+   procedure Move (Target, Source : in out Weak_Access);
+
    -- Override for Ada.Finalization.Controlled
    overriding procedure Adjust  (Self : in out Weak_Access);
    overriding procedure Finalize(Self : in out Weak_Access);
@@ -269,6 +279,10 @@ package Bullfrog.Access_Types.Smart_Access is
 
    -- Swaps two Unique_Access objects
    procedure Swap(Left, Right : in out Unique_Access);
+
+   -- Moves one Shared_Access object into another, destroying the
+   -- source object in the process.
+   procedure Move (Target, Source : in out Unique_Access);
 
    -- Override for Ada.Finalization.Limited_Controlled
    overriding procedure Finalize(Self : in out Unique_Access);

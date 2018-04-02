@@ -167,6 +167,11 @@ package Bullfrog.Access_Types.Simple_Smart_Access is
    -- operations.
    procedure Swap (Left, Right : in out Shared_Access) with Inline => True;
 
+   -- Moves one Shared_Access object into another, destroying the
+   -- source object in the process.  This requires a call to
+   -- Finalize but not to Adjust.
+   procedure Move (Target, Source : in out Shared_Access) with Inline => True;
+
    -- Override for Ada.Finalization.Controlled
    procedure Adjust  (Self : in out Shared_Access) with Inline => True;
    procedure Finalize(Self : in out Shared_Access) with Inline => True;
@@ -215,6 +220,11 @@ package Bullfrog.Access_Types.Simple_Smart_Access is
    -- operations.
    procedure Swap(Left, Right : in out Weak_Access) with Inline => True;
 
+   -- Moves one Weak_Access object into another, destroying the
+   -- source object in the process.  This requires a call to
+   -- Finalize but not to Adjust.
+   procedure Move (Target, Source : in out Weak_Access) with Inline => True;
+
    -- Override for Ada.Finalization.Controlled
    procedure Adjust  (Self : in out Weak_Access) with Inline => True;
    procedure Finalize(Self : in out Weak_Access) with Inline => True;
@@ -261,6 +271,10 @@ package Bullfrog.Access_Types.Simple_Smart_Access is
 
    -- Swaps two Unique_Access objects
    procedure Swap(Left, Right : in out Unique_Access) with Inline => True;
+
+   -- Moves one Weak_Access object into another, destroying the
+   -- source object in the process.
+   procedure Move (Target, Source : in out Unique_Access) with Inline => True;
 
    -- Override for Ada.Finalization.Limited_Controlled
    procedure Finalize(Self : in out Unique_Access) with Inline => True;
@@ -515,6 +529,7 @@ private
        return Boolean
        renames Core.Not_Null;
    procedure Swap (Left, Right : in out Shared_Access) renames Core.Swap;
+   procedure Move (Target, Source : in out Shared_Access ) renames Core.Move;
    procedure Adjust  (Self : in out Shared_Access) renames Core.Adjust;
    procedure Finalize(Self : in out Shared_Access) renames Core.Finalize;
 
@@ -535,6 +550,7 @@ private
        return Boolean
        renames Core.Not_Assigned;
    procedure Swap(Left, Right : in out Weak_Access) renames Core.Swap;
+   procedure Move (Target, Source : in out Weak_Access ) renames Core.Move;
    procedure Adjust  (Self : in out Weak_Access) renames Core.Adjust;
    procedure Finalize(Self : in out Weak_Access) renames Core.Finalize;
 
@@ -559,6 +575,7 @@ private
        return Boolean
        renames Core.Not_Null;
    procedure Swap(Left, Right : in out Unique_Access) renames Core.Swap;
+   procedure Move (Target, Source : in out Unique_Access ) renames Core.Move;
    procedure Finalize(Self : in out Unique_Access) renames Core.Finalize;
 
 end Bullfrog.Access_Types.Simple_Smart_Access;
