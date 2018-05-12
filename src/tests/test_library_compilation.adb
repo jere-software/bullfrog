@@ -4,6 +4,7 @@ with Bullfrog.Containers.Circular_Buffer;
 with Bullfrog.Containers.Circular_Buffer.Debug;
 with Bullfrog.Containers.Iterable_Wrappers;
 with Bullfrog.Containers.Predefined_Iterable_Wrappers;
+with Bullfrog.Containers.Simple_Iterators;
 with Bullfrog.Access_Types;
 with Bullfrog.Access_Types.Reference_Counts;
 with Bullfrog.Access_Types.References;
