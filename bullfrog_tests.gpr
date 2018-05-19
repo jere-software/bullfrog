@@ -6,7 +6,8 @@ project Bullfrog_Tests is
                  "test_circular_buffer",
                  "test_library_compilation.adb",
                  "test_generic_iteration.adb",
-                 "test_simple_iteration.adb");
+                 "test_simple_iteration.adb",
+                 "test_sync_wrappers.adb");
    for Exec_Dir use "bin";
 
    package Ide is

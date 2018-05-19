@@ -33,6 +33,8 @@ with Ada.Iterator_Interfaces;
 -- tampering checks or supply ranged iteration.
 package Bullfrog.Containers.Simple_Iterators is
 
+   pragma Pure;
+
    -- Contract for Forward Iteration only
    generic
 

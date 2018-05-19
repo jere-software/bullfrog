@@ -16,6 +16,9 @@ with Bullfrog.Tests.Smart_Access;
 with Bullfrog.Tests.Smart_Access.Main;
 with Bullfrog.Tests.Smart_Access_Node;
 with Bullfrog.Tests.Circular_Buffer;
+with Bullfrog.Synchronization;
+with Bullfrog.Synchronization.Mutexes;
+with Bullfrog.Synchronization.Sync_Wrappers;
 
 procedure Test_Library_Compilation is
 begin

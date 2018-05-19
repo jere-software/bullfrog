@@ -37,6 +37,8 @@ with Ada.Iterator_Interfaces;
 -- libraries.
 package Bullfrog.Containers.Iterable_Wrappers is
 
+   pragma Pure;
+
    -- This provides the formal type specification needed to do forward
    -- iteration of a container in a generic.  The cost of using this package
    -- includes:
