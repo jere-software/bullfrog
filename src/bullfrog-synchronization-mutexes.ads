@@ -126,17 +126,14 @@ private
    -- Protected Implementation of the basic mutex
    protected type Basic_Impl is
 
-      -- Acquires the mutex on a mutex or blocks until it can.  Raises
-      -- Constraint_Error if recursively called too deep.  Requeues to
-      -- Actual_Lock if not the current owner (and there is an owner)
+      -- Acquires the lock on a mutex or blocks until it can.
       entry Lock;
 
       -- Unlocks the mutex.  Raises Mutex_Use_Error if not the owning task or
       -- not locked.
       procedure Unlock;
 
-      -- Acquires the mutex if available.  Returns True if successful.  Raises
-      -- Constraint_Error if recursively called too deep
+      -- Acquires the mutex if available.  Returns True if successful.
       procedure Try_Lock(Success : out Boolean);
 
       -- Indicates if the mutex is currently locked
@@ -151,7 +148,7 @@ private
       -- Holds the owner of the mutex
       Current : Owner := Null_Task_Id;
 
-      -- Recursive count
+      -- Lock state of the mutex
       Locked  : Boolean := False;
 
    end Basic_Impl;
@@ -163,7 +160,7 @@ private
    -- Protected implementation of the recursive mutex
    protected type Recursive_Impl is
 
-      -- Acquires the mutex on a mutex or blocks until it can.  Raises
+      -- Acquires the lock on a mutex or blocks until it can.  Raises
       -- Constraint_Error if recursively called too deep.  Requeues to
       -- Actual_Lock if not the current owner (and there is an owner)
       entry Lock;
