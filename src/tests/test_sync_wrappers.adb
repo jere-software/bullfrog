@@ -24,16 +24,6 @@ begin
    v.Lock := 23;
    Put_Line("Value is " & Integer'Image(v.Lock));
 
-   -- Test recursion
-   declare
-      g : Int_Wrappers.Scoped_Lock := v.Lock;
-   begin
-      g := 30;
-      Put_Line("Value is " & Integer'Image(g));
-      v.Lock := 99;
-      Put_Line("Value is " & Integer'Image(v.Lock));
-   end;
-
    -- Test bad initialization
    declare
       i : aliased Integer := 75;

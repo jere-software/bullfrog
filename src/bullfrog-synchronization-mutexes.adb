@@ -29,6 +29,73 @@
 
 package body Bullfrog.Synchronization.Mutexes is
 
+   procedure Lock (Self : in out Basic_Mutex) is
+   begin
+      Self.Impl.Lock;
+   end Lock;
+
+   procedure Unlock (Self : in out Basic_Mutex) is
+   begin
+      Self.Impl.Unlock;
+   end Unlock;
+
+   function Try_Lock (Self : in out Basic_Mutex) return Boolean is
+   begin
+      return Result : Boolean do
+         Self.Impl.Try_Lock(Result);
+      end return;
+   end Try_Lock;
+
+   function Is_Locked (Self : Basic_Mutex) return Boolean is
+   begin
+      return Self.Impl.Is_Locked;
+   end Is_Locked;
+
+   function Current_Owner (Self : Basic_Mutex) return Owner is
+   begin
+      return Self.Impl.Current_Owner;
+   end Current_Owner;
+
+   protected body Basic_Impl is
+
+      entry Lock when not Locked is
+      begin
+         Current := Basic_Impl.Lock'Caller;
+         Locked  := True;
+      end Lock;
+
+      procedure Unlock is
+      begin
+         if Locked then
+            Current := Null_Task_Id;
+            Locked  := False;
+         else
+            raise Mutex_Use_Error;
+         end if;
+      end Unlock;
+
+      procedure Try_Lock(Success : out Boolean) is
+      begin
+         if Locked then
+            Success := False;
+         else
+            Locked  := True;
+            Success := True;
+         end if;
+      end Try_Lock;
+
+      function Is_Locked return Boolean is
+      begin
+         return Locked;
+      end Is_Locked;
+
+      function Current_Owner return Owner is
+      begin
+         return Current;
+      end Current_Owner;
+
+   end Basic_Impl;
+
    procedure Lock (Self : in out Recursive_Mutex) is
    begin
       Self.Impl.Lock;

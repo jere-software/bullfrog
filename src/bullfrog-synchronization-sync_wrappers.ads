@@ -104,7 +104,7 @@ private
 
    -- This type provides finalization/initialization to control locking and
    -- unlocking the mutex;
-   type Finalizer(Mutex : access Mutexes.Recursive_Mutex := null) is
+   type Finalizer(Mutex : access Mutexes.Basic_Mutex := null) is
       new Ada.Finalization.Limited_Controlled with null record;
 
    -- Shouldn't be called if package is used correctly.  Raises the
@@ -118,9 +118,12 @@ private
       Impl : Finalizer;
    end record;
 
-   type Wrapper is tagged limited record
-      Mutex   : aliased Mutexes.Recursive_Mutex;
+   type Wrapper is new Ada.Finalization.Limited_Controlled with record
+      Mutex   : aliased Mutexes.Basic_Mutex;
       Element : aliased Element_Type;
    end record;
+
+   -- Can only finish if no Scoped_Locks are active
+   overriding procedure Finalize(Self : in out Wrapper);
 
 end Bullfrog.Synchronization.Sync_Wrappers;

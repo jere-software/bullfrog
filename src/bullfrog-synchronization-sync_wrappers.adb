@@ -31,14 +31,11 @@ package body Bullfrog.Synchronization.Sync_Wrappers is
 
    function Lock (Self : aliased in out Wrapper) return Scoped_Lock is
    begin
-      return Result : Scoped_Lock :=
-         (Element => Self.Element'Access,
-          Impl    =>
-             (Ada.Finalization.Limited_Controlled with
-                    Mutex => Self.Mutex'Access))
-      do
-         Self.Mutex.Lock;
-      end return;
+      Self.Mutex.Lock;
+      return (Element => Self.Element'Access,
+              Impl    =>
+                 (Ada.Finalization.Limited_Controlled with
+                     Mutex => Self.Mutex'Access));
    end Lock;
 
    procedure Initialize (Self : in out Finalizer) is
@@ -57,7 +54,8 @@ package body Bullfrog.Synchronization.Sync_Wrappers is
 
    function Default return Wrapper is
    begin
-      return (Element => Default, others => <>);
+      return (Ada.Finalization.Limited_Controlled with
+                 Element => Default, others => <>);
    end Default;
 
    -- After bug fix will be:
@@ -68,8 +66,15 @@ package body Bullfrog.Synchronization.Sync_Wrappers is
    package body Constructors is
       function Make(Value : Item_Type) return Wrapper is
       begin
-         return (Element => Constructor(Value), others => <>);
+         return (Ada.Finalization.Limited_Controlled with
+                    Element => Constructor(Value), others => <>);
       end Make;
    end Constructors;
+
+   procedure Finalize(Self : in out Wrapper) is
+   begin
+      -- Prevents finalization until all scoped locks are finalized
+      Self.Mutex.Lock;
+   end Finalize;
 
 end Bullfrog.Synchronization.Sync_Wrappers;

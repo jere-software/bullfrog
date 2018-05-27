@@ -58,6 +58,36 @@ package Bullfrog.Synchronization.Mutexes is
    -- Ada.Task_Identification facilities to leverage this value
    function Current_Owner(Self : Mutex) return Owner is abstract;
 
+   -----------------------------------------------------------------------------
+   -- Basic Mutex Implementation
+   -----------------------------------------------------------------------------
+
+   type Basic_Mutex is limited new Mutex with private;
+
+   -- Acquires the mutex on a mutex or blocks until it can.  Raises
+   -- Constraint_Error if recursively called too deep
+   overriding procedure Lock(Self : in out Basic_Mutex)
+      with Inline;
+
+   -- Unlocks the mutex.  Raises Mutex_Use_Error if not the owning task or
+   -- not locked.
+   overriding procedure Unlock(Self : in out Basic_Mutex)
+      with Inline;
+
+   -- Acquires the mutex if available.  Returns True if successful.  Raises
+   -- Constraint_Error if recursively called too deep
+   overriding function Try_Lock(Self : in out Basic_Mutex) return Boolean
+      with Inline;
+
+   -- Indicates if the mutex is currently locked
+   overriding function Is_Locked(Self : Basic_Mutex) return Boolean
+      with Inline;
+
+   -- Returns an identifier unique to the owning task.  Use
+   -- Ada.Task_Identification facilities to leverage this value
+   overriding function Current_Owner(Self : Basic_Mutex) return Owner
+      with Inline;
+
 
    -----------------------------------------------------------------------------
    -- Recursive Mutex Implementation
@@ -92,6 +122,43 @@ package Bullfrog.Synchronization.Mutexes is
 private
 
    use Ada.Task_Identification;
+
+   -- Protected Implementation of the basic mutex
+   protected type Basic_Impl is
+
+      -- Acquires the mutex on a mutex or blocks until it can.  Raises
+      -- Constraint_Error if recursively called too deep.  Requeues to
+      -- Actual_Lock if not the current owner (and there is an owner)
+      entry Lock;
+
+      -- Unlocks the mutex.  Raises Mutex_Use_Error if not the owning task or
+      -- not locked.
+      procedure Unlock;
+
+      -- Acquires the mutex if available.  Returns True if successful.  Raises
+      -- Constraint_Error if recursively called too deep
+      procedure Try_Lock(Success : out Boolean);
+
+      -- Indicates if the mutex is currently locked
+      function Is_Locked return Boolean;
+
+      -- Returns an identifier unique to the owning task.  Use
+      -- Ada.Task_Identification facilities to leverage this value
+      function Current_Owner return Owner;
+
+   private
+
+      -- Holds the owner of the mutex
+      Current : Owner := Null_Task_Id;
+
+      -- Recursive count
+      Locked  : Boolean := False;
+
+   end Basic_Impl;
+
+   type Basic_Mutex is limited new Mutex with record
+      Impl : Basic_Impl;
+   end record;
 
    -- Protected implementation of the recursive mutex
    protected type Recursive_Impl is
