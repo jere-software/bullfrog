@@ -58,18 +58,11 @@ package body Bullfrog.Synchronization.Sync_Wrappers is
                  Element => Default, others => <>);
    end Default;
 
-   -- After bug fix will be:
-   --     function Make(Value : Item_Type) return Wrapper is
-   --     begin
-   --        return (Element => Constructor(Value), others => <>);
-   --     end Make;
-   package body Constructors is
-      function Make(Value : Item_Type) return Wrapper is
-      begin
-         return (Ada.Finalization.Limited_Controlled with
-                    Element => Constructor(Value), others => <>);
-      end Make;
-   end Constructors;
+   function Make(Value : Item_Type) return Wrapper is
+   begin
+      return (Ada.Finalization.Limited_Controlled with
+                 Element => Constructor(Value), others => <>);
+   end Make;
 
    procedure Finalize(Self : in out Wrapper) is
    begin

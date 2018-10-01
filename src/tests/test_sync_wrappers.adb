@@ -7,22 +7,26 @@ procedure Test_Sync_Wrappers is
 
    package Int_Wrappers is new Sync_Wrappers(Integer);
 
-   function Make(Value : Integer) return Integer is (Value);
+   function Make_Impl(Value : Integer) return Integer is (Value);
 
-   package Make_Int_Wrappers is new Int_Wrappers.Constructors
+   function Make is new Int_Wrappers.Make
       (Item_Type   => Integer,
-       Constructor => Make);
-   function Make
-      (Value : Integer)
-       return Int_Wrappers.Wrapper
-       renames Make_Int_Wrappers.Make;
+       Constructor => Make_Impl);
 
-   v : Int_Wrappers.Wrapper := Make(50);
+   v1 : Int_Wrappers.Wrapper := Make(50);
+
+   procedure Print(Wrapper : in out Int_Wrappers.Wrapper) is
+   begin
+      Put_Line("Value is " & Integer'Image(Wrapper.Lock));
+   end Print;
+
 begin
+
+   Put_Line("Starting Test");
    -- Test general operations
-   Put_Line("Value is " & Integer'Image(v.Lock));
-   v.Lock := 23;
-   Put_Line("Value is " & Integer'Image(v.Lock));
+   Print(v1);
+   v1.Lock := 23;
+   print(v1);
 
    -- Test bad initialization
    declare

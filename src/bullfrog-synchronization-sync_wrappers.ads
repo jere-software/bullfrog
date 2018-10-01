@@ -57,7 +57,8 @@ package Bullfrog.Synchronization.Sync_Wrappers is
    type Wrapper is tagged limited private;
 
    -- This function provides access to the internal data by creating a
-   -- scoped lock.
+   -- scoped lock.  Do not call this at library level or the declarative
+   -- region of a operation where you plan to further call the Lock operation.
    function Lock(Self : aliased in out Wrapper) return Scoped_Lock;
 
    -- Optional default constructor
@@ -65,40 +66,11 @@ package Bullfrog.Synchronization.Sync_Wrappers is
       with function Default return Element_Type;
    function Default return Wrapper with Inline;
 
-   -- Bug in FSF GNAT 7.2, FSF GNAT 7.3, and GPL 2017 prevents using a
-   -- generic function here.  Workaround using a generic package
-   -- Until then, suggested instantiation should be similar to:
-   --
-   --    function Make(Value : Integer) return Integer is (Value);
-   --    package Int_Wrappers is new Sync_Wrappers(Integer);
-   --    package Int_Wrapper_Constructors is new Int_Wrappers.Constructors
-   --      (Item_Type   => Integer,
-   --       Constructor => Make);
-   --    function Make(Value : Integer) return Int_Wrappers.Wrapper
-   --       renames Int_Wrapper_Constructors.Make;
-   --
-   --    v : Int_Wrappers.Wrapper := Make(50);
-   --
-   -- It will later be replaced with:
-   --
-   --    function Make(Value : Integer) return Integer is (Value);
-   --    package Int_Wrappers is new Sync_Wrappers(Integer);
-   --    function Make is new Int_Wrappers.Make
-   --      (Item_Type   => Integer,
-   --       Constructor => Make);
-   --
-   --    v : Int_Wrappers.Wrapper := Make(50);
+   -- Constructor for 1 parameter
    generic
       type Item_Type(<>) is limited private;
       with function Constructor(Value : Item_Type) return Element_Type;
-   package Constructors is
-      function Make(Value : Item_Type) return Wrapper with Inline;
-   end Constructors;
-
---     -- Causes GNAT crash when used to initialize a wrapper
---     generic
---        with function Constructor(Value : Element_Type) return Element_Type;
---     function Make(Value : Element_Type) return Wrapper with Inline;
+   function Make(Value : Item_Type) return Wrapper with Inline;
 
 private
 
