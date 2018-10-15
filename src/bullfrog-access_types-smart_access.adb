@@ -44,19 +44,13 @@ package body Bullfrog.Access_Types.Smart_Access is
 
    function Reference
       (Self : in Shared_Access)
-       return Item_Access
-   is
-   begin
-      return Self.Item_Reference;
-   end Reference;
+       return Reference_Holder
+   is (Element => Self.Item_Reference);
 
    function Constant_Reference
       (Self : in Shared_Access)
-       return Constant_Item_Access
-   is
-   begin
-      return Constant_Item_Access(Self.Item_Reference);
-   end Constant_Reference;
+       return Constant_Reference_Holder
+   is (Element => Self.Item_Reference);
 
    overriding
    function "="
@@ -86,7 +80,7 @@ package body Bullfrog.Access_Types.Smart_Access is
    procedure Swap
       (Left, Right : in out Shared_Access)
    is
-      Temp_Reference : Item_Access   := Left.Item_Reference;
+      Temp_Reference : Element_Access   := Left.Item_Reference;
       Temp_Counts    : Counts_Access := Left.Counts_Reference;
    begin
       Left.Item_Reference    := Right.Item_Reference;
@@ -175,7 +169,7 @@ package body Bullfrog.Access_Types.Smart_Access is
    procedure Swap
       (Left, Right : in out Weak_Access)
    is
-      Temp_Reference : Item_Access   := Left.Item_Reference;
+      Temp_Reference : Element_Access   := Left.Item_Reference;
       Temp_Counts    : Counts_Access := Left.Counts_Reference;
    begin
       Left.Item_Reference    := Right.Item_Reference;
@@ -234,19 +228,13 @@ package body Bullfrog.Access_Types.Smart_Access is
 
    function Reference
       (Self : in Unique_Access)
-       return Item_Access
-   is
-   begin
-      return Self.Item_Reference;
-   end Reference;
+       return Reference_Holder
+   is (Element => Self.Item_Reference);
 
    function Constant_Reference
       (Self : in Unique_Access)
-       return Constant_Item_Access
-   is
-   begin
-      return Constant_Item_Access(Self.Item_Reference);
-   end Constant_Reference;
+       return Constant_Reference_Holder
+   is (Element => Self.Item_Reference);
 
    function Is_Null
       (Self : in Unique_Access)
@@ -267,7 +255,7 @@ package body Bullfrog.Access_Types.Smart_Access is
    procedure Swap
       (Left, Right : in out Unique_Access)
    is
-      Temp_Reference : Item_Access := Left.Item_Reference;
+      Temp_Reference : Element_Access := Left.Item_Reference;
    begin
       Left.Item_Reference  := Right.Item_Reference;
       Right.Item_Reference := Temp_Reference;
@@ -297,7 +285,7 @@ package body Bullfrog.Access_Types.Smart_Access is
 
       procedure Shared_Access
          (Target : in out Smart_Access.Shared_Access;
-          Source : in     not null Item_Access)
+          Source : in     not null Element_Access)
       is
       begin
          Target.Finalize;
@@ -306,7 +294,7 @@ package body Bullfrog.Access_Types.Smart_Access is
       exception
          when others =>
             declare
-               Temp : Item_Access := Source;
+               Temp : Element_Access := Source;
             begin
                Finalize(Temp);
                raise;
@@ -356,7 +344,7 @@ package body Bullfrog.Access_Types.Smart_Access is
       end Shared_Access;
 
       function Shared_Access
-         (Source : in not null Item_Access)
+         (Source : in not null Element_Access)
           return Smart_Access.Shared_Access
       is
       begin
@@ -366,7 +354,7 @@ package body Bullfrog.Access_Types.Smart_Access is
       exception
          when others =>
             declare
-               Temp : Item_Access := Source;
+               Temp : Element_Access := Source;
             begin
                Finalize(Temp);
                raise;
@@ -459,7 +447,7 @@ package body Bullfrog.Access_Types.Smart_Access is
 
       procedure Unique_Access
          (Target : in out Smart_Access.Unique_Access;
-          Source : in     not null Item_Access)
+          Source : in     not null Element_Access)
       is
       begin
          Target.Finalize;
@@ -477,7 +465,7 @@ package body Bullfrog.Access_Types.Smart_Access is
       end Unique_Access;
 
       function Unique_Access
-         (Source : in not null Item_Access)
+         (Source : in not null Element_Access)
           return Smart_Access.Unique_Access
       is
       begin
@@ -531,6 +519,15 @@ package body Bullfrog.Access_Types.Smart_Access is
          end if;
       end Weak_Count;
 
+      function Raw_Access
+         (Self : in Shared_Access)
+          return Element_Access
+      is (Self.Item_Reference);
+
+      function Raw_Constant_Access
+         (Self : in Shared_Access)
+          return Constant_Element_Access
+      is (Constant_Element_Access(Self.Item_Reference));
 
 
       function Use_Count
@@ -577,6 +574,16 @@ package body Bullfrog.Access_Types.Smart_Access is
          return Weak.Counts_Reference =  null
             or  Weak.Counts_Reference /= Shared.Counts_Reference;
       end Not_Assigned_To;
+
+      function Raw_Access
+         (Self : in Unique_Access)
+          return Element_Access
+      is (Self.Item_Reference);
+
+      function Raw_Constant_Access
+         (Self : in Unique_Access)
+          return Constant_Element_Access
+      is (Constant_Element_Access(Self.Item_Reference));
 
    end Utilities;
 

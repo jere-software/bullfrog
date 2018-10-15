@@ -19,7 +19,7 @@ procedure Test_Simple_Iteration is
       function Has_Element(Cursor : Cursor_Type) return Boolean;
 
       package References is new Bullfrog.Access_Types.References
-         (Item_Type => Integer);
+         (Element_Type => Integer);
 
       function Constant_Reference
          (Container : aliased Instance;
@@ -92,7 +92,7 @@ procedure Test_Simple_Iteration is
           Position  : Cursor_Type)
           return References.Not_Null_Constant_Reference
       is begin
-         return (Raw_Access => Container.Data(Position.Index)'Access);
+         return (Element => Container.Data(Position.Index)'Access);
       end Constant_Reference;
 
       function First(Self : Instance) return Cursor_Type is

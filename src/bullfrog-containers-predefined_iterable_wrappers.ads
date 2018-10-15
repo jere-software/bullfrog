@@ -72,7 +72,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
 
       -- Proxy packages needed
       package References is new Access_Types.References
-         (Item_Type => Container_Pkg.Element_Type);
+         (Element_Type => Container_Pkg.Element_Type);
       package Iterators renames
          Container_Pkg.Vector_Iterator_Interfaces;
 
@@ -81,7 +81,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased in out Container_Type;
           Cursor    :                Cursor_Type)
           return References.Not_Null_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -91,7 +91,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Constant_Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -155,7 +155,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
 
       -- Proxy packages needed
       package References is new Access_Types.References
-         (Item_Type => Container_Pkg.Element_Type);
+         (Element_Type => Container_Pkg.Element_Type);
       package Iterators renames
          Container_Pkg.List_Iterator_Interfaces;
 
@@ -164,7 +164,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased in out Container_Type;
           Cursor    :                Cursor_Type)
           return References.Not_Null_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -174,7 +174,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Constant_Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -238,7 +238,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
 
       -- Proxy packages needed
       package References is new Access_Types.References
-         (Item_Type => Container_Pkg.Element_Type);
+         (Element_Type => Container_Pkg.Element_Type);
       package Iterators renames
          Container_Pkg.Map_Iterator_Interfaces;
 
@@ -247,7 +247,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased in out Container_Type;
           Cursor    :                Cursor_Type)
           return References.Not_Null_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -257,7 +257,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Constant_Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -296,7 +296,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
 
       -- Proxy packages needed
       package References is new Access_Types.References
-         (Item_Type => Container_Pkg.Element_Type);
+         (Element_Type => Container_Pkg.Element_Type);
       package Iterators renames
          Container_Pkg.Map_Iterator_Interfaces;
 
@@ -305,7 +305,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased in out Container_Type;
           Cursor    :                Cursor_Type)
           return References.Not_Null_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -315,7 +315,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Constant_Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -379,7 +379,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
 
       -- Proxy packages needed
       package References is new Access_Types.References
-         (Item_Type => Container_Pkg.Element_Type);
+         (Element_Type => Container_Pkg.Element_Type);
       package Iterators renames
          Container_Pkg.Set_Iterator_Interfaces;
 
@@ -388,7 +388,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Constant_Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -417,7 +417,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
 
       -- Proxy packages needed
       package References is new Access_Types.References
-         (Item_Type => Container_Pkg.Element_Type);
+         (Element_Type => Container_Pkg.Element_Type);
       package Iterators renames
          Container_Pkg.Set_Iterator_Interfaces;
 
@@ -426,7 +426,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Constant_Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -470,7 +470,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
 
       -- Proxy packages needed
       package References is new Access_Types.References
-         (Item_Type => Container_Pkg.Element_Type);
+         (Element_Type => Container_Pkg.Element_Type);
       package Iterators renames
          Container_Pkg.Tree_Iterator_Interfaces;
 
@@ -479,7 +479,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased in out Container_Type;
           Cursor    :                Cursor_Type)
           return References.Not_Null_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -489,7 +489,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Constant_Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -528,7 +528,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
 
       -- Proxy packages needed
       package References is new Access_Types.References
-         (Item_Type => Container_Pkg.Element_Type);
+         (Element_Type => Container_Pkg.Element_Type);
       package Iterators renames
          Container_Pkg.Vector_Iterator_Interfaces;
 
@@ -537,7 +537,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased in out Container_Type;
           Cursor    :                Cursor_Type)
           return References.Not_Null_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -547,7 +547,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Constant_Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -612,7 +612,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
 
       -- Proxy packages needed
       package References is new Access_Types.References
-         (Item_Type => Container_Pkg.Element_Type);
+         (Element_Type => Container_Pkg.Element_Type);
       package Iterators renames
          Container_Pkg.List_Iterator_Interfaces;
 
@@ -621,7 +621,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased in out Container_Type;
           Cursor    :                Cursor_Type)
           return References.Not_Null_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -631,7 +631,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Constant_Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -696,7 +696,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
 
       -- Proxy packages needed
       package References is new Access_Types.References
-         (Item_Type => Container_Pkg.Element_Type);
+         (Element_Type => Container_Pkg.Element_Type);
       package Iterators renames
          Container_Pkg.Map_Iterator_Interfaces;
 
@@ -705,7 +705,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased in out Container_Type;
           Cursor    :                Cursor_Type)
           return References.Not_Null_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -715,7 +715,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Constant_Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -755,7 +755,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
 
       -- Proxy packages needed
       package References is new Access_Types.References
-         (Item_Type => Container_Pkg.Element_Type);
+         (Element_Type => Container_Pkg.Element_Type);
       package Iterators renames
          Container_Pkg.Map_Iterator_Interfaces;
 
@@ -764,7 +764,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased in out Container_Type;
           Cursor    :                Cursor_Type)
           return References.Not_Null_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -774,7 +774,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Constant_Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -839,7 +839,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
 
       -- Proxy packages needed
       package References is new Access_Types.References
-         (Item_Type => Container_Pkg.Element_Type);
+         (Element_Type => Container_Pkg.Element_Type);
       package Iterators renames
          Container_Pkg.Set_Iterator_Interfaces;
 
@@ -848,7 +848,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Constant_Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -878,7 +878,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
 
       -- Proxy packages needed
       package References is new Access_Types.References
-         (Item_Type => Container_Pkg.Element_Type);
+         (Element_Type => Container_Pkg.Element_Type);
       package Iterators renames
          Container_Pkg.Set_Iterator_Interfaces;
 
@@ -887,7 +887,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Constant_Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -932,7 +932,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
 
       -- Proxy packages needed
       package References is new Access_Types.References
-         (Item_Type => Container_Pkg.Element_Type);
+         (Element_Type => Container_Pkg.Element_Type);
       package Iterators renames
          Container_Pkg.Tree_Iterator_Interfaces;
 
@@ -941,7 +941,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased in out Container_Type;
           Cursor    :                Cursor_Type)
           return References.Not_Null_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -951,7 +951,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Constant_Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -990,7 +990,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
 
       -- Proxy packages needed
       package References is new Access_Types.References
-         (Item_Type => Container_Pkg.Element_Type);
+         (Element_Type => Container_Pkg.Element_Type);
       package Iterators renames
          Container_Pkg.Vector_Iterator_Interfaces;
 
@@ -999,7 +999,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased in out Container_Type;
           Cursor    :                Cursor_Type)
           return References.Not_Null_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -1009,7 +1009,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Constant_Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -1074,7 +1074,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
 
       -- Proxy packages needed
       package References is new Access_Types.References
-         (Item_Type => Container_Pkg.Element_Type);
+         (Element_Type => Container_Pkg.Element_Type);
       package Iterators renames
          Container_Pkg.List_Iterator_Interfaces;
 
@@ -1083,7 +1083,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased in out Container_Type;
           Cursor    :                Cursor_Type)
           return References.Not_Null_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -1093,7 +1093,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Constant_Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -1158,7 +1158,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
 
       -- Proxy packages needed
       package References is new Access_Types.References
-         (Item_Type => Container_Pkg.Element_Type);
+         (Element_Type => Container_Pkg.Element_Type);
       package Iterators renames
          Container_Pkg.Map_Iterator_Interfaces;
 
@@ -1167,7 +1167,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased in out Container_Type;
           Cursor    :                Cursor_Type)
           return References.Not_Null_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -1177,7 +1177,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Constant_Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -1217,7 +1217,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
 
       -- Proxy packages needed
       package References is new Access_Types.References
-         (Item_Type => Container_Pkg.Element_Type);
+         (Element_Type => Container_Pkg.Element_Type);
       package Iterators renames
          Container_Pkg.Map_Iterator_Interfaces;
 
@@ -1226,7 +1226,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased in out Container_Type;
           Cursor    :                Cursor_Type)
           return References.Not_Null_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -1236,7 +1236,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Constant_Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -1301,7 +1301,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
 
       -- Proxy packages needed
       package References is new Access_Types.References
-         (Item_Type => Container_Pkg.Element_Type);
+         (Element_Type => Container_Pkg.Element_Type);
       package Iterators renames
          Container_Pkg.Set_Iterator_Interfaces;
 
@@ -1310,7 +1310,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Constant_Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -1340,7 +1340,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
 
       -- Proxy packages needed
       package References is new Access_Types.References
-         (Item_Type => Container_Pkg.Element_Type);
+         (Element_Type => Container_Pkg.Element_Type);
       package Iterators renames
          Container_Pkg.Set_Iterator_Interfaces;
 
@@ -1349,7 +1349,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Constant_Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -1394,7 +1394,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
 
       -- Proxy packages needed
       package References is new Access_Types.References
-         (Item_Type => Container_Pkg.Element_Type);
+         (Element_Type => Container_Pkg.Element_Type);
       package Iterators renames
          Container_Pkg.Tree_Iterator_Interfaces;
 
@@ -1403,7 +1403,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased in out Container_Type;
           Cursor    :                Cursor_Type)
           return References.Not_Null_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Reference
                 (Container => Container,
                  Position  => Cursor).Element)
@@ -1413,7 +1413,7 @@ package Bullfrog.Containers.Predefined_Iterable_Wrappers is
          (Container : aliased Container_Type;
           Cursor    :         Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Container_Pkg.Constant_Reference
                 (Container => Container,
                  Position  => Cursor).Element)

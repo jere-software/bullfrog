@@ -95,7 +95,7 @@ package Bullfrog.Containers.Iterable_Wrappers is
    package Forward is
 
       -- This is the type of Element housed in the Container_Type
-      subtype Element_Type is References.Item_Type;
+      subtype Element_Type is References.Element_Type;
 
       -- This type provides an iterable wrapper for a container in a
       -- generic.  It must be created using the function Iterable
@@ -154,19 +154,19 @@ package Bullfrog.Containers.Iterable_Wrappers is
          (Container : aliased Wrapper;
           Cursor    : Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Constant_Reference
                 (Container => Container.Container_Access.all,
-                 Cursor    => Cursor).Raw_Access);
+                 Cursor    => Cursor).Element);
 
       function Variable_Indexing
          (Container : aliased in out Wrapper;
           Cursor    : Cursor_Type)
           return References.Not_Null_Reference
-      is (Raw_Access =>
+      is (Element =>
              Constant_Reference
                 (Container => Container.Container_Access.all,
-                 Cursor    => Cursor).Raw_Access);
+                 Cursor    => Cursor).Element);
 
       function Iterable
          (Container : aliased in out Container_Type)
@@ -231,7 +231,7 @@ package Bullfrog.Containers.Iterable_Wrappers is
    package Reversible is
 
       -- This is the type of Element housed in the Container_Type
-      subtype Element_Type is References.Item_Type;
+      subtype Element_Type is References.Element_Type;
 
       -- This type provides an iterable wrapper for a container in a
       -- generic.  It must be created using the function Iterable
@@ -290,19 +290,19 @@ package Bullfrog.Containers.Iterable_Wrappers is
          (Container : aliased Wrapper;
           Cursor    : Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Constant_Reference
                 (Container => Container.Container_Access.all,
-                 Cursor    => Cursor).Raw_Access);
+                 Cursor    => Cursor).Element);
 
       function Variable_Indexing
          (Container : aliased in out Wrapper;
           Cursor    : Cursor_Type)
           return References.Not_Null_Reference
-      is (Raw_Access =>
+      is (Element =>
              Reference
                 (Container => Container.Container_Access.all,
-                 Cursor    => Cursor).Raw_Access);
+                 Cursor    => Cursor).Element);
 
       function Iterable
          (Container : aliased in out Container_Type)
@@ -358,7 +358,7 @@ package Bullfrog.Containers.Iterable_Wrappers is
    package Constant_Forward is
 
       -- This is the type of Element housed in the Container_Type
-      subtype Element_Type is References.Item_Type;
+      subtype Element_Type is References.Element_Type;
 
       -- This type provides an iterable wrapper for a container in a
       -- generic.  It must be created using the function Iterable
@@ -408,10 +408,10 @@ package Bullfrog.Containers.Iterable_Wrappers is
          (Container : aliased Wrapper;
           Cursor    : Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Constant_Reference
                 (Container => Container.Container_Access.all,
-                 Cursor    => Cursor).Raw_Access);
+                 Cursor    => Cursor).Element);
 
       function Iterable
          (Container : aliased in out Container_Type)
@@ -467,7 +467,7 @@ package Bullfrog.Containers.Iterable_Wrappers is
    package Constant_Reversible is
 
       -- This is the type of Element housed in the Container_Type
-      subtype Element_Type is References.Item_Type;
+      subtype Element_Type is References.Element_Type;
 
       -- This type provides an iterable wrapper for a container in a
       -- generic.  It must be created using the function Iterable
@@ -517,10 +517,10 @@ package Bullfrog.Containers.Iterable_Wrappers is
          (Container : aliased Wrapper;
           Cursor    : Cursor_Type)
           return References.Not_Null_Constant_Reference
-      is (Raw_Access =>
+      is (Element =>
              Constant_Reference
                 (Container => Container.Container_Access.all,
-                 Cursor    => Cursor).Raw_Access);
+                 Cursor    => Cursor).Element);
 
       function Iterable
          (Container : aliased in out Container_Type)

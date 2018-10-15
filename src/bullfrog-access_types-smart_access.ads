@@ -39,15 +39,15 @@ with Bullfrog.Access_Types.Reference_Counts;
 generic
 
    -- The basic type held by a Smart_Access type
-   type Item_Type(<>);
+   type Element_Type(<>);
 
    -- The desired named access type that pairs with Item_Type
-   type Item_Access is access Item_Type;
+   type Element_Access is access Element_Type;
 
    -- A finalization procedure to be called when all
-   -- references to the Item_Access variable are gone.
+   -- references to the Element_Access variable are gone.
    -- The client should never manually call this procedure.
-   with procedure Finalize(Memory : in out Item_Access);
+   with procedure Finalize(Memory : in out Element_Access);
 
    -- This specifies whether or not to use atomic increment (a count wrapped
    -- in a protected object).  For single task applications, this should
@@ -68,8 +68,8 @@ package Bullfrog.Access_Types.Smart_Access is
    -----------------------------------------------------------------------------
 
    -- This type provides read only access to the resource
-   type Constant_Item_Access is access constant Item_Type;
-   for Constant_Item_Access'Storage_Pool use Item_Access'Storage_Pool;
+   type Constant_Element_Access is access constant Element_Type;
+   for Constant_Element_Access'Storage_Pool use Element_Access'Storage_Pool;
 
    -- Basic counting type for the underlying reference count
    subtype Basic_Count is Bullfrog.Access_Types.Reference_Counts.Basic_Count;
@@ -98,6 +98,21 @@ package Bullfrog.Access_Types.Smart_Access is
    -- desired.
    type Unique_Access is new Ada.Finalization.Limited_Controlled with private;
 
+   -- Provides a "by reference" type for the smart_access ojbect that supplies
+   -- a mutable view of the primary object.
+   type Reference_Holder
+      (Element : not null access Element_Type)
+   is limited null record
+      with
+         Implicit_Dereference => Element;
+
+   -- Provides a "by reference" type for the smart_access ojbect that supplies
+   -- a constant view of the primary object.
+   type Constant_Reference_Holder
+      (Element : not null access constant Element_Type)
+   is limited null record
+      with
+         Implicit_Dereference => Element;
 
 
    -----------------------------------------------------------------------------
@@ -112,36 +127,19 @@ package Bullfrog.Access_Types.Smart_Access is
       with
          Inline => True;
 
-   -- Returns a dereferenced view of the Share_Access object's reference
-   -- NOTE:  In the future (when GNAT is fixed) this will return a
-   --        variable of type References.Reference:
-   --           package References is new Access_Types.References(Item_Type);
-   --           function Reference
-   --              (Self : in Shared_Access)
-   --               return References.Reference;
-   --
-   --        Then all calls of Object.Reference.all will need to be replaced
-   --        with just Object.Reference
+   -- Provides modifiable reference to the data.  Return value acts
+   -- as if it is of Element_Type
    function Reference
       (Self : in Shared_Access)
-       return Item_Access
+       return Reference_Holder
       with
          Inline => True;
 
-   -- Returns a dereferenced read-only view of the Share_Access object's
-   -- reference
-   -- NOTE:  In the future (when GNAT is fixed) this will return a
-   --        variable of type References.Constant_Reference:
-   --           package References is new Access_Types.References(Item_Type);
-   --           function Constant_Reference
-   --              (Self : in Shared_Access)
-   --               return References.Constant_Reference;
-   --
-   --        Then all calls of Object.Constant_Reference.all will need to be
-   --        replaced with just Object.Constant_Reference
+   -- Provides modifiable reference to the data.  Return value acts
+   -- as if it is of constant Element_Type
    function Constant_Reference
       (Self : in Shared_Access)
-       return Constant_Item_Access
+       return Constant_Reference_Holder
       with
          Inline => True;
 
@@ -248,18 +246,19 @@ package Bullfrog.Access_Types.Smart_Access is
       with
          Inline => True;
 
-   -- Returns a dereferenced view of the Unique_Access object's reference
+   -- Provides modifiable reference to the data.  Return value acts
+   -- as if it is of Element_Type
    function Reference
       (Self : in Unique_Access)
-       return Item_Access
+       return Reference_Holder
       with
          Inline => True;
 
-   -- Returns a dereferenced read-only view of the Unique_Access object's
-   -- reference
+   -- Provides modifiable reference to the data.  Return value acts
+   -- as if it is of constant Element_Type
    function Constant_Reference
       (Self : in Unique_Access)
-       return Constant_Item_Access
+       return Constant_Reference_Holder
       with
          Inline => True;
 
@@ -296,7 +295,7 @@ package Bullfrog.Access_Types.Smart_Access is
       -- Constructs a Shared_Access object
       procedure Shared_Access
          (Target : in out Smart_Access.Shared_Access;
-          Source : in     not null Item_Access);
+          Source : in     not null Element_Access);
       procedure Shared_Access
          (Target : in out Smart_Access.Shared_Access;
           Source : in     Smart_Access.Shared_Access);
@@ -307,7 +306,7 @@ package Bullfrog.Access_Types.Smart_Access is
          (Target : in out Smart_Access.Shared_Access;
           Source : in out Smart_Access.Unique_Access);
       function Shared_Access
-         (Source : in not null Item_Access)
+         (Source : in not null Element_Access)
           return Smart_Access.Shared_Access;
       function Shared_Access
          (Source : in Smart_Access.Weak_Access)
@@ -330,12 +329,12 @@ package Bullfrog.Access_Types.Smart_Access is
       -- Constructs a Unique_Access object
       procedure Unique_Access
          (Target : in out Smart_Access.Unique_Access;
-          Source : in     not null Item_Access);
+          Source : in     not null Element_Access);
       procedure Unique_Access
          (Target : in out Smart_Access.Unique_Access;
           Source : in out Smart_Access.Unique_Access);
       function Unique_Access
-         (Source : in not null Item_Access)
+         (Source : in not null Element_Access)
           return Smart_Access.Unique_Access;
       function Unique_Access
          (Source : in out Smart_Access.Unique_Access)
@@ -360,7 +359,24 @@ package Bullfrog.Access_Types.Smart_Access is
          (Self : in Shared_Access)
           return Basic_Count;
 
+      -- Provides dangerous unprotected access to the item type.  This should
+      -- only be used when developing wrappers for this type or when needing
+      -- to pass a pointer to an existing library operation.
+      function Raw_Access
+         (Self : in Shared_Access)
+          return Element_Access
+         with
+            Inline => True;
 
+      -- Provides dangerous unprotected access to a constant view of the item
+      -- type.  This should only be used when developing wrappers for this
+      -- type or when needing to pass a pointer to an existing library
+      -- operation.
+      function Raw_Constant_Access
+         (Self : in Shared_Access)
+          return Constant_Element_Access
+         with
+            Inline => True;
 
       -- Returns the number of Shared_Access objects that manage this
       -- reference.
@@ -393,6 +409,25 @@ package Bullfrog.Access_Types.Smart_Access is
          with
             Inline => True;
 
+      -- Provides dangerous unprotected access to the item type.  This should
+      -- only be used when developing wrappers for this type or when needing
+      -- to pass a pointer to an existing library operation.
+      function Raw_Access
+         (Self : in Unique_Access)
+          return Element_Access
+         with
+            Inline => True;
+
+      -- Provides dangerous unprotected access to a constant view of the item
+      -- type.  This should only be used when developing wrappers for this
+      -- type or when needing to pass a pointer to an existing library
+      -- operation.
+      function Raw_Constant_Access
+         (Self : in Unique_Access)
+          return Constant_Element_Access
+         with
+            Inline => True;
+
    end Utilities;
 
 private
@@ -405,7 +440,7 @@ private
 
    -- Access type for the counts container
    type Counts_Access is access Counts;
-   for Counts_Access'Storage_Pool use Item_Access'Storage_Pool;
+   for Counts_Access'Storage_Pool use Element_Access'Storage_Pool;
 
 
    -----------------------------------------------------------------------------
@@ -414,7 +449,7 @@ private
 
    type Shared_Access is new Ada.Finalization.Controlled with
       record
-         Item_Reference   : Item_Access   := null;
+         Item_Reference   : Element_Access   := null;
          Counts_Reference : Counts_Access := null;
       end record;
 
@@ -425,7 +460,7 @@ private
 
    type Weak_Access is new Ada.Finalization.Controlled with
       record
-         Item_Reference   : Item_Access   := null;
+         Item_Reference   : Element_Access   := null;
          Counts_Reference : Counts_Access := null;
       end record;
 
@@ -436,7 +471,7 @@ private
 
    type Unique_Access is new Ada.Finalization.Limited_Controlled with
       record
-         Item_Reference : Item_Access := null;
+         Item_Reference : Element_Access := null;
       end record;
 
 end Bullfrog.Access_Types.Smart_Access;

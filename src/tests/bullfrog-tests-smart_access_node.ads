@@ -8,8 +8,8 @@ package Bullfrog.Tests.Smart_Access_Node is
    procedure Finalize(Memory : in out Node_Access);
 
    package Node_Smart_Access is new Bullfrog.Access_Types.Smart_Access
-      (Item_Type        => Node,
-       Item_Access      => Node_Access,
+      (Element_Type        => Node,
+       Element_Access      => Node_Access,
        Finalize         => Finalize,
        Atomic_Increment => True);
 

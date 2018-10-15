@@ -32,7 +32,7 @@ generic
 
    -- This is the type that the references will reflect
    -- NOTE:  when GNAT bugs fixed, this will be changed to incomplete type
-   type Item_Type(<>) is limited private;
+   type Element_Type(<>);
 
 package Bullfrog.Access_Types.References is
 
@@ -42,39 +42,39 @@ package Bullfrog.Access_Types.References is
    -- type.  For most purposes, a variable of type Reference is equivalant
    -- to a variable of type Item_Type.
    type Reference
-      (Raw_Access : access Item_Type)
+      (Element : access Element_Type)
    is limited null record
       with
-         Implicit_Dereference => Raw_Access;
+         Implicit_Dereference => Element;
 
    -- Provides a reference holder that is safer than just a simple access
    -- type.  For most purposes, a variable of type Reference is equivalant
    -- to a variable of type Item_Type.  This version provides read-only
    -- access.
    type Constant_Reference
-      (Raw_Access : access constant Item_Type)
+      (Element : access constant Element_Type)
    is limited null record
       with
-         Implicit_Dereference => Raw_Access;
+         Implicit_Dereference => Element;
 
    -- Provides a reference holder that is safer than just a simple access
    -- type.  For most purposes, a variable of type Reference is equivalant
    -- to a variable of type Item_Type.  This version ensures that the
    -- reference is not null.
    type Not_Null_Reference
-      (Raw_Access : not null access Item_Type)
+      (Element : not null access Element_Type)
    is limited null record
       with
-         Implicit_Dereference => Raw_Access;
+         Implicit_Dereference => Element;
 
    -- Provides a reference holder that is safer than just a simple access
    -- type.  For most purposes, a variable of type Reference is equivalant
    -- to a variable of type Item_Type.  This version ensures that the
    -- reference is not null and provides read-only access.
    type Not_Null_Constant_Reference
-      (Raw_Access : not null access constant Item_Type)
+      (Element : not null access constant Element_Type)
    is limited null record
       with
-         Implicit_Dereference => Raw_Access;
+         Implicit_Dereference => Element;
 
 end Bullfrog.Access_Types.References;

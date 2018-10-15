@@ -12,14 +12,14 @@ package Bullfrog.Tests.Smart_Access is
    procedure Finalize(Memory : in out Test_Class_Access) is null;
 
    package TT is new Bullfrog.Access_Types.Smart_Access
-      (Item_Type        => Test_Type,
-       Item_Access      => Test_Access,
+      (Element_Type        => Test_Type,
+       Element_Access      => Test_Access,
        Finalize         => Finalize,
        Atomic_Increment => False);
 
    package TC is new Bullfrog.Access_Types.Smart_Access
-      (Item_Type        => Test_Type'Class,
-       Item_Access      => Test_Class_Access,
+      (Element_Type        => Test_Type'Class,
+       Element_Access      => Test_Class_Access,
        Finalize         => Finalize,
        Atomic_Increment => False);
 

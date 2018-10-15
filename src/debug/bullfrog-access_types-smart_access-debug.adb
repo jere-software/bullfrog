@@ -34,7 +34,7 @@ with System.Storage_Elements; use System.Storage_Elements;
 package body Bullfrog.Access_Types.Smart_Access.Debug is
 
    function To_Integer is new Ada.Unchecked_Conversion
-      (Source => Item_Access,
+      (Source => Element_Access,
        Target => Integer_Address);
 
     function To_Integer is new Ada.Unchecked_Conversion
