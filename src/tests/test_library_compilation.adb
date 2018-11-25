@@ -19,6 +19,8 @@ with Bullfrog.Tests.Circular_Buffer;
 with Bullfrog.Synchronization;
 with Bullfrog.Synchronization.Mutexes;
 with Bullfrog.Synchronization.Sync_Wrappers;
+with Bullfrog.Endianess;
+with Bullfrog.Modular_To_Array_Conversions;
 
 procedure Test_Library_Compilation is
 begin

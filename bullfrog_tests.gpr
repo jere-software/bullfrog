@@ -7,7 +7,8 @@ project Bullfrog_Tests is
                  "test_library_compilation.adb",
                  "test_generic_iteration.adb",
                  "test_simple_iteration.adb",
-                 "test_sync_wrappers.adb");
+                 "test_sync_wrappers.adb",
+                 "bullfrog-tests-modular_to_array_conversions.adb");
    for Exec_Dir use "bin";
 
    package Ide is
