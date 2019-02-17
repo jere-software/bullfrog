@@ -20,9 +20,9 @@ procedure Bullfrog.Tests.Modular_To_Array_Conversions is
    BE_Array_8x4  : Unsigned_8x4  := (16#F1#,16#E2#,16#D3#,16#C4#);
    BE_Array_8x8  : Unsigned_8x8  := (16#F1#,16#E2#,16#D3#,16#C4#,
                                      16#B5#,16#A6#,16#97#,16#88#);
-   BE_Array_16x2 : Unsigned_16x2 := (16#F1E2#,16#D3C4#);
-   BE_Array_16x4 : Unsigned_16x4 := (16#F1E2#,16#D3C4#,16#B5A6#,16#9788#);
-   BE_Array_32x2 : Unsigned_32x2 := (16#F1E2D3C4#,16#B5A69788#);
+   BE_Array_16x2 : Unsigned_16x2 := (16#E2F1#,16#C4D3#);
+   BE_Array_16x4 : Unsigned_16x4 := (16#E2F1#,16#C4D3#,16#A6B5#,16#8897#);
+   BE_Array_32x2 : Unsigned_32x2 := (16#C4D3E2F1#,16#8897A6B5#);
    
    -- Little Endian Array Test Values
    LE_Array_8x2  : Unsigned_8x2  := (16#E2#,16#F1#);
