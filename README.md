@@ -3,7 +3,7 @@
 The Bullfrog library is an collection of various Ada packages, some useful and some just for play.  It includes packages that work with access types, containers, tasking, and low level memory access.
 
 ## License
-The license for the Bullfrog library, **GPL v3 with Link Exception**, is intended to be permissive.  I have chosen a license similar to that used in the Free Software Foundation's (FSF) GNAT Compiler.  The intent is that any changes made to the library are fed back to the community and the source code of the library itself is always available.  Alternatively, the exceptions provided to the license are meant to allow anyone to use it in closed source software if they like without the burden of making their own software GPL.  If someone were to ask for their source code, they would have to only provide the Bullfrog library or any other libraries they used with similar restrictions, but not their own source code.  However, any changes made to the library should be made available to the author of the library.  It is important to note that if other less permissive libraries are used, this library cannot be used to protect your software from those other license restrictions.  The exceptions only apply to the Bullfrog library. 
+The license for the Bullfrog library, **GPL v3 with Link Exception**, is intended to be permissive.  I have chosen a license similar to that used in the Free Software Foundation's (FSF) GNAT Compiler.  The intent is that any changes made to the library are fed back to the community and the source code of the library itself is always available.  Alternatively, the exceptions provided to the license are meant to allow anyone to use it in closed source software if they like without the burden of making their own software GPL.  If someone were to ask for their source code, they would have to only provide the Bullfrog library or any other libraries they used with similar restrictions, but not their own source code.  However, any changes made to the library should be made available to the author of the library.  It is important to note that if other less permissive libraries are used, this library cannot be used to protect your software from those other license restrictions. 
 
 ## Platforms
 The Bullfrog library currently builds and runs under GNAT Community 2018 (Note that this is a pure GPL compiler, so it's license will apply to your code) and the mingw64 x86_64 FSF GNAT 8.2 (The compiler license should be similar to this library's license).  I have not tested on linux or with other compilers than GNAT.
@@ -34,12 +34,12 @@ In the **Bullfrog.Containers.Circular_Buffers** package, the library provdes a 1
 ***
 
 ### Sync_Wrapper types
-In the **Bullfrog.Synchronization.Sync_Wrappers** package, the Bullfrog library provides a wrapper type that can be used to quickly add synchronization to another more complex type that doesn't provide it by default. To use the package, simply instantiate a generic with the type that you want and create a varialbe with the type from the generic.  You then can call variable_name.lock.some_operation_or_variable and it will autmoatically add synchronization around the call.  **There are some known bugs in GNAT when doing this in a declarative region though, so keep an eye for any if you use this package.  They will manifest as deadlocks (Essentially GNAT doesn't always call Finalize on objects in certain situations).**
+In the **Bullfrog.Synchronization.Sync_Wrappers** package, the Bullfrog library provides a wrapper type that can be used to quickly add synchronization to another more complex type that doesn't provide it by default. To use the package, simply instantiate a generic with the type that you want and create a variable with the type from the generic.  You then can call variable_name.lock.some_operation_or_variable and it will autmoatically add synchronization around the call.  **There are some known bugs in GNAT when doing this in a declarative region though, so keep an eye for any if you use this package.  They will manifest as deadlocks (Essentially GNAT doesn't always call Finalize on objects in certain situations).**
 
 ***
 
 ### Endianess Functionality
-I the **Bullfrog.Endianess** package, the library provides a means to detect what type of byte order your system uses.  The Ada language does not provide this standard.  It only covers bit order (which is not the same and rarely an issue for modern processors).  It defines a type and a constant (elaborated at runtime) to indicate what byte order you system currently uses.  If the system is not Big_Endian or Little_Endian, it is defaulted to Middle_Endian as a catch all.
+In the **Bullfrog.Endianess** package, the library provides a means to detect what type of byte order your system uses.  The Ada language does not provide this standard.  It only covers bit order (which is not the same and rarely an issue for modern processors).  It defines a type and a constant (elaborated at runtime) to indicate what byte order you system currently uses.  If the system is not Big_Endian or Little_Endian, it is defaulted to Middle_Endian as a catch all.
 
 ***
 
@@ -56,16 +56,6 @@ In the **Bullfrog.Modular_To_Array_Conversions** package, the library provides m
 
 ***
 
-### References Types
-In the **Bullfrog.Access_Types.References** package, the library provides a quick and easy example of how to create reference types for containers and other data structures.  It is mostly just for example, but is also referenced in other sample packages.  Note that the GNAT compiler still has some bugs with incomplete formal types mixed with reference types, so you might experience some compiler crashes when using this package in awkward ways.
-
-***
-
-### Simple_Iterators Operations
-In the **Bullfrog.Containers.Simple_Iterators** package, the library provides a quick and easy implementation for both a forward and reversible iterator.  It is mostly just for example.
-
-***
-
 ### Reference_Counts Types
 In the **Bullfrog.Access_Types.Reference_Counts** package, the library provides a utility type that provides "reference counting" functionality with the option to either include or exclude atomic operations as the mechanism.  
 
@@ -79,16 +69,6 @@ In the **Bullfrog.Synchronization.Mutexes** package, the library provides a mute
 * **Basic_Mutex** - This is the most basic type of mutex.  Locking it more than once in the same thread will cause a deadlock.
 
 * **Recursive_Mutex** - This type of mutex can determine which thread is the actual owner of the mutex currently and thus can allow multiple locks within the same thread.  The same number of unlocks must be called, however, to prevent deadlocks.
-
-***
-
-### Iterable_Wrappers Types
-In the **Bullfrog.Containers.Iterable_Wrappers** package, the library provides a "for fun" generic contract for allowing iterable types in generic packages.  This is purely a proof of concept to see what is possible and learning.  It is not intended for actual use.
-
-***
-
-### Predefined_Iterable_Wrappers
-In the **Bullfrog.Containers.Predefined_Iterable_Wrappers** package, the library provides some proof of concept implementations of the Iterable_Wrappers generic using the standard Ada containers.  This is just a fun package for learning and fun.  It is not intended for actual use and may not even fully work.
 
 ***
 

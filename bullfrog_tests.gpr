@@ -5,8 +5,6 @@ project Bullfrog_Tests is
    for Main use ("test_smart_access.adb",
                  "test_circular_buffer",
                  "test_library_compilation.adb",
-                 "test_generic_iteration.adb",
-                 "test_simple_iteration.adb",
                  "test_sync_wrappers.adb",
                  "bullfrog-tests-modular_to_array_conversions.adb");
    for Exec_Dir use "bin";
