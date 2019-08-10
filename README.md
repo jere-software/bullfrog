@@ -27,13 +27,13 @@ In the **Bullfrog.Access_Types.Smart_Access** and **Bullfrog.Access_Types.Simple
 
 * **Unique_Access** - Provides single ownership of a resource.  This is most useful for data structures where you need to allocate an object and automatically deallocate the object when the data structure goes out of scope.  While Unique_Access objects cannot be copied or shared, you can move their contents to a different Unique_Access object or even a Shared_Access object.  The previous owner gives up ownership in these situations.
 
-Smart_Access types have, by default, atomic reference counting.  This can be turned off when instantiating the generic if using them in a single threaded context for performance improvements.  The Smart_Access types are not themselves task safe, nor are the resources task safe.  Protected objects or other primatives must be used to achieve task safety in those two contexts.
+Smart_Access types don't have atomic reference counting by default.  This can be turned on when instantiating the generic if using them in a multithreaded context.  Even when atomic reference counts are enabled, the Smart_Access types are not themselves task safe, nor are the resources task safe.  Protected objects or other primatives must be used to achieve task safety in those two contexts.
 
-The main differences between the Smart_Access and Simple_Smart_Access packages is that the Simple_Smart_Access package provides both the underlying access type and the free operation for the package and it cannot be used with incomplete formal types.  In 99% of applications, the Simple_Smart_Access will probably be the package of choice.  Use the Smart_Access package if:
+The main differences between the Smart_Access and Simple_Smart_Access packages is that the Simple_Smart_Access package provides both the underlying access type and the finalization operation for the package and it cannot be used with incomplete formal types.  In 99% of applications, the Simple_Smart_Access will probably be the package of choice.  Use the Smart_Access package if:
 
 * You need a self referencing data structure
 * You need to provided the access type used (say to provide a storage pool or another library's type)
-* You need a custom deleter instead of the standard Unchecked_Deallocation method
+* You need a custom deleter or finalization instead of the standard Unchecked_Deallocation method
 
 ***
 

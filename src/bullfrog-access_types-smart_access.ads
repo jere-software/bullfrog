@@ -57,7 +57,7 @@ generic
    -- needs multiple tasks to access the same Smart_Access variable, however,
    -- it will need to be wrapped in some sort of synchronization primitive.
    -- It also does not guarantee task safety on the resource itself.
-   Atomic_Increment : Boolean := True;
+   Atomic_Increment : Boolean := False;
 
 package Bullfrog.Access_Types.Smart_Access is
 
