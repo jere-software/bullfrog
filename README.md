@@ -6,7 +6,16 @@ The Bullfrog library is an collection of various Ada packages, some useful and s
 The license for the Bullfrog library, **GPL v3 with Link Exception**, is intended to be permissive.  I have chosen a license similar to that used in the Free Software Foundation's (FSF) GNAT Compiler.  The intent is that any changes made to the library are fed back to the community and the source code of the library itself is always available.  Alternatively, the exceptions provided to the license are meant to allow anyone to use it in closed source software if they like without the burden of making their own software GPL.  If someone were to ask for their source code, they would have to only provide the Bullfrog library or any other libraries they used with similar restrictions, but not their own source code.  However, any changes made to the library should be made available to the author of the library.  It is important to note that if other less permissive libraries are used, this library cannot be used to protect your software from those other license restrictions. 
 
 ## Platforms
-The Bullfrog library currently builds and runs under GNAT Community 2018 (Note that this is a pure GPL compiler, so it's license will apply to your code) and the mingw64 x86_64 FSF GNAT 8.2 (The compiler license should be similar to this library's license).  I have not tested on linux or with other compilers than GNAT.
+The Bullfrog library currently builds and runs under GNAT Community 2019 (Note that this is a pure GPL compiler, so it's license will apply to your code) and the mingw64 x86_64 FSF GNAT 9.1 (The compiler license should be similar to this library's license).  I have not tested on linux or with other compilers than GNAT.  The following platforms have been tested:
+
+__Windows 10__
+* GNAT Community 2018 (GPLv3)
+* GNAT Community 2019 (GPLv3)
+* FSF GNAT 8.2.0 (GPLv3 with Runtime Exception)
+* FSF GNAT 9.1.0 (GPLv3 with Runtime Exception)
+
+__Linux__
+* Untested
 
 ## Components
 ### Smart_Access Types
