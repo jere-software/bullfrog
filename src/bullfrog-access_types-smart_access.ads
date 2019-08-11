@@ -288,7 +288,7 @@ package Bullfrog.Access_Types.Smart_Access is
 
 
 
-   -- This package provides all the constructing operations for Smart_Acess
+   -- This package provides all the constructing operations for Smart_Access
    -- types.
    package Make is
 
