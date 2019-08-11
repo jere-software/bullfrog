@@ -315,7 +315,7 @@ package Bullfrog.Access_Types.Smart_Access is
          (Source : in out Smart_Access.Unique_Access)
           return Smart_Access.Shared_Access;
 
-      -- Constructs a Weak_Acces object
+      -- Constructs a Weak_Access object
       procedure Weak_Access
          (Target : in out Smart_Access.Weak_Access;
           Source : in     Smart_Access.Weak_Access);

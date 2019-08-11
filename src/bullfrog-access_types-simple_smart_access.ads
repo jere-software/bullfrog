@@ -300,7 +300,7 @@ package Bullfrog.Access_Types.Simple_Smart_Access is
          with
             Inline => True;
 
-      -- Constructs a Weak_Acces object
+      -- Constructs a Weak_Access object
       procedure Weak_Access
          (Target : in out Simple_Smart_Access.Weak_Access;
           Source : in     Simple_Smart_Access.Weak_Access)
