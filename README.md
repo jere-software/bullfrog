@@ -73,8 +73,6 @@ In the **Bullfrog.Access_Types.Reference_Counts** package, the library provides 
 ### Mutexes Types
 In the **Bullfrog.Synchronization.Mutexes** package, the library provides both a basic mutex type and a recursive mutex type for utility operations in other packages:
 
-* **Mutex** - The all purpose interface a mutex is supposed to provide.  Both Basic_Mutex and Recursive_Mutex implement this interface.
-
 * **Basic_Mutex** - This is the most basic type of mutex.  Locking it more than once in the same thread will cause a deadlock.
 
 * **Recursive_Mutex** - This type of mutex can determine which thread is the actual owner of the mutex currently and thus can allow multiple locks within the same thread.  The same number of unlocks must be called, however, to prevent deadlocks.
