@@ -71,7 +71,7 @@ In the **Bullfrog.Access_Types.Reference_Counts** package, the library provides 
 ***
 
 ### Mutexes Types
-In the **Bullfrog.Synchronization.Mutexes** package, the library provides a mutex interface and both a basic mutex type and a recursive mutex type for utility operations in other packages:
+In the **Bullfrog.Synchronization.Mutexes** package, the library provides both a basic mutex type and a recursive mutex type for utility operations in other packages:
 
 * **Mutex** - The all purpose interface a mutex is supposed to provide.  Both Basic_Mutex and Recursive_Mutex implement this interface.
 
