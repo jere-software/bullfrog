@@ -29,63 +29,45 @@
 
 with Ada.Task_Identification;
 
--- Provides a mutex interface and implementation
+-- Provides mutex implementations
 package Bullfrog.Synchronization.Mutexes is
 
    -----------------------------------------------------------------------------
-   -- Generic Mutex Interface
+   -- Support types
    -----------------------------------------------------------------------------
 
    -- Type to represent the owner
    subtype Owner is Ada.Task_Identification.Task_Id;
 
-   -- General mutex interface
-   type Mutex is limited interface;
-
-   -- Acquires the mutex on a mutex or blocks until it can.
-   procedure Lock(Self : in out Mutex) is abstract;
-
-   -- Unlocks the mutex
-   procedure Unlock(Self : in out Mutex) is abstract;
-
-   -- Acquires the mutex if available.  Returns True if successful
-   function Try_Lock(Self : in out Mutex) return Boolean is abstract;
-
-   -- Indicates if the mutex is currently locked
-   function Is_Locked(Self : Mutex) return Boolean is abstract;
-
-   -- Returns an identifier unique to the owning task.  Use
-   -- Ada.Task_Identification facilities to leverage this value
-   function Current_Owner(Self : Mutex) return Owner is abstract;
-
    -----------------------------------------------------------------------------
    -- Basic Mutex Implementation
    -----------------------------------------------------------------------------
 
-   type Basic_Mutex is limited new Mutex with private;
+   -- Basic functionality standard mutex
+   type Basic_Mutex is tagged limited private;
 
    -- Acquires the mutex on a mutex or blocks until it can.  Raises
    -- Constraint_Error if recursively called too deep
-   overriding procedure Lock(Self : in out Basic_Mutex)
+   procedure Lock(Self : in out Basic_Mutex)
       with Inline;
 
    -- Unlocks the mutex.  Raises Mutex_Use_Error if not the owning task or
    -- not locked.
-   overriding procedure Unlock(Self : in out Basic_Mutex)
+   procedure Unlock(Self : in out Basic_Mutex)
       with Inline;
 
    -- Acquires the mutex if available.  Returns True if successful.  Raises
    -- Constraint_Error if recursively called too deep
-   overriding function Try_Lock(Self : in out Basic_Mutex) return Boolean
+   function Try_Lock(Self : in out Basic_Mutex) return Boolean
       with Inline;
 
    -- Indicates if the mutex is currently locked
-   overriding function Is_Locked(Self : Basic_Mutex) return Boolean
+   function Is_Locked(Self : Basic_Mutex) return Boolean
       with Inline;
 
    -- Returns an identifier unique to the owning task.  Use
    -- Ada.Task_Identification facilities to leverage this value
-   overriding function Current_Owner(Self : Basic_Mutex) return Owner
+   function Current_Owner(Self : Basic_Mutex) return Owner
       with Inline;
 
 
@@ -93,30 +75,33 @@ package Bullfrog.Synchronization.Mutexes is
    -- Recursive Mutex Implementation
    -----------------------------------------------------------------------------
 
-   type Recursive_Mutex is limited new Mutex with private;
+   -- Mutex that can be relocked by the thread already owning the mutex, 
+   -- so that it can be locked recursively. It must be unlocked recursively
+   -- as well to prevent deadlock
+   type Recursive_Mutex is tagged limited private;
 
    -- Acquires the mutex on a mutex or blocks until it can.  Raises
    -- Constraint_Error if recursively called too deep
-   overriding procedure Lock(Self : in out Recursive_Mutex)
+   procedure Lock(Self : in out Recursive_Mutex)
       with Inline;
 
    -- Unlocks the mutex.  Raises Mutex_Use_Error if not the owning task or
    -- not locked.
-   overriding procedure Unlock(Self : in out Recursive_Mutex)
+   procedure Unlock(Self : in out Recursive_Mutex)
       with Inline;
 
    -- Acquires the mutex if available.  Returns True if successful.  Raises
    -- Constraint_Error if recursively called too deep
-   overriding function Try_Lock(Self : in out Recursive_Mutex) return Boolean
+   function Try_Lock(Self : in out Recursive_Mutex) return Boolean
       with Inline;
 
    -- Indicates if the mutex is currently locked
-   overriding function Is_Locked(Self : Recursive_Mutex) return Boolean
+   function Is_Locked(Self : Recursive_Mutex) return Boolean
       with Inline;
 
    -- Returns an identifier unique to the owning task.  Use
    -- Ada.Task_Identification facilities to leverage this value
-   overriding function Current_Owner(Self : Recursive_Mutex) return Owner
+   function Current_Owner(Self : Recursive_Mutex) return Owner
       with Inline;
 
 private
@@ -153,7 +138,7 @@ private
 
    end Basic_Impl;
 
-   type Basic_Mutex is limited new Mutex with record
+   type Basic_Mutex is tagged limited record
       Impl : Basic_Impl;
    end record;
 
@@ -194,7 +179,7 @@ private
 
    end Recursive_Impl;
 
-   type Recursive_Mutex is limited new Mutex with record
+   type Recursive_Mutex is tagged limited record
       Impl : Recursive_Impl;
    end record;
 
