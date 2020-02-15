@@ -49,15 +49,6 @@ package Bullfrog.Modular_To_Array_Conversions with Pure is
    -- Array of 2 Unsigned_8 values
    type Unsigned_8x2 is array(1..2) of Unsigned_8 with Pack, Size => 16;
 
-   -- Array of 4 Unsigned_16 values
-   type Unsigned_16x4 is array(1..4) of Unsigned_16 with Pack, Size => 64;
-
-   -- Array of 2 Unsigned_16 values
-   type Unsigned_16x2 is array(1..2) of Unsigned_16 with Pack, Size => 32;
-
-   -- Array of 2 Unsigned_32 values
-   type Unsigned_32x2 is array(1..2) of Unsigned_32 with Pack, Size => 64;
-
    -- Conversions to/from Native type from/to native array representations
    package Native_Arrays is
 
@@ -68,23 +59,11 @@ package Bullfrog.Modular_To_Array_Conversions with Pure is
          with Inline;
       function To_Unsigned_8x2 (Source : Unsigned_16) return Unsigned_8x2
          with Inline;
-      function To_Unsigned_16x4(Source : Unsigned_64) return Unsigned_16x4
-         with Inline;
-      function To_Unsigned_16x2(Source : Unsigned_32) return Unsigned_16x2
-         with Inline;
-      function To_Unsigned_32x2(Source : Unsigned_64) return Unsigned_32x2
-         with Inline;
 
       -- Converts to a modular type from an array
       function To_Unsigned_64(Source : Unsigned_8x8)  return Unsigned_64
          with Inline;
-      function To_Unsigned_64(Source : Unsigned_16x4) return Unsigned_64
-         with Inline;
-      function To_Unsigned_64(Source : Unsigned_32x2) return Unsigned_64
-         with Inline;
       function To_Unsigned_32(Source : Unsigned_8x4)  return Unsigned_32
-         with Inline;
-      function To_Unsigned_32(Source : Unsigned_16x2) return Unsigned_32
          with Inline;
       function To_Unsigned_16(Source : Unsigned_8x2)  return Unsigned_16
          with Inline;
@@ -103,23 +82,11 @@ package Bullfrog.Modular_To_Array_Conversions with Pure is
          with Inline;
       function To_Unsigned_8x2 (Source : Unsigned_16) return Unsigned_8x2
          with Inline;
-      function To_Unsigned_16x4(Source : Unsigned_64) return Unsigned_16x4
-         with Inline;
-      function To_Unsigned_16x2(Source : Unsigned_32) return Unsigned_16x2
-         with Inline;
-      function To_Unsigned_32x2(Source : Unsigned_64) return Unsigned_32x2
-         with Inline;
 
       -- Converts to a modular type from an array
       function To_Unsigned_64(Source : Unsigned_8x8)  return Unsigned_64
          with Inline;
-      function To_Unsigned_64(Source : Unsigned_16x4) return Unsigned_64
-         with Inline;
-      function To_Unsigned_64(Source : Unsigned_32x2) return Unsigned_64
-         with Inline;
       function To_Unsigned_32(Source : Unsigned_8x4)  return Unsigned_32
-         with Inline;
-      function To_Unsigned_32(Source : Unsigned_16x2) return Unsigned_32
          with Inline;
       function To_Unsigned_16(Source : Unsigned_8x2)  return Unsigned_16
          with Inline;
@@ -136,23 +103,11 @@ package Bullfrog.Modular_To_Array_Conversions with Pure is
          with Inline;
       function To_Unsigned_8x2 (Source : Unsigned_16) return Unsigned_8x2
          with Inline;
-      function To_Unsigned_16x4(Source : Unsigned_64) return Unsigned_16x4
-         with Inline;
-      function To_Unsigned_16x2(Source : Unsigned_32) return Unsigned_16x2
-         with Inline;
-      function To_Unsigned_32x2(Source : Unsigned_64) return Unsigned_32x2
-         with Inline;
 
       -- Converts to a modular type from an array
       function To_Unsigned_64(Source : Unsigned_8x8)  return Unsigned_64
          with Inline;
-      function To_Unsigned_64(Source : Unsigned_16x4) return Unsigned_64
-         with Inline;
-      function To_Unsigned_64(Source : Unsigned_32x2) return Unsigned_64
-         with Inline;
       function To_Unsigned_32(Source : Unsigned_8x4)  return Unsigned_32
-         with Inline;
-      function To_Unsigned_32(Source : Unsigned_16x2) return Unsigned_32
          with Inline;
       function To_Unsigned_16(Source : Unsigned_8x2)  return Unsigned_16
          with Inline;
@@ -170,23 +125,11 @@ package Bullfrog.Modular_To_Array_Conversions with Pure is
          with Inline;
       function To_Unsigned_8x2 (Source : Unsigned_16) return Unsigned_8x2
          with Inline;
-      function To_Unsigned_16x4(Source : Unsigned_64) return Unsigned_16x4
-         with Inline;
-      function To_Unsigned_16x2(Source : Unsigned_32) return Unsigned_16x2
-         with Inline;
-      function To_Unsigned_32x2(Source : Unsigned_64) return Unsigned_32x2
-         with Inline;
 
       -- Converts to a modular type from an array
       function To_Unsigned_64(Source : Unsigned_8x8)  return Unsigned_64
          with Inline;
-      function To_Unsigned_64(Source : Unsigned_16x4) return Unsigned_64
-         with Inline;
-      function To_Unsigned_64(Source : Unsigned_32x2) return Unsigned_64
-         with Inline;
       function To_Unsigned_32(Source : Unsigned_8x4)  return Unsigned_32
-         with Inline;
-      function To_Unsigned_32(Source : Unsigned_16x2) return Unsigned_32
          with Inline;
       function To_Unsigned_16(Source : Unsigned_8x2)  return Unsigned_16
          with Inline;

@@ -35,56 +35,20 @@ package body Bullfrog.Modular_To_Array_Conversions is
    function To_8x8 is new Ada.Unchecked_Conversion
       (Source => Unsigned_64,
        Target => Unsigned_8x8) with Inline;
-   function To_8x8 is new Ada.Unchecked_Conversion
-      (Source => Unsigned_32x2,
-       Target => Unsigned_8x8) with Inline;
-   function To_8x8 is new Ada.Unchecked_Conversion
-      (Source => Unsigned_16x4,
-       Target => Unsigned_8x8) with Inline;
    function To_8x4 is new Ada.Unchecked_Conversion
       (Source => Unsigned_32,
-       Target => Unsigned_8x4) with Inline;
-   function To_8x4 is new Ada.Unchecked_Conversion
-      (Source => Unsigned_16x2,
        Target => Unsigned_8x4) with Inline;
    function To_8x2 is new Ada.Unchecked_Conversion
       (Source => Unsigned_16,
        Target => Unsigned_8x2) with Inline;
-   function To_16x4 is new Ada.Unchecked_Conversion
-      (Source => Unsigned_64,
-       Target => Unsigned_16x4) with Inline;
-   function To_16x4 is new Ada.Unchecked_Conversion
-      (Source => Unsigned_8x8,
-       Target => Unsigned_16x4) with Inline;
-   function To_16x2 is new Ada.Unchecked_Conversion
-      (Source => Unsigned_32,
-       Target => Unsigned_16x2) with Inline;
-   function To_16x2 is new Ada.Unchecked_Conversion
-      (Source => Unsigned_8x4,
-       Target => Unsigned_16x2) with Inline;
-   function To_32x2 is new Ada.Unchecked_Conversion
-      (Source => Unsigned_64,
-       Target => Unsigned_32x2) with Inline;
-   function To_32x2 is new Ada.Unchecked_Conversion
-      (Source => Unsigned_8x8,
-       Target => Unsigned_32x2) with Inline;
 
 
    -- Quick conversion from array to modular type
    function To_64 is new Ada.Unchecked_Conversion
       (Source => Unsigned_8x8,
        Target => Unsigned_64) with Inline;
-   function To_64 is new Ada.Unchecked_Conversion
-      (Source => Unsigned_16x4,
-       Target => Unsigned_64) with Inline;
-   function To_64 is new Ada.Unchecked_Conversion
-      (Source => Unsigned_32x2,
-       Target => Unsigned_64) with Inline;
    function To_32 is new Ada.Unchecked_Conversion
       (Source => Unsigned_8x4,
-       Target => Unsigned_32) with Inline;
-   function To_32 is new Ada.Unchecked_Conversion
-      (Source => Unsigned_16x2,
        Target => Unsigned_32) with Inline;
    function To_16 is new Ada.Unchecked_Conversion
       (Source => Unsigned_8x2,
@@ -108,43 +72,13 @@ package body Bullfrog.Modular_To_Array_Conversions is
           return Unsigned_8x2
       is (To_8x2(Source));
 
-      function To_Unsigned_16x4
-         (Source : Unsigned_64)
-          return Unsigned_16x4
-      is (To_16x4(Source));
-
-      function To_Unsigned_16x2
-         (Source : Unsigned_32)
-          return Unsigned_16x2
-      is (To_16x2(Source));
-
-      function To_Unsigned_32x2
-         (Source : Unsigned_64)
-          return Unsigned_32x2
-      is (To_32x2(Source));
-
       function To_Unsigned_64
          (Source : Unsigned_8x8)
           return Unsigned_64
       is (To_64(Source));
 
-      function To_Unsigned_64
-         (Source : Unsigned_16x4)
-          return Unsigned_64
-      is (To_64(Source));
-
-      function To_Unsigned_64
-         (Source : Unsigned_32x2)
-          return Unsigned_64
-      is (To_64(Source));
-
       function To_Unsigned_32
          (Source : Unsigned_8x4)
-          return Unsigned_32
-      is (To_32(Source));
-
-      function To_Unsigned_32
-         (Source : Unsigned_16x2)
           return Unsigned_32
       is (To_32(Source));
 
@@ -183,21 +117,6 @@ package body Bullfrog.Modular_To_Array_Conversions is
       is (1 => To_8x2(Source)(2),
           2 => To_8x2(Source)(1));
 
-      function To_Unsigned_16x4
-         (Source : Unsigned_64)
-          return Unsigned_16x4
-      is (To_16x4(To_Unsigned_8x8(Source)));
-
-      function To_Unsigned_16x2
-         (Source : Unsigned_32)
-          return Unsigned_16x2
-      is (To_16x2(To_Unsigned_8x4(Source)));
-
-      function To_Unsigned_32x2
-         (Source : Unsigned_64)
-          return Unsigned_32x2
-      is (To_32x2(To_Unsigned_8x8(Source)));
-
       function To_Unsigned_64
          (Source : Unsigned_8x8)
           return Unsigned_64
@@ -211,16 +130,6 @@ package body Bullfrog.Modular_To_Array_Conversions is
               7 => Source(2),
               8 => Source(1))));
 
-      function To_Unsigned_64
-         (Source : Unsigned_16x4)
-          return Unsigned_64
-      is (To_Unsigned_64(To_8x8(Source)));
-
-      function To_Unsigned_64
-         (Source : Unsigned_32x2)
-          return Unsigned_64
-      is (To_Unsigned_64(To_8x8(Source)));
-
       function To_Unsigned_32
          (Source : Unsigned_8x4)
           return Unsigned_32
@@ -229,11 +138,6 @@ package body Bullfrog.Modular_To_Array_Conversions is
               2 => Source(3),
               3 => Source(2),
               4 => Source(1))));
-
-      function To_Unsigned_32
-         (Source : Unsigned_16x2)
-          return Unsigned_32
-      is (To_Unsigned_32(To_8x4(Source)));
 
       function To_Unsigned_16
          (Source : Unsigned_8x2)
@@ -281,15 +185,6 @@ package body Bullfrog.Modular_To_Array_Conversions is
              2 => Unsigned_8(Source                 and 16#0FF#));
       end To_Unsigned_8x2;
 
-      function To_Unsigned_16x4(Source : Unsigned_64) return Unsigned_16x4 is
-         (To_16x4(To_Unsigned_8x8(Source)));
-
-      function To_Unsigned_16x2(Source : Unsigned_32) return Unsigned_16x2 is
-         (To_16x2(To_Unsigned_8x4(Source)));
-
-      function To_Unsigned_32x2(Source : Unsigned_64) return Unsigned_32x2 is
-         (To_32x2(To_Unsigned_8x8(Source)));
-
       function To_Unsigned_64(Source : Unsigned_8x8) return Unsigned_64 is
          Pragma Suppress(All_Checks);
          use all type Unsigned_64;
@@ -304,12 +199,6 @@ package body Bullfrog.Modular_To_Array_Conversions is
                  or            Unsigned_64(Source(8)));
       end To_Unsigned_64;
 
-      function To_Unsigned_64(Source : Unsigned_16x4) return Unsigned_64 is
-         (To_Unsigned_64(To_8x8(Source)));
-
-      function To_Unsigned_64(Source : Unsigned_32x2) return Unsigned_64 is
-         (To_Unsigned_64(To_8x8(Source)));
-
       function To_Unsigned_32(Source : Unsigned_8x4) return Unsigned_32 is
          Pragma Suppress(All_Checks);
          use all type Unsigned_32;
@@ -319,9 +208,6 @@ package body Bullfrog.Modular_To_Array_Conversions is
                  or Shift_Left(Unsigned_32(Source(3)),8)
                  or            Unsigned_32(Source(4)));
       end To_Unsigned_32;
-
-      function To_Unsigned_32(Source : Unsigned_16x2) return Unsigned_32 is
-         (To_Unsigned_32(To_8x4(Source)));
 
       function To_Unsigned_16(Source : Unsigned_8x2) return Unsigned_16 is
          Pragma Suppress(All_Checks);
@@ -382,15 +268,6 @@ package body Bullfrog.Modular_To_Array_Conversions is
              1 => Unsigned_8(Source                 and 16#0FF#));
       end To_Unsigned_8x2;
 
-      function To_Unsigned_16x4(Source : Unsigned_64) return Unsigned_16x4 is
-         (To_16x4(To_Unsigned_8x8(Source)));
-
-      function To_Unsigned_16x2(Source : Unsigned_32) return Unsigned_16x2 is
-         (To_16x2(To_Unsigned_8x4(Source)));
-
-      function To_Unsigned_32x2(Source : Unsigned_64) return Unsigned_32x2 is
-         (To_32x2(To_Unsigned_8x8(Source)));
-
       function To_Unsigned_64(Source : Unsigned_8x8) return Unsigned_64 is
          Pragma Suppress(All_Checks);
          use all type Unsigned_64;
@@ -405,12 +282,6 @@ package body Bullfrog.Modular_To_Array_Conversions is
                  or            Unsigned_64(Source(1)));
       end To_Unsigned_64;
 
-      function To_Unsigned_64(Source : Unsigned_16x4) return Unsigned_64 is
-         (To_Unsigned_64(To_8x8(Source)));
-
-      function To_Unsigned_64(Source : Unsigned_32x2) return Unsigned_64 is
-         (To_Unsigned_64(To_8x8(Source)));
-
       function To_Unsigned_32(Source : Unsigned_8x4) return Unsigned_32 is
          Pragma Suppress(All_Checks);
          use all type Unsigned_32;
@@ -420,9 +291,6 @@ package body Bullfrog.Modular_To_Array_Conversions is
                  or Shift_Left(Unsigned_32(Source(2)),8)
                  or            Unsigned_32(Source(1)));
       end To_Unsigned_32;
-
-      function To_Unsigned_32(Source : Unsigned_16x2) return Unsigned_32 is
-         (To_Unsigned_32(To_8x4(Source)));
 
       function To_Unsigned_16(Source : Unsigned_8x2) return Unsigned_16 is
          Pragma Suppress(All_Checks);
