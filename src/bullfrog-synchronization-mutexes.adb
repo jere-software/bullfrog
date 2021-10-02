@@ -79,6 +79,7 @@ package body Bullfrog.Synchronization.Mutexes is
          if Locked then
             Success := False;
          else
+            Current := Current_Task;
             Locked  := True;
             Success := True;
          end if;
