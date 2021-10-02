@@ -440,7 +440,6 @@ private
 
    -- Access type for the counts container
    type Counts_Access is access Counts;
-   for Counts_Access'Storage_Pool use Element_Access'Storage_Pool;
 
 
    -----------------------------------------------------------------------------
@@ -449,8 +448,8 @@ private
 
    type Shared_Access is new Ada.Finalization.Controlled with
       record
-         Item_Reference   : Element_Access   := null;
-         Counts_Reference : Counts_Access := null;
+         Item_Reference   : Element_Access := null;
+         Counts_Reference : Counts_Access  := null;
       end record;
 
 
@@ -460,8 +459,8 @@ private
 
    type Weak_Access is new Ada.Finalization.Controlled with
       record
-         Item_Reference   : Element_Access   := null;
-         Counts_Reference : Counts_Access := null;
+         Item_Reference   : Element_Access := null;
+         Counts_Reference : Counts_Access  := null;
       end record;
 
 
