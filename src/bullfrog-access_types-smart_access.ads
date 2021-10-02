@@ -41,7 +41,7 @@ generic
    -- The basic type held by a Smart_Access type
    type Element_Type(<>);
 
-   -- The desired named access type that pairs with Item_Type
+   -- The desired named access type that pairs with Element_Type
    type Element_Access is access Element_Type;
 
    -- A finalization procedure to be called when all
@@ -135,7 +135,7 @@ package Bullfrog.Access_Types.Smart_Access is
       with
          Inline => True;
 
-   -- Provides modifiable reference to the data.  Return value acts
+   -- Provides a read-only reference to the data.  Return value acts
    -- as if it is of constant Element_Type
    function Constant_Reference
       (Self : in Shared_Access)
