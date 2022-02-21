@@ -1,16 +1,18 @@
-with Bullfrog.Access_Types.Smart_Access;
-with Bullfrog.Access_Types.Smart_Access.Debug;
+with Bullfrog.Access_Types.Custom_Smart_Access;
+with Bullfrog.Access_Types.Custom_Smart_Access.Debug;
+with Bullfrog.Access_Types.Custom_Smart_Access_Traits;
+with Bullfrog.Access_Types.Custom_Smart_Access.Make;
 
 package Bullfrog.Tests.Smart_Access_Node is
 
    type Node;
    type Node_Access is access Node;
-   procedure Finalize(Memory : in out Node_Access);
 
-   package Node_Smart_Access is new Bullfrog.Access_Types.Smart_Access
-      (Element_Type        => Node,
-       Element_Access      => Node_Access,
-       Finalize         => Finalize,
+   package Node_Traits is new Bullfrog.Access_Types.Custom_Smart_Access_Traits
+      (Element_Type => Node);
+
+   package Node_Smart_Access is new Bullfrog.Access_Types.Custom_Smart_Access
+      (Traits           => Node_Traits,
        Atomic_Increment => True);
 
    package Node_Debug is new Node_Smart_Access.Debug;
@@ -22,6 +24,11 @@ package Bullfrog.Tests.Smart_Access_Node is
       Left   : Node_Smart_Access.Shared_Access;
       Right  : Node_Smart_Access.Shared_Access;
    end record;
+
+   package Make_Node is new Node_Smart_Access.Make
+      (Element_Type   => Node,
+       Element_Access => Node_Access,
+       Traits         => Node_Traits);
 
    type Tree is tagged record
       Root : Node_Smart_Access.Shared_Access;

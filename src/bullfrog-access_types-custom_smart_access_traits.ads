@@ -27,57 +27,28 @@
 --  covered by the GNU Public License.                                      --
 ------------------------------------------------------------------------------
 
-with System.Address_Image;
-with Ada.Unchecked_Conversion;
-with System.Storage_Elements; use System.Storage_Elements;
+-- This package provides a set of traits needed to handle incomplete types
+-- for Smart_Access based packages.
+generic
+   
+   -- The basic type held by a Smart_Access type
+   type Element_Type(<>);
+   
+package Bullfrog.Access_Types.Custom_Smart_Access_Traits is
 
-package body Bullfrog.Access_Types.Smart_Access.Debug is
-
-   function To_Integer is new Ada.Unchecked_Conversion
-      (Source => Element_Access,
-       Target => Integer_Address);
-
-    function To_Integer is new Ada.Unchecked_Conversion
-      (Source => Counts_Access,
-       Target => Integer_Address);
-
-   function To_String(Object : Shared_Access) return String is
-   begin
-      return
-         "("
-         & System.Address_Image(Object'Address)
-         & ","
-         & Integer_Address'Image(To_Integer(Object.Item_Reference))
-         & ","
-         & Integer_Address'Image(To_Integer(Object.Counts_Reference))
-         & ","
-         & Reference_Counts.Basic_Count'Image(Utilities.Use_Count(Object))
-         & ","
-         & Reference_Counts.Basic_Count'Image(Utilities.Weak_Count(Object))
-         & ")";
-   end To_String;
-   function To_String(Object : Weak_Access) return String is
-   begin
-      return
-         "("
-         & System.Address_Image(Object'Address)
-         & ","
-         & Integer_Address'Image(To_Integer(Object.Item_Reference))
-         & ","
-         & Integer_Address'Image(To_Integer(Object.Counts_Reference))
-         & ","
-         & Reference_Counts.Basic_Count'Image(Utilities.Use_Count(Object))
-         & ","
-         & Reference_Counts.Basic_Count'Image(Utilities.Weak_Count(Object))
-         & ")";
-   end To_String;
-   function To_String(Object : Unique_Access) return String is
-   begin
-      return
-         "("
-         & System.Address_Image(Object'Address)
-         & ","
-         & Integer_Address'Image(To_Integer(Object.Item_Reference))
-         & ")";
-   end To_String;
-end Bullfrog.Access_Types.Smart_Access.Debug;
+   -- Returns the ID for this package instantiation.  The ID is unique only
+   -- while the package is in scope.
+   function Get_Package_ID return Trait_Package_ID;
+   
+private
+   
+   -- Dummy variable type needed
+   type Dummy is null record;
+   
+   -- Dummy variable
+   Placeholder : constant Dummy := (null record);
+   
+   function Get_Package_ID return Trait_Package_ID is 
+      (Trait_Package_ID(Placeholder'Address));
+   
+end Bullfrog.Access_Types.Custom_Smart_Access_Traits;

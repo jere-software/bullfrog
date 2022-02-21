@@ -1,10 +1,10 @@
-with Bullfrog.Tests.Smart_Access.Main;
+with Bullfrog.Tests.Custom_Smart_Access.Main;
 with Bullfrog.Tests.Smart_Access_Node;
 
 procedure Test_Smart_Access is
    Tree : Bullfrog.Tests.Smart_Access_Node.Tree;
 begin
-   Bullfrog.Tests.Smart_Access.Main.Run;
+   Bullfrog.Tests.Custom_Smart_Access.Main.Run;
    for Index in 10 .. 13 loop
       Tree.Insert(Index);
    end loop;

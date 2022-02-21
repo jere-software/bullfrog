@@ -26,15 +26,18 @@
 --  however invalidate any other reasons why the executable file might be   --
 --  covered by the GNU Public License.                                      --
 ------------------------------------------------------------------------------
-with Bullfrog.Access_Types.Custom_Smart_Access_Traits;
-with Bullfrog.Access_Types.Custom_Smart_Access;
 
--- This package provides simple smart access types.  They are suitable for
--- most user defined types (in particular not for incomplete types).
+
+with Ada.Finalization;
+with Bullfrog.Access_Types.Reference_Counts;
+with Bullfrog.Access_Types.Custom_Smart_Access_Traits;
+
+-- This package provides general smart access types.  They are suitable for
+-- almost any ada type.
 generic
 
-   -- The basic type held by a Smart_Access type
-   type Element_Type(<>) is limited private;
+   -- This package contains the element type to make Smart_Access types for.
+   with package Traits is new Custom_Smart_Access_Traits(<>);
 
    -- This specifies whether or not to use atomic increment (a count wrapped
    -- in a protected object).  For single task applications, this should
@@ -46,32 +49,26 @@ generic
    -- It also does not guarantee task safety on the resource itself.
    Atomic_Increment : Boolean := False;
 
-package Bullfrog.Access_Types.Smart_Access is
+package Bullfrog.Access_Types.Custom_Smart_Access is
 
    -----------------------------------------------------------------------------
    -- Package Types
    -----------------------------------------------------------------------------
 
-   -- Core implementation.  Do not use directly
-   package Core_Traits is new Custom_Smart_Access_Traits
-      (Element_Type => Element_Type);
-   package Core is new Access_Types.Custom_Smart_Access
-      (Traits           => Core_Traits,
-       Atomic_Increment => Atomic_Increment);
-
    -- This type provides variable access to the resource
-   subtype Element_Access is Core.Element_Access;
+   type Element_Access is access Traits.Element_Type;
 
    -- This type provides read only access to the resource
-   subtype Constant_Element_Access is Core.Constant_Element_Access;
+   type Constant_Element_Access is access constant Traits.Element_Type;
 
    -- Basic counting type for the underlying reference count
-   subtype Basic_Count is Core.Basic_Count;
+   subtype Basic_Count is Bullfrog.Access_Types.Reference_Counts.Basic_Count;
 
    -- This Smart_Access type provides reference counting semantics.  It can
-   -- be copied and will automatically handle deallocating the held access
-   -- variable.
-   subtype Shared_Access is Core.Shared_Access;
+   -- be copied and will automatically handle finalizing the held resource.
+   -- Do not create circular references with this type.  Instead use
+   -- Weak_Access types to break any such connections.
+   type Shared_Access is new Ada.Finalization.Controlled with private;
 
    -- This Smart_Access type provides indirect access to a resource. By
    -- itself, it cannot view or modify the resource, but must be promoted to
@@ -81,15 +78,15 @@ package Bullfrog.Access_Types.Smart_Access is
    -- object is considered "assigned" to that Shared_Access object's resource.
    -- It remains "assigned" even if all of the Shared_Access objects managing
    -- the resource are finalized (which finalizes the resource as well).
-   -- Objects of type Weak_Access are used to create handles to Shared_Access
-   -- resources.
-   subtype Weak_Access is Core.Weak_Access;
+   -- Objects of type Weak_Access are used to create handles or break circular
+   -- references for Shared_Access objects.
+   type Weak_Access is new Ada.Finalization.Controlled with private;
 
    -- This Smart_Access type is the "goto" access manager for most situations.
-   -- Only one Unique_Access variable can hold a reference at a time.
+   -- Only one Unique_Access variable can hold a resource at a time.
    -- Ownership can be transferred to other Unique_Access variables when
    -- desired.
-   subtype Unique_Access is Core.Unique_Access;
+   type Unique_Access is new Ada.Finalization.Limited_Controlled with private;
 
    -- Provides a "by reference" type for the smart_access ojbect that supplies
    -- a mutable view of the primary object.
@@ -97,7 +94,11 @@ package Bullfrog.Access_Types.Smart_Access is
    --        only meant to be used as a temporary return object for the
    --        Reference function.  Explicitly creating objects of this type
    --        can cause erroneous memory access.
-   subtype Reference_Holder is Core.Reference_Holder;
+   type Reference_Holder
+      (Element : not null access Traits.Element_Type)
+   is limited null record
+      with
+         Implicit_Dereference => Element;
 
    -- Provides a "by reference" type for the smart_access ojbect that supplies
    -- a constant view of the primary object.
@@ -105,7 +106,12 @@ package Bullfrog.Access_Types.Smart_Access is
    --        only meant to be used as a temporary return object for the
    --        Constant_Reference function.  Explicitly creating objects of this
    --        type can cause erroneous memory access.
-   subtype Constant_Reference_Holder is Core.Constant_Reference_Holder;
+   type Constant_Reference_Holder
+      (Element : not null access constant Traits.Element_Type)
+   is limited null record
+      with
+         Implicit_Dereference => Element;
+
 
    -----------------------------------------------------------------------------
    -- Shared_Access type
@@ -148,6 +154,7 @@ package Bullfrog.Access_Types.Smart_Access is
          Inline => True;
 
    -- Compares two Shared_Access objects
+   overriding
    function "="
       (Left,Right : Shared_Access)
        return Boolean
@@ -172,16 +179,16 @@ package Bullfrog.Access_Types.Smart_Access is
    -- than simple assignement as it doesn't require any calls to
    -- Finalize or Adjust, and it doesn't require any protected
    -- operations.
-   procedure Swap (Left, Right : in out Shared_Access) with Inline => True;
+   procedure Swap (Left, Right : in out Shared_Access);
 
    -- Moves one Shared_Access object into another, destroying the
    -- source object in the process.  This requires a call to
    -- Finalize but not to Adjust.
-   procedure Move (Target, Source : in out Shared_Access) with Inline => True;
+   procedure Move (Target, Source : in out Shared_Access);
 
    -- Override for Ada.Finalization.Controlled
-   procedure Adjust  (Self : in out Shared_Access) with Inline => True;
-   procedure Finalize(Self : in out Shared_Access) with Inline => True;
+   overriding procedure Adjust  (Self : in out Shared_Access);
+   overriding procedure Finalize(Self : in out Shared_Access);
 
 
    -----------------------------------------------------------------------------
@@ -199,6 +206,7 @@ package Bullfrog.Access_Types.Smart_Access is
 
    -- Compares two Weak_Access objects.  Returns True if they are assigned to
    -- the same Shared_Access object's resource or are both unassigned.
+   overriding
    function "="
       (Left,Right : Weak_Access)
        return Boolean
@@ -225,16 +233,17 @@ package Bullfrog.Access_Types.Smart_Access is
    -- than simple assignement as it doesn't require any calls to
    -- Finalize or Adjust, and it doesn't require any protected
    -- operations.
-   procedure Swap(Left, Right : in out Weak_Access) with Inline => True;
+   procedure Swap(Left, Right : in out Weak_Access);
 
    -- Moves one Weak_Access object into another, destroying the
    -- source object in the process.  This requires a call to
    -- Finalize but not to Adjust.
-   procedure Move (Target, Source : in out Weak_Access) with Inline => True;
+   procedure Move (Target, Source : in out Weak_Access);
 
    -- Override for Ada.Finalization.Controlled
-   procedure Adjust  (Self : in out Weak_Access) with Inline => True;
-   procedure Finalize(Self : in out Weak_Access) with Inline => True;
+   overriding procedure Adjust  (Self : in out Weak_Access);
+   overriding procedure Finalize(Self : in out Weak_Access);
+
 
    -----------------------------------------------------------------------------
    -- Unique_Access type
@@ -247,15 +256,16 @@ package Bullfrog.Access_Types.Smart_Access is
       with
          Inline => True;
 
-   -- Returns a dereferenced view of the Unique_Access object's reference
+   -- Provides modifiable reference to the data.  Return value acts
+   -- as if it is of Element_Type
    function Reference
       (Self : in Unique_Access)
        return Reference_Holder
       with
          Inline => True;
 
-   -- Returns a dereferenced read-only view of the Unique_Access object's
-   -- reference
+   -- Provides modifiable reference to the data.  Return value acts
+   -- as if it is of constant Element_Type
    function Constant_Reference
       (Self : in Unique_Access)
        return Constant_Reference_Holder
@@ -277,88 +287,14 @@ package Bullfrog.Access_Types.Smart_Access is
          Inline => True;
 
    -- Swaps two Unique_Access objects
-   procedure Swap(Left, Right : in out Unique_Access) with Inline => True;
+   procedure Swap(Left, Right : in out Unique_Access);
 
-   -- Moves one Weak_Access object into another, destroying the
+   -- Moves one Shared_Access object into another, destroying the
    -- source object in the process.
-   procedure Move (Target, Source : in out Unique_Access) with Inline => True;
+   procedure Move (Target, Source : in out Unique_Access);
 
    -- Override for Ada.Finalization.Limited_Controlled
-   procedure Finalize(Self : in out Unique_Access) with Inline => True;
-
-
-
-   -- This package provides all the constructing operations for Smart_Access
-   -- types.
-   package Make is
-
-      -- Constructs a Shared_Access object
-      procedure Shared_Access
-         (Target : in out Smart_Access.Shared_Access;
-          Source : in     not null Element_Access)
-         with
-            Inline => True;
-      procedure Shared_Access
-         (Target : in out Smart_Access.Shared_Access;
-          Source : in     Smart_Access.Shared_Access)
-         with
-            Inline => True;
-      procedure Shared_Access
-         (Target : in out Smart_Access.Shared_Access;
-          Source : in out Smart_Access.Unique_Access)
-         with
-            Inline => True;
-      function Shared_Access
-         (Source : in not null Element_Access)
-          return Smart_Access.Shared_Access
-         with
-            Inline => True;
-      function Shared_Access
-         (Source : in out Smart_Access.Unique_Access)
-          return Smart_Access.Shared_Access
-         with
-            Inline => True;
-
-      -- Constructs a Weak_Access object
-      procedure Weak_Access
-         (Target : in out Smart_Access.Weak_Access;
-          Source : in     Smart_Access.Weak_Access)
-         with
-            Inline => True;
-      procedure Weak_Access
-         (Target : in out Smart_Access.Weak_Access;
-          Source : in     Smart_Access.Shared_Access)
-         with
-            Inline => True;
-      function Weak_Access
-         (Source : in Smart_Access.Shared_Access)
-          return Smart_Access.Weak_Access
-         with
-            Inline => True;
-
-      -- Constructs a Unique_Access object
-      procedure Unique_Access
-         (Target : in out Smart_Access.Unique_Access;
-          Source : in     not null Element_Access)
-         with
-            Inline => True;
-      procedure Unique_Access
-         (Target : in out Smart_Access.Unique_Access;
-          Source : in out Smart_Access.Unique_Access)
-         with
-            Inline => True;
-      function Unique_Access
-         (Source : in not null Element_Access)
-          return Smart_Access.Unique_Access
-         with
-            Inline => True;
-      function Unique_Access
-         (Source : in out Smart_Access.Unique_Access)
-          return Smart_Access.Unique_Access
-         with
-            Inline => True;
-
-   end Make;
+   overriding procedure Finalize(Self : in out Unique_Access);
 
    -- This package provides special purpose non-primitive operations for
    -- Smart_Access types.
@@ -368,18 +304,14 @@ package Bullfrog.Access_Types.Smart_Access is
       -- reference.
       function Use_Count
          (Self : in Shared_Access)
-          return Basic_Count
-         with
-            Inline => True;
+          return Basic_Count;
 
       -- Returns the number of Weak_Access objects that manage this
       -- reference.  If any Shared_Access objects manage this resource,
       -- a value of 1 is added to the count.
       function Weak_Count
          (Self : in Shared_Access)
-          return Basic_Count
-         with
-            Inline => True;
+          return Basic_Count;
 
       -- Provides dangerous unprotected access to the item type.  This should
       -- only be used when developing wrappers for this type or when needing
@@ -400,23 +332,18 @@ package Bullfrog.Access_Types.Smart_Access is
          with
             Inline => True;
 
-
       -- Returns the number of Shared_Access objects that manage this
       -- reference.
       function Use_Count
          (Self : in Weak_Access)
-          return Basic_Count
-         with
-            Inline => True;
+          return Basic_Count;
 
       -- Returns the number of Weak_Access objects that manage this
       -- reference.  If any Shared_Access objects manage this resource,
       -- a value of 1 is added to the count.
       function Weak_Count
          (Self : in Weak_Access)
-          return Basic_Count
-         with
-            Inline => True;
+          return Basic_Count;
 
       -- Returns True if the Weak_Access object is assigned to the
       -- Shared_Access object's resource.
@@ -457,4 +384,57 @@ package Bullfrog.Access_Types.Smart_Access is
 
    end Utilities;
 
-end Bullfrog.Access_Types.Smart_Access;
+private
+
+   -- Container for the two reference counts
+   type Counts is record
+      Strong : Reference_Counts.Reference_Count(Atomic_Increment);
+      Weak   : Reference_Counts.Reference_Count(Atomic_Increment);
+   end record;
+
+   -- Access type for the counts container
+   type Counts_Access is access Counts;
+
+   -----------------------------------------------------------------------------
+   -- Element_Type finalization
+   -----------------------------------------------------------------------------
+
+   -- Access to deallocation procedure for Element_Type objects
+   type Deallocation is access procedure (Memory : in out Element_Access);
+
+   -- Actaul deallocation procedure holder (assigned by Make package)
+   Deallocate : Deallocation := null with Volatile;
+
+
+   -----------------------------------------------------------------------------
+   -- Shared_Access type
+   -----------------------------------------------------------------------------
+
+   type Shared_Access is new Ada.Finalization.Controlled with
+      record
+         Item_Reference   : Element_Access := null;
+         Counts_Reference : Counts_Access  := null;
+      end record;
+
+
+   -----------------------------------------------------------------------------
+   -- Weak_Access type
+   -----------------------------------------------------------------------------
+
+   type Weak_Access is new Ada.Finalization.Controlled with
+      record
+         Item_Reference   : Element_Access := null;
+         Counts_Reference : Counts_Access  := null;
+      end record;
+
+
+   -----------------------------------------------------------------------------
+   -- Unique_Access type
+   -----------------------------------------------------------------------------
+
+   type Unique_Access is new Ada.Finalization.Limited_Controlled with
+      record
+         Item_Reference : Element_Access := null;
+      end record;
+
+end Bullfrog.Access_Types.Custom_Smart_Access;

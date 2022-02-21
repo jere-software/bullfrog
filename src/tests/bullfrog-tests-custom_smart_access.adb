@@ -3,7 +3,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with System.Address_Image;
 with System.Storage_Elements; use System.Storage_Elements;
 
-package body Bullfrog.Tests.Smart_Access is
+package body Bullfrog.Tests.Custom_Smart_Access is
 
    ID : Integer := 0;
 
@@ -41,7 +41,7 @@ package body Bullfrog.Tests.Smart_Access is
       return ("Shared: " & TT_Debug.To_String(Obj) & " => " & Temp);
    end To_String;
    function To_String(Obj : TT.Weak_Access)   return String is
-      Shared : TT.Shared_Access := TT.Make.Shared_Access(Obj);
+      Shared : TT.Shared_Access := TT_Make.Shared_Access(Obj);
       Temp   : String           := (if
                                        Shared.Is_Null
                                     then
@@ -62,4 +62,4 @@ package body Bullfrog.Tests.Smart_Access is
       return ("Unique: " & TT_Debug.To_String(Obj) & " => " & Temp);
    end To_String;
 
-end Bullfrog.Tests.Smart_Access;
+end Bullfrog.Tests.Custom_Smart_Access;
