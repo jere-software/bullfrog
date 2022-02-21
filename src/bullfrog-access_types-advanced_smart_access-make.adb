@@ -30,7 +30,7 @@
 with Ada.Unchecked_Deallocation;
 with Ada.Unchecked_Conversion;
 
-package body Bullfrog.Access_Types.Custom_Smart_Access.Make is
+package body Bullfrog.Access_Types.Advanced_Smart_Access.Make is
    
    -- Access type to local deallocation method
    type Deallocation is access procedure (Memory : in out Element_Access);
@@ -49,15 +49,15 @@ package body Bullfrog.Access_Types.Custom_Smart_Access.Make is
    -- This function converts Element_Access between packages
    function Convert is new Ada.Unchecked_Conversion
       (Source => Element_Access,
-       Target => Custom_Smart_Access.Element_Access);
+       Target => Advanced_Smart_Access.Element_Access);
    
    -- This function converts Deallocation objects between pacakges
    function Convert is new Ada.Unchecked_Conversion
       (Source => Deallocation,
-       Target => Custom_Smart_Access.Deallocation);
+       Target => Advanced_Smart_Access.Deallocation);
    
    procedure Shared_Access
-      (Target : in out Custom_Smart_Access.Shared_Access;
+      (Target : in out Advanced_Smart_Access.Shared_Access;
        Source : in     not null Element_Access)
    is
    begin
@@ -75,8 +75,8 @@ package body Bullfrog.Access_Types.Custom_Smart_Access.Make is
    end Shared_Access;
 
    procedure Shared_Access
-      (Target : in out Custom_Smart_Access.Shared_Access;
-       Source : in     Custom_Smart_Access.Shared_Access)
+      (Target : in out Advanced_Smart_Access.Shared_Access;
+       Source : in     Advanced_Smart_Access.Shared_Access)
    is
    begin
       Target.Finalize;
@@ -89,8 +89,8 @@ package body Bullfrog.Access_Types.Custom_Smart_Access.Make is
    end Shared_Access;
 
    procedure Shared_Access
-      (Target : in out Custom_Smart_Access.Shared_Access;
-       Source : in     Custom_Smart_Access.Weak_Access)
+      (Target : in out Advanced_Smart_Access.Shared_Access;
+       Source : in     Advanced_Smart_Access.Weak_Access)
    is
       use Access_Types.Reference_Counts;
    begin
@@ -104,8 +104,8 @@ package body Bullfrog.Access_Types.Custom_Smart_Access.Make is
    end Shared_Access;
 
    procedure Shared_Access
-      (Target : in out Custom_Smart_Access.Shared_Access;
-       Source : in out Custom_Smart_Access.Unique_Access)
+      (Target : in out Advanced_Smart_Access.Shared_Access;
+       Source : in out Advanced_Smart_Access.Unique_Access)
    is
    begin
       Target.Finalize;
@@ -118,7 +118,7 @@ package body Bullfrog.Access_Types.Custom_Smart_Access.Make is
 
    function Shared_Access
       (Source : in not null Element_Access)
-       return Custom_Smart_Access.Shared_Access
+       return Advanced_Smart_Access.Shared_Access
    is
    begin
       return (Ada.Finalization.Controlled with
@@ -135,8 +135,8 @@ package body Bullfrog.Access_Types.Custom_Smart_Access.Make is
    end Shared_Access;
 
    function Shared_Access
-      (Source : in Custom_Smart_Access.Weak_Access)
-       return Custom_Smart_Access.Shared_Access
+      (Source : in Advanced_Smart_Access.Weak_Access)
+       return Advanced_Smart_Access.Shared_Access
    is
       use Access_Types.Reference_Counts;
    begin
@@ -158,8 +158,8 @@ package body Bullfrog.Access_Types.Custom_Smart_Access.Make is
    end Shared_Access;
 
    function Shared_Access
-      (Source : in out Custom_Smart_Access.Unique_Access)
-       return Custom_Smart_Access.Shared_Access
+      (Source : in out Advanced_Smart_Access.Unique_Access)
+       return Advanced_Smart_Access.Shared_Access
    is
    begin
       if Source.Item_Reference = null then
@@ -167,7 +167,7 @@ package body Bullfrog.Access_Types.Custom_Smart_Access.Make is
                  Item_Reference   => null,
                  Counts_Reference => null);
       else
-         return Target : Custom_Smart_Access.Shared_Access do
+         return Target : Advanced_Smart_Access.Shared_Access do
             Target.Counts_Reference := new Counts;
             Target.Item_Reference   := Source.Item_Reference;
             Source.Item_Reference   := null;
@@ -176,8 +176,8 @@ package body Bullfrog.Access_Types.Custom_Smart_Access.Make is
    end Shared_Access;
 
    procedure Weak_Access
-      (Target : in out Custom_Smart_Access.Weak_Access;
-       Source : in     Custom_Smart_Access.Weak_Access)
+      (Target : in out Advanced_Smart_Access.Weak_Access;
+       Source : in     Advanced_Smart_Access.Weak_Access)
    is
    begin
       Target.Finalize;
@@ -189,8 +189,8 @@ package body Bullfrog.Access_Types.Custom_Smart_Access.Make is
    end Weak_Access;
 
    procedure Weak_Access
-      (Target : in out Custom_Smart_Access.Weak_Access;
-       Source : in     Custom_Smart_Access.Shared_Access)
+      (Target : in out Advanced_Smart_Access.Weak_Access;
+       Source : in     Advanced_Smart_Access.Shared_Access)
    is
    begin
       Target.Finalize;
@@ -202,8 +202,8 @@ package body Bullfrog.Access_Types.Custom_Smart_Access.Make is
    end Weak_Access;
 
    function Weak_Access
-      (Source : in Custom_Smart_Access.Shared_Access)
-       return Custom_Smart_Access.Weak_Access
+      (Source : in Advanced_Smart_Access.Shared_Access)
+       return Advanced_Smart_Access.Weak_Access
    is
    begin
       if Source.Counts_Reference = null then
@@ -219,7 +219,7 @@ package body Bullfrog.Access_Types.Custom_Smart_Access.Make is
    end Weak_Access;
 
    procedure Unique_Access
-      (Target : in out Custom_Smart_Access.Unique_Access;
+      (Target : in out Advanced_Smart_Access.Unique_Access;
        Source : in     not null Element_Access)
    is
    begin
@@ -228,8 +228,8 @@ package body Bullfrog.Access_Types.Custom_Smart_Access.Make is
    end Unique_Access;
 
    procedure Unique_Access
-      (Target : in out Custom_Smart_Access.Unique_Access;
-       Source : in out Custom_Smart_Access.Unique_Access)
+      (Target : in out Advanced_Smart_Access.Unique_Access;
+       Source : in out Advanced_Smart_Access.Unique_Access)
    is
    begin
       Target.Finalize;
@@ -239,7 +239,7 @@ package body Bullfrog.Access_Types.Custom_Smart_Access.Make is
 
    function Unique_Access
       (Source : in not null Element_Access)
-       return Custom_Smart_Access.Unique_Access
+       return Advanced_Smart_Access.Unique_Access
    is
    begin
       return (Ada.Finalization.Limited_Controlled with
@@ -247,15 +247,15 @@ package body Bullfrog.Access_Types.Custom_Smart_Access.Make is
    end Unique_Access;
 
    function Unique_Access
-      (Source : in out Custom_Smart_Access.Unique_Access)
-       return Custom_Smart_Access.Unique_Access
+      (Source : in out Advanced_Smart_Access.Unique_Access)
+       return Advanced_Smart_Access.Unique_Access
    is
    begin
       if Source.Item_Reference = null then
          return (Ada.Finalization.Limited_Controlled with
                  Item_Reference => null);
       else
-         return Target : Custom_Smart_Access.Unique_Access do
+         return Target : Advanced_Smart_Access.Unique_Access do
             Target.Item_Reference := Source.Item_Reference;
             Source.Item_Reference := null;
          end return;
@@ -266,15 +266,15 @@ begin
    
    -- This validates that the same Traits package is used for both packages
    -- to ensure that the unchecked conversions are correct
-   if Traits.Get_Package_ID /= Custom_Smart_Access.Traits.Get_Package_ID then
+   if Traits.Get_Package_ID /= Advanced_Smart_Access.Traits.Get_Package_ID then
       raise Program_Error with "Incompatable traits package used in Make";
    end if;
    
    -- Do the accessibility check first.  The Deallocate variable is
    -- volatile to ensure both assignments are not optimized out.
-   Custom_Smart_Access.Deallocate := Deallocate_Check;
+   Advanced_Smart_Access.Deallocate := Deallocate_Check;
    
    -- Assign the actual deallocation routine
-   Custom_Smart_Access.Deallocate := Convert(Deallocate_Wrapper'Access);
+   Advanced_Smart_Access.Deallocate := Convert(Deallocate_Wrapper'Access);
 
-end Bullfrog.Access_Types.Custom_Smart_Access.Make;
+end Bullfrog.Access_Types.Advanced_Smart_Access.Make;

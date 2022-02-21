@@ -27,9 +27,28 @@
 --  covered by the GNU Public License.                                      --
 ------------------------------------------------------------------------------
 
+-- This package provides a set of traits needed to handle incomplete types
+-- for Smart_Access based packages.
 generic
-package Bullfrog.Access_Types.Custom_Smart_Access.Debug is
-   function To_String(Object : Shared_Access) return String;
-   function To_String(Object : Weak_Access)   return String;
-   function To_String(Object : Unique_Access) return String;
-end Bullfrog.Access_Types.Custom_Smart_Access.Debug;
+   
+   -- The basic type held by a Smart_Access type
+   type Element_Type(<>);
+   
+package Bullfrog.Access_Types.Advanced_Smart_Access_Traits is
+
+   -- Returns the ID for this package instantiation.  The ID is unique only
+   -- while the package is in scope.
+   function Get_Package_ID return Trait_Package_ID;
+   
+private
+   
+   -- Dummy variable type needed
+   type Dummy is null record;
+   
+   -- Dummy variable
+   Placeholder : constant Dummy := (null record);
+   
+   function Get_Package_ID return Trait_Package_ID is 
+      (Trait_Package_ID(Placeholder'Address));
+   
+end Bullfrog.Access_Types.Advanced_Smart_Access_Traits;

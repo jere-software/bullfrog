@@ -1,17 +1,17 @@
-with Bullfrog.Access_Types.Custom_Smart_Access;
-with Bullfrog.Access_Types.Custom_Smart_Access.Debug;
-with Bullfrog.Access_Types.Custom_Smart_Access_Traits;
-with Bullfrog.Access_Types.Custom_Smart_Access.Make;
+with Bullfrog.Access_Types.Advanced_Smart_Access;
+with Bullfrog.Access_Types.Advanced_Smart_Access.Debug;
+with Bullfrog.Access_Types.Advanced_Smart_Access_Traits;
+with Bullfrog.Access_Types.Advanced_Smart_Access.Make;
 
 package Bullfrog.Tests.Smart_Access_Node is
 
    type Node;
    type Node_Access is access Node;
 
-   package Node_Traits is new Bullfrog.Access_Types.Custom_Smart_Access_Traits
+   package Node_Traits is new Bullfrog.Access_Types.Advanced_Smart_Access_Traits
       (Element_Type => Node);
 
-   package Node_Smart_Access is new Bullfrog.Access_Types.Custom_Smart_Access
+   package Node_Smart_Access is new Bullfrog.Access_Types.Advanced_Smart_Access
       (Traits           => Node_Traits,
        Atomic_Increment => True);
 

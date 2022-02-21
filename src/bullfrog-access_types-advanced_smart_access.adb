@@ -30,7 +30,7 @@
 
 with Ada.Unchecked_Deallocation;
 
-package body Bullfrog.Access_Types.Custom_Smart_Access is
+package body Bullfrog.Access_Types.Advanced_Smart_Access is
 
    use type Bullfrog.Access_Types.Reference_Counts.Basic_Count;
 
@@ -375,4 +375,4 @@ package body Bullfrog.Access_Types.Custom_Smart_Access is
 
    end Utilities;
 
-end Bullfrog.Access_Types.Custom_Smart_Access;
+end Bullfrog.Access_Types.Advanced_Smart_Access;

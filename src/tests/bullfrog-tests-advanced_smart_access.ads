@@ -1,24 +1,24 @@
-with Bullfrog.Access_Types.Custom_Smart_Access_Traits;
-with Bullfrog.Access_Types.Custom_Smart_Access;
-with Bullfrog.Access_Types.Custom_Smart_Access.Make;
-with Bullfrog.Access_Types.Custom_Smart_Access.Debug;
+with Bullfrog.Access_Types.Advanced_Smart_Access_Traits;
+with Bullfrog.Access_Types.Advanced_Smart_Access;
+with Bullfrog.Access_Types.Advanced_Smart_Access.Make;
+with Bullfrog.Access_Types.Advanced_Smart_Access.Debug;
 
-package Bullfrog.Tests.Custom_Smart_Access is
+package Bullfrog.Tests.Advanced_Smart_Access is
 
    type Test_Type;
    type Test_Access is access Test_Type;
 
-   package TT_Traits is new Bullfrog.Access_Types.Custom_Smart_Access_Traits
+   package TT_Traits is new Bullfrog.Access_Types.Advanced_Smart_Access_Traits
       (Element_Type => Test_Type);
 
-   package TT is new Bullfrog.Access_Types.Custom_Smart_Access
+   package TT is new Bullfrog.Access_Types.Advanced_Smart_Access
       (Traits           => TT_Traits,
        Atomic_Increment => False);
 
-   package TC_Traits is new Bullfrog.Access_Types.Custom_Smart_Access_Traits
+   package TC_Traits is new Bullfrog.Access_Types.Advanced_Smart_Access_Traits
       (Element_Type => Test_Type'Class);
 
-   package TC is new Bullfrog.Access_Types.Custom_Smart_Access
+   package TC is new Bullfrog.Access_Types.Advanced_Smart_Access
       (Traits           => TT_Traits,
        Atomic_Increment => False);
 
@@ -42,4 +42,4 @@ package Bullfrog.Tests.Custom_Smart_Access is
    function To_String(Obj : TT.Weak_Access)   return String;
    function To_String(Obj : TT.Unique_Access) return String;
 
-end Bullfrog.Tests.Custom_Smart_Access;
+end Bullfrog.Tests.Advanced_Smart_Access;

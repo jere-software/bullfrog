@@ -26,8 +26,8 @@
 --  however invalidate any other reasons why the executable file might be   --
 --  covered by the GNU Public License.                                      --
 ------------------------------------------------------------------------------
-with Bullfrog.Access_Types.Custom_Smart_Access_Traits;
-with Bullfrog.Access_Types.Custom_Smart_Access;
+with Bullfrog.Access_Types.Advanced_Smart_Access_Traits;
+with Bullfrog.Access_Types.Advanced_Smart_Access;
 
 -- This package provides simple smart access types.  They are suitable for
 -- most user defined types (in particular not for incomplete types).
@@ -53,9 +53,9 @@ package Bullfrog.Access_Types.Smart_Access is
    -----------------------------------------------------------------------------
 
    -- Core implementation.  Do not use directly
-   package Core_Traits is new Custom_Smart_Access_Traits
+   package Core_Traits is new Advanced_Smart_Access_Traits
       (Element_Type => Element_Type);
-   package Core is new Access_Types.Custom_Smart_Access
+   package Core is new Access_Types.Advanced_Smart_Access
       (Traits           => Core_Traits,
        Atomic_Increment => Atomic_Increment);
 

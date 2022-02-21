@@ -31,7 +31,7 @@ with System.Address_Image;
 with Ada.Unchecked_Conversion;
 with System.Storage_Elements; use System.Storage_Elements;
 
-package body Bullfrog.Access_Types.Custom_Smart_Access.Debug is
+package body Bullfrog.Access_Types.Advanced_Smart_Access.Debug is
 
    function To_Integer is new Ada.Unchecked_Conversion
       (Source => Element_Access,
@@ -80,4 +80,4 @@ package body Bullfrog.Access_Types.Custom_Smart_Access.Debug is
          & Integer_Address'Image(To_Integer(Object.Item_Reference))
          & ")";
    end To_String;
-end Bullfrog.Access_Types.Custom_Smart_Access.Debug;
+end Bullfrog.Access_Types.Advanced_Smart_Access.Debug;

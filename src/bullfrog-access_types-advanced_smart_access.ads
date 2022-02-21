@@ -30,14 +30,14 @@
 
 with Ada.Finalization;
 with Bullfrog.Access_Types.Reference_Counts;
-with Bullfrog.Access_Types.Custom_Smart_Access_Traits;
+with Bullfrog.Access_Types.Advanced_Smart_Access_Traits;
 
 -- This package provides general smart access types.  They are suitable for
 -- almost any ada type.
 generic
 
    -- This package contains the element type to make Smart_Access types for.
-   with package Traits is new Custom_Smart_Access_Traits(<>);
+   with package Traits is new Advanced_Smart_Access_Traits(<>);
 
    -- This specifies whether or not to use atomic increment (a count wrapped
    -- in a protected object).  For single task applications, this should
@@ -49,7 +49,7 @@ generic
    -- It also does not guarantee task safety on the resource itself.
    Atomic_Increment : Boolean := False;
 
-package Bullfrog.Access_Types.Custom_Smart_Access is
+package Bullfrog.Access_Types.Advanced_Smart_Access is
 
    -----------------------------------------------------------------------------
    -- Package Types
@@ -437,4 +437,4 @@ private
          Item_Reference : Element_Access := null;
       end record;
 
-end Bullfrog.Access_Types.Custom_Smart_Access;
+end Bullfrog.Access_Types.Advanced_Smart_Access;

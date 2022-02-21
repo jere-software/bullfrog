@@ -27,7 +27,7 @@
 --  covered by the GNU Public License.                                      --
 ------------------------------------------------------------------------------
 
-with Bullfrog.Access_Types.Custom_Smart_Access;
+with Bullfrog.Access_Types.Advanced_Smart_Access;
 
 -- This package provides all the constructing operations for Smart_Access
 -- types.
@@ -43,57 +43,57 @@ generic
    -- This package contains the element type to make Smart_Access types for.
    -- This is used to validate that the two Element_Types used here
    -- and in the parent package actually match.
-   with package Traits is new Custom_Smart_Access_Traits(Element_Type);
+   with package Traits is new Advanced_Smart_Access_Traits(Element_Type);
    
-package Bullfrog.Access_Types.Custom_Smart_Access.Make is
+package Bullfrog.Access_Types.Advanced_Smart_Access.Make is
    
    -- Constructs a Shared_Access object
    procedure Shared_Access
-      (Target : in out Custom_Smart_Access.Shared_Access;
+      (Target : in out Advanced_Smart_Access.Shared_Access;
        Source : in     not null Element_Access);
    procedure Shared_Access
-      (Target : in out Custom_Smart_Access.Shared_Access;
-       Source : in     Custom_Smart_Access.Shared_Access);
+      (Target : in out Advanced_Smart_Access.Shared_Access;
+       Source : in     Advanced_Smart_Access.Shared_Access);
    procedure Shared_Access
-      (Target : in out Custom_Smart_Access.Shared_Access;
-       Source : in     Custom_Smart_Access.Weak_Access);
+      (Target : in out Advanced_Smart_Access.Shared_Access;
+       Source : in     Advanced_Smart_Access.Weak_Access);
    procedure Shared_Access
-      (Target : in out Custom_Smart_Access.Shared_Access;
-       Source : in out Custom_Smart_Access.Unique_Access);
+      (Target : in out Advanced_Smart_Access.Shared_Access;
+       Source : in out Advanced_Smart_Access.Unique_Access);
    function Shared_Access
       (Source : in not null Element_Access)
-       return Custom_Smart_Access.Shared_Access;
+       return Advanced_Smart_Access.Shared_Access;
    function Shared_Access
-      (Source : in Custom_Smart_Access.Weak_Access)
-       return Custom_Smart_Access.Shared_Access;
+      (Source : in Advanced_Smart_Access.Weak_Access)
+       return Advanced_Smart_Access.Shared_Access;
    function Shared_Access
-      (Source : in out Custom_Smart_Access.Unique_Access)
-       return Custom_Smart_Access.Shared_Access;
+      (Source : in out Advanced_Smart_Access.Unique_Access)
+       return Advanced_Smart_Access.Shared_Access;
 
    -- Constructs a Weak_Access object
    procedure Weak_Access
-      (Target : in out Custom_Smart_Access.Weak_Access;
-       Source : in     Custom_Smart_Access.Weak_Access);
+      (Target : in out Advanced_Smart_Access.Weak_Access;
+       Source : in     Advanced_Smart_Access.Weak_Access);
    procedure Weak_Access
-      (Target : in out Custom_Smart_Access.Weak_Access;
-       Source : in     Custom_Smart_Access.Shared_Access);
+      (Target : in out Advanced_Smart_Access.Weak_Access;
+       Source : in     Advanced_Smart_Access.Shared_Access);
    function Weak_Access
-      (Source : in Custom_Smart_Access.Shared_Access)
-       return Custom_Smart_Access.Weak_Access;
+      (Source : in Advanced_Smart_Access.Shared_Access)
+       return Advanced_Smart_Access.Weak_Access;
 
    -- Constructs a Unique_Access object
    procedure Unique_Access
-      (Target : in out Custom_Smart_Access.Unique_Access;
+      (Target : in out Advanced_Smart_Access.Unique_Access;
        Source : in     not null Element_Access);
    procedure Unique_Access
-      (Target : in out Custom_Smart_Access.Unique_Access;
-       Source : in out Custom_Smart_Access.Unique_Access);
+      (Target : in out Advanced_Smart_Access.Unique_Access;
+       Source : in out Advanced_Smart_Access.Unique_Access);
    function Unique_Access
       (Source : in not null Element_Access)
-          return Custom_Smart_Access.Unique_Access;
+          return Advanced_Smart_Access.Unique_Access;
    function Unique_Access
-      (Source : in out Custom_Smart_Access.Unique_Access)
-       return Custom_Smart_Access.Unique_Access;
+      (Source : in out Advanced_Smart_Access.Unique_Access)
+       return Advanced_Smart_Access.Unique_Access;
    
 private
    
@@ -101,7 +101,7 @@ private
    -- instantiated at an accessibility level lower than the parent
    -- package
    procedure Accessibility_Check
-      (Memory : in out Custom_Smart_Access.Element_Access) 
+      (Memory : in out Advanced_Smart_Access.Element_Access) 
    is null;
    
    -- Ada rules require that the Access to Accessibiity_Check only be used
@@ -109,4 +109,4 @@ private
    -- temporary holding spot for it.
    Deallocate_Check : constant Deallocation := Accessibility_Check'Access;
 
-end Bullfrog.Access_Types.Custom_Smart_Access.Make;
+end Bullfrog.Access_Types.Advanced_Smart_Access.Make;

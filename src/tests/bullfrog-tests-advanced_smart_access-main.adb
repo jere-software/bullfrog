@@ -1,9 +1,9 @@
-with Bullfrog.Tests.Custom_Smart_Access;  use Bullfrog.Tests.Custom_Smart_Access;
+with Bullfrog.Tests.Advanced_Smart_Access;  use Bullfrog.Tests.Advanced_Smart_Access;
 with Ada.Text_IO; use Ada.Text_IO;
-with Bullfrog.Access_Types.Custom_Smart_Access.Debug;
+with Bullfrog.Access_Types.Advanced_Smart_Access.Debug;
 with Bullfrog.Tests.Smart_Access_Node;
 
-package body Bullfrog.Tests.Custom_Smart_Access.Main is
+package body Bullfrog.Tests.Advanced_Smart_Access.Main is
    procedure Run is
       -- Test initialization
       tts1 : aliased TT.Shared_Access := TT_Make.Shared_Access(Make_Test_Type);
@@ -96,4 +96,4 @@ package body Bullfrog.Tests.Custom_Smart_Access.Main is
          Put_Line(To_String(ttu(Index).all));
       end loop;
    end Run;
-end Bullfrog.Tests.Custom_Smart_Access.Main;
+end Bullfrog.Tests.Advanced_Smart_Access.Main;
