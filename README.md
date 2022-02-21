@@ -13,15 +13,16 @@ __Windows 10__
 * GNAT Community 2019 (GPLv3)
 * FSF GNAT 8.2.0 (GPLv3 with Runtime Exception)
 * FSF GNAT 9.1.0 (GPLv3 with Runtime Exception)
+* FSF GNAT 10.3.0 (GPLv3 with Runtime Exception)
 
 __Linux__
 * Untested
 
 ## Components
 ### Smart_Access Types
-In the **Bullfrog.Access_Types.Smart_Access** and **Bullfrog.Access_Types.Simple_Smart_Access** packages, the Bullfrog library provides a variety of types designed to make memory management as automatic as possible.  These are intended to be "building block" types and not client facing types.  In a basic sense, the 3 primary types are:
+In the **Bullfrog.Access_Types.Smart_Access** and **Bullfrog.Access_Types.Advanced_Smart_Access** packages, the Bullfrog library provides a variety of types designed to make memory management as automatic as possible.  These are intended to be "building block" types and not client facing types.  In a basic sense, the 3 primary types are:
 
-* **Shared_Access** - Manages an access type so that it can be shared among various objects.  A Shared_Access object is copiable but it does a shallow copy (so copies the internal access variable, not the object itself).  This type, when instantiated from the Smart_Access generic package, can be used with Incomplete formal types in generics to make self referencial data structures, but be aware of circular dependancies if you do so.
+* **Shared_Access** - Manages an access type so that it can be shared among various objects.  A Shared_Access object is copiable but it does a shallow copy (so copies the internal access variable, not the object itself).  This type, when instantiated from the Advanced_Smart_Access generic package, can be used with Incomplete formal types in generics to make self referencial data structures, but be aware of circular dependancies if you do so.
 
 * **Weak_Access** - Primarily used to break circular dependencies in self referencial types that use Shared_Access objects.  Additionally, they can be used to emulate "handle" type designs since they do not allow direct access to the object.  A Weak_Access object must be promoted to a Shared_Access object in order to access the underlying resource.
 
@@ -29,11 +30,28 @@ In the **Bullfrog.Access_Types.Smart_Access** and **Bullfrog.Access_Types.Simple
 
 Smart_Access types don't have atomic reference counting by default.  This can be turned on when instantiating the generic if using them in a multithreaded context.  Even when atomic reference counts are enabled, the Smart_Access types are not themselves task safe, nor are the resources task safe.  Protected objects or other primatives must be used to achieve task safety in those two contexts.
 
-The main differences between the Smart_Access and Simple_Smart_Access packages is that the Simple_Smart_Access package provides both the underlying access type and the finalization operation for the package and it cannot be used with incomplete formal types.  In 99% of applications, the Simple_Smart_Access will probably be the package of choice.  Use the Smart_Access package if:
+The main differences between the Smart_Access and Advanced_Smart_Access packages is that the Smart_Access package is intended to be used with most types while the various Advanced_Smart_Access packages are intended to be used with incomplete formal types and/or types that need custom storage pools.  In 99% of applications, the Smart_Access will probably be the package of choice.  Only use the Advanced_Smart_Access package if:
 
 * You need a self referencing data structure
 * You need to provided the access type used (say to provide a storage pool or another library's type)
-* You need a custom deleter or finalization instead of the standard Unchecked_Deallocation method
+<br><br>
+<table border=6px>
+   <tr><th>Package</th><th>Special Types Supported</th></tr>
+   <tr>
+      <td>Smart_Access</td>
+      <td>Indefinite<br>
+          Limited
+      </td>
+   </tr>
+   <tr>
+      <td>Advanced_Smart_Access</td>
+      <td>Indefinite<br>
+          Limited<br>
+          Incomplete<br>
+          Types with custom storage pools
+      </td>
+   </tr>
+</table><br>
 
 ***
 
