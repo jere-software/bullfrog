@@ -30,7 +30,8 @@
 with Bullfrog.Access_Types.Advanced_Smart_Access;
 
 -- This package provides all the constructing operations for Smart_Access
--- types.
+-- types.  See the package Advanced_Smart_Access for ane sample on how to use 
+-- this package.
 generic
    
    -- The complete type that corresponds to Element_Type used

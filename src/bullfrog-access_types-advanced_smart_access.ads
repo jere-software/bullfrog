@@ -26,11 +26,52 @@
 --  however invalidate any other reasons why the executable file might be   --
 --  covered by the GNU Public License.                                      --
 ------------------------------------------------------------------------------
-
-
 with Ada.Finalization;
 with Bullfrog.Access_Types.Reference_Counts;
 with Bullfrog.Access_Types.Advanced_Smart_Access_Traits;
+
+-- Example incomplete type declaration setup:
+--
+--    use Bullfrog.Access_Types;
+--
+--    type My_Element_Type;
+--    type My_Element_Access is access My_Element_Type;
+--
+--    package Core_Traits is new Advanced_Smart_Access_Traits
+--       (Element_Type => My_Element_Type);
+--    package Core is new Advanced_Smart_Access
+--       (Traits => Core_Traits);
+--
+--    type My_Element_Type is record
+--       <Stuff>
+--    end record;
+--
+--    package Core_Make is new Core.Make
+--       (Element_Type   => My_Element_Type,
+--        Element_Access => My_Element_Access,
+--        Traits         => Core_Traits);
+
+-- Example custom storage type declaration setup:
+--
+--    use Bullfrog.Access_Types;
+--
+--    Pool : My_Storage_Pool_Type;
+--
+--    type My_Element_Type is record
+--       <Stuff>
+--    end record;
+--
+--    type My_Element_Access is access My_Element_Type
+--       with Storage_Pool => Pool;
+--
+--    package Core_Traits is new Advanced_Smart_Access_Traits
+--       (Element_Type => My_Element_Type);
+--    package Core is new Advanced_Smart_Access
+--       (Traits => Core_Traits);
+--    package Core_Make is new Core.Make
+--       (Element_Type   => My_Element_Type,
+--        Element_Access => My_Element_Access,
+--        Traits         => Core_Traits);
 
 -- This package provides general smart access types.  They are suitable for
 -- almost any ada type.

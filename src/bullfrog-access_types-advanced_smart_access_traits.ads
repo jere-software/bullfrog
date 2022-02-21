@@ -28,7 +28,8 @@
 ------------------------------------------------------------------------------
 
 -- This package provides a set of traits needed to handle incomplete types
--- for Smart_Access based packages.
+-- for Smart_Access based packages.  See the package Advanced_Smart_Access
+-- for ane sample on how to use this package.
 generic
    
    -- The basic type held by a Smart_Access type
