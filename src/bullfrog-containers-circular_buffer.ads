@@ -37,9 +37,7 @@ generic
    -- Type that the Circular Buffer will hold at each index.
    type Item_Type is private;
 
-package Bullfrog.Containers.Circular_Buffer is
-
-   pragma Pure;
+package Bullfrog.Containers.Circular_Buffer with Pure is
 
    -----------------------------------------------------------------------------
    -- Buffer Implementation
@@ -144,15 +142,15 @@ private
    is tagged limited record
 
       -- Actual Data in the buffer.  Needs to be volatile
-      Data : Item_Array(0..Max_Size); pragma Volatile(Data);
+      Data : Item_Array(0..Max_Size) with Volatile;
 
       -- Index used exclusively by a producer to add elements to the buffer
       -- This needs to be Atomic.
-      Put_Index : Buffer_Index := 0; pragma Atomic(Put_Index);
+      Put_Index : Buffer_Index := 0 with Atomic;
 
       -- Index used exclusively by a consumer to remove elements from
       -- the buffer.  This needs to be Atomic.
-      Get_Index : Buffer_Index := 0; pragma Atomic(Get_Index);
+      Get_Index : Buffer_Index := 0 with Atomic;
 
    end record;
 

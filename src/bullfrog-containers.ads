@@ -28,9 +28,7 @@
 ------------------------------------------------------------------------------
 
 -- Top level package for the Bullfrog containers library
-package Bullfrog.Containers is
-
-   pragma Pure;
+package Bullfrog.Containers with Pure is
 
    -- This exception is raised if a Put is issued on a full container
    Container_Full  : exception;

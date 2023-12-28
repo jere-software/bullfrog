@@ -28,9 +28,7 @@
 ------------------------------------------------------------------------------
 
 -- This package provides reference count types needed for smart access types
-package Bullfrog.Access_Types.Reference_Counts is
-
-   pragma Pure;
+package Bullfrog.Access_Types.Reference_Counts with Pure is
 
    -- Basic count type for reference counting
    type Basic_Count is mod 2**32;

@@ -1,3 +1,1 @@
-package Bullfrog.Tests is
-   pragma Pure;
-end Bullfrog.Tests;
+package Bullfrog.Tests with Pure is end Bullfrog.Tests;

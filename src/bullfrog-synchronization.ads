@@ -28,9 +28,7 @@
 ------------------------------------------------------------------------------
 
 -- Base package for synchronization utilities
-package Bullfrog.Synchronization is
-
-   pragma Pure;
+package Bullfrog.Synchronization with Pure is
 
    -- Generated when attempting to use data that should be synchronized
    -- but is not

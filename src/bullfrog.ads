@@ -28,8 +28,4 @@
 ------------------------------------------------------------------------------
 
 -- Top level package for the Bullfrog library
-package Bullfrog is
-
-   pragma Pure;
-
-end Bullfrog;
+package Bullfrog with Pure is end Bullfrog;
