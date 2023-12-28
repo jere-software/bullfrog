@@ -9,18 +9,20 @@ package Bullfrog.Tests.Advanced_Smart_Access is
    type Test_Access is access Test_Type;
 
    package TT_Traits is new Bullfrog.Access_Types.Advanced_Smart_Access_Traits
-      (Element_Type => Test_Type);
+      (Element_Type     => Test_Type,
+       Atomic_Increment => False);
 
    package TT is new Bullfrog.Access_Types.Advanced_Smart_Access
-      (Traits           => TT_Traits,
-       Atomic_Increment => False);
+      (Traits => TT_Traits);
+
+   type Test_Class_Access is access all Test_Type'Class;
 
    package TC_Traits is new Bullfrog.Access_Types.Advanced_Smart_Access_Traits
-      (Element_Type => Test_Type'Class);
+      (Element_Type     => Test_Type'Class,
+       Atomic_Increment => False);
 
    package TC is new Bullfrog.Access_Types.Advanced_Smart_Access
-      (Traits           => TT_Traits,
-       Atomic_Increment => False);
+      (Traits => TT_Traits);
 
    type Test_Type(Value : Integer) is tagged limited record
       Other : Integer := 0;
@@ -30,8 +32,6 @@ package Bullfrog.Tests.Advanced_Smart_Access is
       (Element_Type   => Test_Type,
        Element_Access => Test_Access,
        Traits         => TT_Traits);
-
-   type Test_Class_Access is access all Test_Type'Class;
 
    package TT_Debug is new TT.Debug;
 

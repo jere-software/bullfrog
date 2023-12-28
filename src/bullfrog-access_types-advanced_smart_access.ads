@@ -80,16 +80,6 @@ generic
    -- This package contains the element type to make Smart_Access types for.
    with package Traits is new Advanced_Smart_Access_Traits(<>);
 
-   -- This specifies whether or not to use atomic increment (a count wrapped
-   -- in a protected object).  For single task applications, this should
-   -- be False.  When True, it does not guarantee task saftey on the
-   -- Smart_Access types, but it does guarantee that seperate Smart_Access
-   -- variables in separate tasks can safely manage the same resource.  If one
-   -- needs multiple tasks to access the same Smart_Access variable, however,
-   -- it will need to be wrapped in some sort of synchronization primitive.
-   -- It also does not guarantee task safety on the resource itself.
-   Atomic_Increment : Boolean := False;
-
 package Bullfrog.Access_Types.Advanced_Smart_Access is
 
    -----------------------------------------------------------------------------
@@ -429,8 +419,8 @@ private
 
    -- Container for the two reference counts
    type Counts is record
-      Strong : Reference_Counts.Reference_Count(Atomic_Increment);
-      Weak   : Reference_Counts.Reference_Count(Atomic_Increment);
+      Strong : Reference_Counts.Reference_Count(Traits.Atomic_Increment);
+      Weak   : Reference_Counts.Reference_Count(Traits.Atomic_Increment);
    end record;
 
    -- Access type for the counts container
@@ -444,7 +434,7 @@ private
    type Deallocation is access procedure (Memory : in out Element_Access);
 
    -- Actaul deallocation procedure holder (assigned by Make package)
-   Deallocate : Deallocation := null with Volatile;
+   Deallocate : Deallocation := null;
 
 
    -----------------------------------------------------------------------------

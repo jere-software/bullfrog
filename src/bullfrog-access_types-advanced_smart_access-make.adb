@@ -270,8 +270,7 @@ begin
       raise Program_Error with "Incompatable traits package used in Make";
    end if;
    
-   -- Do the accessibility check first.  The Deallocate variable is
-   -- volatile to ensure both assignments are not optimized out.
+   -- Do the accessibility check first.
    Advanced_Smart_Access.Deallocate := Deallocate_Check;
    
    -- Assign the actual deallocation routine

@@ -9,11 +9,11 @@ package Bullfrog.Tests.Smart_Access_Node is
    type Node_Access is access Node;
 
    package Node_Traits is new Bullfrog.Access_Types.Advanced_Smart_Access_Traits
-      (Element_Type => Node);
+      (Element_Type     => Node,
+       Atomic_Increment => True);
 
    package Node_Smart_Access is new Bullfrog.Access_Types.Advanced_Smart_Access
-      (Traits           => Node_Traits,
-       Atomic_Increment => True);
+      (Traits => Node_Traits);
 
    package Node_Debug is new Node_Smart_Access.Debug;
 

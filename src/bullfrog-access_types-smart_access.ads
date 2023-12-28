@@ -54,10 +54,10 @@ package Bullfrog.Access_Types.Smart_Access is
 
    -- Core implementation.  Do not use directly
    package Core_Traits is new Advanced_Smart_Access_Traits
-      (Element_Type => Element_Type);
-   package Core is new Access_Types.Advanced_Smart_Access
-      (Traits           => Core_Traits,
+      (Element_Type     => Element_Type,
        Atomic_Increment => Atomic_Increment);
+   package Core is new Access_Types.Advanced_Smart_Access
+      (Traits => Core_Traits);
 
    -- This type provides variable access to the resource
    subtype Element_Access is Core.Element_Access;

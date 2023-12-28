@@ -27,11 +27,10 @@
 --  covered by the GNU Public License.                                      --
 ------------------------------------------------------------------------------
 
-with Bullfrog.Access_Types.Advanced_Smart_Access;
-
 -- This package provides all the constructing operations for Smart_Access
 -- types.  See the package Advanced_Smart_Access for ane sample on how to use 
--- this package.
+-- this package.  It must be declared at the same accessibility level as
+-- the parent instantiation of Advanced_Smart_Access
 generic
    
    -- The complete type that corresponds to Element_Type used
@@ -44,7 +43,9 @@ generic
    -- This package contains the element type to make Smart_Access types for.
    -- This is used to validate that the two Element_Types used here
    -- and in the parent package actually match.
-   with package Traits is new Advanced_Smart_Access_Traits(Element_Type);
+   with package Traits is new Advanced_Smart_Access_Traits
+      (Element_Type     => Element_Type,
+       Atomic_Increment => <>);
    
 package Bullfrog.Access_Types.Advanced_Smart_Access.Make is
    

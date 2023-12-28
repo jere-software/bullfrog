@@ -35,6 +35,16 @@ generic
    -- The basic type held by a Smart_Access type
    type Element_Type(<>);
    
+   -- This specifies whether or not to use atomic increment (a count wrapped
+   -- in a protected object).  For single task applications, this should
+   -- be False.  When True, it does not guarantee task saftey on the
+   -- Smart_Access types, but it does guarantee that seperate Smart_Access
+   -- variables in separate tasks can safely manage the same resource.  If one
+   -- needs multiple tasks to access the same Smart_Access variable, however,
+   -- it will need to be wrapped in some sort of synchronization primitive.
+   -- It also does not guarantee task safety on the resource itself.
+   Atomic_Increment : Boolean := False;
+   
 package Bullfrog.Access_Types.Advanced_Smart_Access_Traits is
 
    -- Returns the ID for this package instantiation.  The ID is unique only
