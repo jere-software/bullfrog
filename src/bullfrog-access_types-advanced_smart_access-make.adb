@@ -274,6 +274,10 @@ begin
    Advanced_Smart_Access.Deallocate := Deallocate_Check;
    
    -- Assign the actual deallocation routine
-   Advanced_Smart_Access.Deallocate := Convert(Deallocate_Wrapper'Access);
+   Advanced_Smart_Access.Deallocate := Convert
+      (if Custom_Deallocator = null then
+          Deallocate_Wrapper'Access
+       else
+          Custom_Deallocator);
 
 end Bullfrog.Access_Types.Advanced_Smart_Access.Make;

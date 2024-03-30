@@ -47,6 +47,12 @@ generic
       (Element_Type     => Element_Type,
        Atomic_Increment => <>);
    
+   -- Provide a custom deallocation procedure.  Providing this will 
+   -- make the packange not call Unchecked_Deallocation internally.  The
+   -- supplied procedure here needs to handle deallocation if needed
+   Custom_Deallocator : access procedure (Element : in out Element_Access) 
+      := null;
+   
 package Bullfrog.Access_Types.Advanced_Smart_Access.Make is
    
    -- Constructs a Shared_Access object
