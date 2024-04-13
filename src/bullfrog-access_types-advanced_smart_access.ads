@@ -26,71 +26,50 @@
 --  however invalidate any other reasons why the executable file might be   --
 --  covered by the GNU Public License.                                      --
 ------------------------------------------------------------------------------
+
+
 with Ada.Finalization;
 with Bullfrog.Access_Types.Reference_Counts;
-with Bullfrog.Access_Types.Advanced_Smart_Access_Traits;
-
--- Example incomplete type declaration setup:
---
---    use Bullfrog.Access_Types;
---
---    type My_Element_Type;
---    type My_Element_Access is access My_Element_Type;
---
---    package Core_Traits is new Advanced_Smart_Access_Traits
---       (Element_Type => My_Element_Type);
---    package Core is new Advanced_Smart_Access
---       (Traits => Core_Traits);
---
---    type My_Element_Type is record
---       <Stuff>
---    end record;
---
---    package Core_Make is new Core.Make
---       (Element_Type   => My_Element_Type,
---        Element_Access => My_Element_Access,
---        Traits         => Core_Traits);
-
--- Example custom storage type declaration setup:
---
---    use Bullfrog.Access_Types;
---
---    Pool : My_Storage_Pool_Type;
---
---    type My_Element_Type is record
---       <Stuff>
---    end record;
---
---    type My_Element_Access is access My_Element_Type
---       with Storage_Pool => Pool;
---
---    package Core_Traits is new Advanced_Smart_Access_Traits
---       (Element_Type => My_Element_Type);
---    package Core is new Advanced_Smart_Access
---       (Traits => Core_Traits);
---    package Core_Make is new Core.Make
---       (Element_Type   => My_Element_Type,
---        Element_Access => My_Element_Access,
---        Traits         => Core_Traits);
 
 -- This package provides general smart access types.  They are suitable for
--- almost any ada type.
+-- almost any ada type.  In addition, one can specify the named access type to
+-- allow for custom storage pools if desired.  Finally, a finalization
+-- procedure can be specified for the named access type.  This is typically an
+-- Unchecked_Deallocation, but can be specified any way the user desires.
 generic
 
-   -- This package contains the element type to make Smart_Access types for.
-   with package Traits is new Advanced_Smart_Access_Traits(<>);
+   -- The basic type held by a Smart_Access type
+   type Element_Type(<>);
+
+   -- The desired named access type that pairs with Element_Type
+   type Element_Access is access Element_Type;
+
+   -- A finalization procedure to be called when all
+   -- references to the Element_Access variable are gone.
+   -- The client should never manually call this procedure.
+   with procedure Finalize(Memory : in out Element_Access);
+
+   -- This specifies whether or not to use atomic increment (a count wrapped
+   -- in a protected object).  For single task applications, this should
+   -- be False.  When True, it does not guarantee task saftey on the
+   -- Smart_Access types, but it does guarantee that seperate Smart_Access
+   -- variables in separate tasks can safely manage the same resource.  If one
+   -- needs multiple tasks to access the same Smart_Access variable, however,
+   -- it will need to be wrapped in some sort of synchronization primitive.
+   -- It also does not guarantee task safety on the resource itself.
+   Atomic_Increment : Boolean := False;
 
 package Bullfrog.Access_Types.Advanced_Smart_Access is
+
+   pragma Pure;
 
    -----------------------------------------------------------------------------
    -- Package Types
    -----------------------------------------------------------------------------
 
-   -- This type provides variable access to the resource
-   type Element_Access is access Traits.Element_Type;
-
    -- This type provides read only access to the resource
-   type Constant_Element_Access is access constant Traits.Element_Type;
+   type Constant_Element_Access is access constant Element_Type;
+   for Constant_Element_Access'Storage_Pool use Element_Access'Storage_Pool;
 
    -- Basic counting type for the underlying reference count
    subtype Basic_Count is Bullfrog.Access_Types.Reference_Counts.Basic_Count;
@@ -121,24 +100,16 @@ package Bullfrog.Access_Types.Advanced_Smart_Access is
 
    -- Provides a "by reference" type for the smart_access ojbect that supplies
    -- a mutable view of the primary object.
-   -- NOTE:  Do not create objects of this type explicitly.  This type is
-   --        only meant to be used as a temporary return object for the
-   --        Reference function.  Explicitly creating objects of this type
-   --        can cause erroneous memory access.
    type Reference_Holder
-      (Element : not null access Traits.Element_Type)
+      (Element : not null access Element_Type)
    is limited null record
       with
          Implicit_Dereference => Element;
 
    -- Provides a "by reference" type for the smart_access ojbect that supplies
    -- a constant view of the primary object.
-   -- NOTE:  Do not create objects of this type explicitly.  This type is
-   --        only meant to be used as a temporary return object for the
-   --        Constant_Reference function.  Explicitly creating objects of this
-   --        type can cause erroneous memory access.
    type Constant_Reference_Holder
-      (Element : not null access constant Traits.Element_Type)
+      (Element : not null access constant Element_Type)
    is limited null record
       with
          Implicit_Dereference => Element;
@@ -158,12 +129,6 @@ package Bullfrog.Access_Types.Advanced_Smart_Access is
 
    -- Provides modifiable reference to the data.  Return value acts
    -- as if it is of Element_Type
-   -- NOTE:  Do not save the return value of this function to any objects.
-   --        Doing so can cause erroneous memory access.  This function is
-   --        meant to only return temporary reference objects.
-   --        Intended usage is:
-   --
-   --        Shared_Access_Object.Reference.Element_Method_Or_Field
    function Reference
       (Self : in Shared_Access)
        return Reference_Holder
@@ -172,12 +137,6 @@ package Bullfrog.Access_Types.Advanced_Smart_Access is
 
    -- Provides a read-only reference to the data.  Return value acts
    -- as if it is of constant Element_Type
-   -- NOTE:  Do not save the return value of this function to any objects.
-   --        Doing so can cause erroneous memory access.  This function is
-   --        meant to only return temporary constnat reference objects.
-   --        Intended usage is:
-   --
-   --        Shared_Access_Object.Constant_Reference.Element_Method_Or_Field
    function Constant_Reference
       (Self : in Shared_Access)
        return Constant_Reference_Holder
@@ -327,6 +286,62 @@ package Bullfrog.Access_Types.Advanced_Smart_Access is
    -- Override for Ada.Finalization.Limited_Controlled
    overriding procedure Finalize(Self : in out Unique_Access);
 
+
+
+   -- This package provides all the constructing operations for Smart_Access
+   -- types.
+   package Make is
+
+      -- Constructs a Shared_Access object
+      procedure Shared_Access
+         (Target : in out Advanced_Smart_Access.Shared_Access;
+          Source : in     not null Element_Access);
+      procedure Shared_Access
+         (Target : in out Advanced_Smart_Access.Shared_Access;
+          Source : in     Advanced_Smart_Access.Shared_Access);
+      procedure Shared_Access
+         (Target : in out Advanced_Smart_Access.Shared_Access;
+          Source : in     Advanced_Smart_Access.Weak_Access);
+      procedure Shared_Access
+         (Target : in out Advanced_Smart_Access.Shared_Access;
+          Source : in out Advanced_Smart_Access.Unique_Access);
+      function Shared_Access
+         (Source : in not null Element_Access)
+          return Advanced_Smart_Access.Shared_Access;
+      function Shared_Access
+         (Source : in Advanced_Smart_Access.Weak_Access)
+          return Advanced_Smart_Access.Shared_Access;
+      function Shared_Access
+         (Source : in out Advanced_Smart_Access.Unique_Access)
+          return Advanced_Smart_Access.Shared_Access;
+
+      -- Constructs a Weak_Access object
+      procedure Weak_Access
+         (Target : in out Advanced_Smart_Access.Weak_Access;
+          Source : in     Advanced_Smart_Access.Weak_Access);
+      procedure Weak_Access
+         (Target : in out Advanced_Smart_Access.Weak_Access;
+          Source : in     Advanced_Smart_Access.Shared_Access);
+      function Weak_Access
+         (Source : in Advanced_Smart_Access.Shared_Access)
+          return Advanced_Smart_Access.Weak_Access;
+
+      -- Constructs a Unique_Access object
+      procedure Unique_Access
+         (Target : in out Advanced_Smart_Access.Unique_Access;
+          Source : in     not null Element_Access);
+      procedure Unique_Access
+         (Target : in out Advanced_Smart_Access.Unique_Access;
+          Source : in out Advanced_Smart_Access.Unique_Access);
+      function Unique_Access
+         (Source : in not null Element_Access)
+          return Advanced_Smart_Access.Unique_Access;
+      function Unique_Access
+         (Source : in out Advanced_Smart_Access.Unique_Access)
+          return Advanced_Smart_Access.Unique_Access;
+
+   end Make;
+
    -- This package provides special purpose non-primitive operations for
    -- Smart_Access types.
    package Utilities is
@@ -419,22 +434,12 @@ private
 
    -- Container for the two reference counts
    type Counts is record
-      Strong : Reference_Counts.Reference_Count(Traits.Atomic_Increment);
-      Weak   : Reference_Counts.Reference_Count(Traits.Atomic_Increment);
+      Strong : Reference_Counts.Reference_Count(Atomic_Increment);
+      Weak   : Reference_Counts.Reference_Count(Atomic_Increment);
    end record;
 
    -- Access type for the counts container
    type Counts_Access is access Counts;
-
-   -----------------------------------------------------------------------------
-   -- Element_Type finalization
-   -----------------------------------------------------------------------------
-
-   -- Access to deallocation procedure for Element_Type objects
-   type Deallocation is access procedure (Memory : in out Element_Access);
-
-   -- Actaul deallocation procedure holder (assigned by Make package)
-   Deallocate : Deallocation := null;
 
 
    -----------------------------------------------------------------------------

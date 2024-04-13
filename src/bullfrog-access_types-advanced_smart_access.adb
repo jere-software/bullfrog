@@ -125,7 +125,7 @@ package body Bullfrog.Access_Types.Advanced_Smart_Access is
             if Pre_Decrement(Self.Counts_Reference.Weak) = 0 then
                Free(Self.Counts_Reference);
             end if;
-            Deallocate(Self.Item_Reference);
+            Finalize(Self.Item_Reference);
          end if;
          Self.Item_Reference   := null;
          Self.Counts_Reference := null;
@@ -274,10 +274,222 @@ package body Bullfrog.Access_Types.Advanced_Smart_Access is
    is
    begin
       if Self.Item_Reference /= null then
-         Deallocate(Self.Item_Reference);
+         Finalize(Self.Item_Reference);
          Self.Item_Reference := null;
       end if;
    end Finalize;
+
+
+
+   package body Make is
+
+      procedure Shared_Access
+         (Target : in out Advanced_Smart_Access.Shared_Access;
+          Source : in     not null Element_Access)
+      is
+      begin
+         Target.Finalize;
+         Target.Counts_Reference := new Counts;
+         Target.Item_Reference   := Source;
+      exception
+         when others =>
+            declare
+               Temp : Element_Access := Source;
+            begin
+               Finalize(Temp);
+               raise;
+            end;
+      end Shared_Access;
+
+      procedure Shared_Access
+         (Target : in out Advanced_Smart_Access.Shared_Access;
+          Source : in     Advanced_Smart_Access.Shared_Access)
+      is
+      begin
+         Target.Finalize;
+         if Source.Item_Reference /= null then
+            Reference_Counts.Increment(Source.Counts_Reference.Strong);
+            Target.Item_Reference   := Source.Item_Reference;
+            Target.Counts_Reference := Source.Counts_Reference;
+         end if;
+
+      end Shared_Access;
+
+      procedure Shared_Access
+         (Target : in out Advanced_Smart_Access.Shared_Access;
+          Source : in     Advanced_Smart_Access.Weak_Access)
+      is
+         use Access_Types.Reference_Counts;
+      begin
+         Target.Finalize;
+         if Source.Counts_Reference /= null then
+            if Pre_Increment(Source.Counts_Reference.Strong) /= 0 then
+               Target.Item_Reference    := Source.Item_Reference;
+               Target.Counts_Reference  := Source.Counts_Reference;
+            end if;
+         end if;
+      end Shared_Access;
+
+      procedure Shared_Access
+         (Target : in out Advanced_Smart_Access.Shared_Access;
+          Source : in out Advanced_Smart_Access.Unique_Access)
+      is
+      begin
+         Target.Finalize;
+         if Source.Item_Reference /= null then
+            Target.Counts_Reference := new Counts;
+            Target.Item_Reference   := Source.Item_Reference;
+            Source.Item_Reference   := null;
+         end if;
+      end Shared_Access;
+
+      function Shared_Access
+         (Source : in not null Element_Access)
+          return Advanced_Smart_Access.Shared_Access
+      is
+      begin
+         return (Ada.Finalization.Controlled with
+                 Item_Reference   => Source,
+                 Counts_Reference => new Counts);
+      exception
+         when others =>
+            declare
+               Temp : Element_Access := Source;
+            begin
+               Finalize(Temp);
+               raise;
+            end;
+      end Shared_Access;
+
+      function Shared_Access
+         (Source : in Advanced_Smart_Access.Weak_Access)
+          return Advanced_Smart_Access.Shared_Access
+      is
+         use Access_Types.Reference_Counts;
+      begin
+         if Source.Counts_Reference = null then
+            return (Ada.Finalization.Controlled with
+                    Item_Reference   => null,
+                    Counts_Reference => null);
+         else
+            if Pre_Increment(Source.Counts_Reference.Strong) = 0 then
+               return (Ada.Finalization.Controlled with
+                       Item_Reference   => null,
+                       Counts_Reference => null);
+            else
+               return (Ada.Finalization.Controlled with
+                       Item_Reference   => Source.Item_Reference,
+                       Counts_Reference => Source.Counts_Reference);
+            end if;
+         end if;
+      end Shared_Access;
+
+      function Shared_Access
+         (Source : in out Advanced_Smart_Access.Unique_Access)
+          return Advanced_Smart_Access.Shared_Access
+      is
+      begin
+         if Source.Item_Reference = null then
+            return (Ada.Finalization.Controlled with
+                    Item_Reference   => null,
+                    Counts_Reference => null);
+         else
+            return Target : Advanced_Smart_Access.Shared_Access do
+               Target.Counts_Reference := new Counts;
+               Target.Item_Reference   := Source.Item_Reference;
+               Source.Item_Reference   := null;
+            end return;
+         end if;
+      end Shared_Access;
+
+      procedure Weak_Access
+         (Target : in out Advanced_Smart_Access.Weak_Access;
+          Source : in     Advanced_Smart_Access.Weak_Access)
+      is
+      begin
+         Target.Finalize;
+         if Source.Counts_Reference /= null then
+            Reference_Counts.Increment(Source.Counts_Reference.Weak);
+            Target.Item_Reference   := Source.Item_Reference;
+            Target.Counts_Reference := Source.Counts_Reference;
+         end if;
+      end Weak_Access;
+
+      procedure Weak_Access
+         (Target : in out Advanced_Smart_Access.Weak_Access;
+          Source : in     Advanced_Smart_Access.Shared_Access)
+      is
+      begin
+         Target.Finalize;
+         if Source.Counts_Reference /= null then
+            Reference_Counts.Increment(Source.Counts_Reference.Weak);
+            Target.Item_Reference   := Source.Item_Reference;
+            Target.Counts_Reference := Source.Counts_Reference;
+         end if;
+      end Weak_Access;
+
+      function Weak_Access
+         (Source : in Advanced_Smart_Access.Shared_Access)
+          return Advanced_Smart_Access.Weak_Access
+      is
+      begin
+         if Source.Counts_Reference = null then
+            return (Ada.Finalization.Controlled with
+                    Item_Reference   => null,
+                    Counts_Reference => null);
+         else
+            Reference_Counts.Increment(Source.Counts_Reference.Weak);
+            return (Ada.Finalization.Controlled with
+                    Item_Reference   => Source.Item_Reference,
+                    Counts_Reference => Source.Counts_Reference);
+         end if;
+      end Weak_Access;
+
+      procedure Unique_Access
+         (Target : in out Advanced_Smart_Access.Unique_Access;
+          Source : in     not null Element_Access)
+      is
+      begin
+         Target.Finalize;
+         Target.Item_Reference := Source;
+      end Unique_Access;
+
+      procedure Unique_Access
+         (Target : in out Advanced_Smart_Access.Unique_Access;
+          Source : in out Advanced_Smart_Access.Unique_Access)
+      is
+      begin
+         Target.Finalize;
+         Target.Item_Reference := Source.Item_Reference;
+         Source.Item_Reference := null;
+      end Unique_Access;
+
+      function Unique_Access
+         (Source : in not null Element_Access)
+          return Advanced_Smart_Access.Unique_Access
+      is
+      begin
+         return (Ada.Finalization.Limited_Controlled with
+                 Item_Reference => Source);
+      end Unique_Access;
+
+      function Unique_Access
+         (Source : in out Advanced_Smart_Access.Unique_Access)
+          return Advanced_Smart_Access.Unique_Access
+      is
+      begin
+         if Source.Item_Reference = null then
+            return (Ada.Finalization.Limited_Controlled with
+                    Item_Reference => null);
+         else
+            return Target : Advanced_Smart_Access.Unique_Access do
+               Target.Item_Reference := Source.Item_Reference;
+               Source.Item_Reference := null;
+            end return;
+         end if;
+      end Unique_Access;
+
+   end Make;
 
 
 

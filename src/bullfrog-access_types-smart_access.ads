@@ -26,15 +26,16 @@
 --  however invalidate any other reasons why the executable file might be   --
 --  covered by the GNU Public License.                                      --
 ------------------------------------------------------------------------------
-with Bullfrog.Access_Types.Advanced_Smart_Access_Traits;
+
 with Bullfrog.Access_Types.Advanced_Smart_Access;
+with Ada.Unchecked_Deallocation;
 
 -- This package provides simple smart access types.  They are suitable for
 -- most user defined types (in particular not for incomplete types).
 generic
 
    -- The basic type held by a Smart_Access type
-   type Element_Type(<>) is limited private;
+   type Element_type(<>) is limited private;
 
    -- This specifies whether or not to use atomic increment (a count wrapped
    -- in a protected object).  For single task applications, this should
@@ -53,14 +54,15 @@ package Bullfrog.Access_Types.Smart_Access is
    -----------------------------------------------------------------------------
 
    -- Core implementation.  Do not use directly
-   package Core_Traits is new Advanced_Smart_Access_Traits
-      (Element_Type     => Element_Type,
-       Atomic_Increment => Atomic_Increment);
+   type Element_Access is access Element_type;
+   procedure Do_Not_Use_Finalize is new Ada.Unchecked_Deallocation
+      (Object => Element_type,
+       Name   => Element_Access);
    package Core is new Access_Types.Advanced_Smart_Access
-      (Traits => Core_Traits);
-
-   -- This type provides variable access to the resource
-   subtype Element_Access is Core.Element_Access;
+      (Element_Type        => Element_type,
+       Element_Access      => Element_Access,
+       Finalize         => Do_Not_Use_Finalize,
+       Atomic_Increment => Atomic_Increment);
 
    -- This type provides read only access to the resource
    subtype Constant_Element_Access is Core.Constant_Element_Access;
@@ -93,18 +95,10 @@ package Bullfrog.Access_Types.Smart_Access is
 
    -- Provides a "by reference" type for the smart_access ojbect that supplies
    -- a mutable view of the primary object.
-   -- NOTE:  Do not create objects of this type explicitly.  This type is
-   --        only meant to be used as a temporary return object for the
-   --        Reference function.  Explicitly creating objects of this type
-   --        can cause erroneous memory access.
    subtype Reference_Holder is Core.Reference_Holder;
 
    -- Provides a "by reference" type for the smart_access ojbect that supplies
    -- a constant view of the primary object.
-   -- NOTE:  Do not create objects of this type explicitly.  This type is
-   --        only meant to be used as a temporary return object for the
-   --        Constant_Reference function.  Explicitly creating objects of this
-   --        type can cause erroneous memory access.
    subtype Constant_Reference_Holder is Core.Constant_Reference_Holder;
 
    -----------------------------------------------------------------------------
@@ -119,28 +113,15 @@ package Bullfrog.Access_Types.Smart_Access is
       with
          Inline => True;
 
-   -- Provides modifiable reference to the data.  Return value acts
-   -- as if it is of Element_Type
-   -- NOTE:  Do not save the return value of this function to any objects.
-   --        Doing so can cause erroneous memory access.  This function is
-   --        meant to only return temporary reference objects.
-   --        Intended usage is:
-   --
-   --        Shared_Access_Object.Reference.Element_Method_Or_Field
+   -- Returns a dereferenced view of the Share_Access object's reference
    function Reference
       (Self : in Shared_Access)
        return Reference_Holder
       with
          Inline => True;
 
-   -- Provides a read-only reference to the data.  Return value acts
-   -- as if it is of constant Element_Type
-   -- NOTE:  Do not save the return value of this function to any objects.
-   --        Doing so can cause erroneous memory access.  This function is
-   --        meant to only return temporary constnat reference objects.
-   --        Intended usage is:
-   --
-   --        Shared_Access_Object.Constant_Reference.Element_Method_Or_Field
+   -- Returns a dereferenced read-only view of the Share_Access object's
+   -- reference
    function Constant_Reference
       (Self : in Shared_Access)
        return Constant_Reference_Holder
@@ -358,6 +339,62 @@ package Bullfrog.Access_Types.Smart_Access is
          with
             Inline => True;
 
+   private
+
+      -- Shared_Access operations
+      procedure Shared_Access
+         (Target : in out Smart_Access.Shared_Access;
+          Source : in     not null Element_Access)
+          renames Core.Make.Shared_Access;
+      procedure Shared_Access
+         (Target : in out Smart_Access.Shared_Access;
+          Source : in     Smart_Access.Shared_Access)
+          renames Core.Make.Shared_Access;
+      procedure Shared_Access
+         (Target : in out Smart_Access.Shared_Access;
+          Source : in out Smart_Access.Unique_Access)
+          renames Core.Make.Shared_Access;
+      function Shared_Access
+         (Source : in not null Element_Access)
+          return Smart_Access.Shared_Access
+          renames Core.Make.Shared_Access;
+      function Shared_Access
+         (Source : in out Smart_Access.Unique_Access)
+          return Smart_Access.Shared_Access
+          renames Core.Make.Shared_Access;
+
+      -- Weak_Access operations
+      procedure Weak_Access
+         (Target : in out Smart_Access.Weak_Access;
+          Source : in     Smart_Access.Weak_Access)
+          renames Core.Make.Weak_Access;
+      procedure Weak_Access
+         (Target : in out Smart_Access.Weak_Access;
+          Source : in     Smart_Access.Shared_Access)
+          renames Core.Make.Weak_Access;
+      function Weak_Access
+         (Source : in Smart_Access.Shared_Access)
+          return Smart_Access.Weak_Access
+          renames Core.Make.Weak_Access;
+
+      -- Unique_Access operations
+      procedure Unique_Access
+         (Target : in out Smart_Access.Unique_Access;
+          Source : in     not null Element_Access)
+          renames Core.Make.Unique_Access;
+      procedure Unique_Access
+         (Target : in out Smart_Access.Unique_Access;
+          Source : in out Smart_Access.Unique_Access)
+          renames Core.Make.Unique_Access;
+      function Unique_Access
+         (Source : in not null Element_Access)
+          return Smart_Access.Unique_Access
+          renames Core.Make.Unique_Access;
+      function Unique_Access
+         (Source : in out Smart_Access.Unique_Access)
+          return Smart_Access.Unique_Access
+          renames Core.Make.Unique_Access;
+
    end Make;
 
    -- This package provides special purpose non-primitive operations for
@@ -455,6 +492,132 @@ package Bullfrog.Access_Types.Smart_Access is
          with
             Inline => True;
 
+   private
+
+      -- Shared Access Operations
+      function Use_Count
+         (Self : in Shared_Access)
+          return Basic_Count
+          renames Core.Utilities.Use_Count;
+      function Weak_Count
+         (Self : in Shared_Access)
+          return Basic_Count
+          renames Core.Utilities.Weak_Count;
+      function Raw_Access
+         (Self : in Shared_Access)
+          return Element_Access
+          renames Core.Utilities.Raw_Access;
+      function Raw_Constant_Access
+         (Self : in Shared_Access)
+          return Constant_Element_Access
+          renames Core.Utilities.Raw_Constant_Access;
+
+
+      -- Weak_Access operations
+      function Use_Count
+         (Self : in Weak_Access)
+          return Basic_Count
+          renames Core.Utilities.Use_Count;
+      function Weak_Count
+         (Self : in Weak_Access)
+          return Basic_Count
+          renames Core.Utilities.Weak_Count;
+      function Is_Assigned_To
+         (Weak   : in Weak_Access;
+          Shared : in Shared_Access)
+          return Boolean
+          renames Core.Utilities.Is_Assigned_To;
+      function Not_Assigned_To
+         (Weak   : in Weak_Access;
+          Shared : in Shared_Access)
+          return Boolean
+          renames Core.Utilities.Not_Assigned_To;
+
+      function Raw_Access
+         (Self : in Unique_Access)
+          return Element_Access
+          renames Core.Utilities.Raw_Access;
+      function Raw_Constant_Access
+         (Self : in Unique_Access)
+          return Constant_Element_Access
+          renames Core.Utilities.Raw_Constant_Access;
+
    end Utilities;
+
+private
+
+   -- Shared_Access operations
+   procedure Set_Null
+      (Self : in out Shared_Access)
+       renames Core.Set_Null;
+   function Reference
+      (Self : in Shared_Access)
+       return Reference_Holder
+       renames Core.Reference;
+   function Constant_Reference
+      (Self : in Shared_Access)
+       return Constant_Reference_Holder
+       renames Core.Constant_Reference;
+   function "="
+      (Left,Right : Shared_Access)
+       return Boolean
+       renames Core."=";
+   function Is_Null
+      (Self : in Shared_Access)
+       return Boolean
+       renames Core.Is_Null;
+   function Not_Null
+      (Self : in Shared_Access)
+       return Boolean
+       renames Core.Not_Null;
+   procedure Swap (Left, Right : in out Shared_Access) renames Core.Swap;
+   procedure Move (Target, Source : in out Shared_Access ) renames Core.Move;
+   procedure Adjust  (Self : in out Shared_Access) renames Core.Adjust;
+   procedure Finalize(Self : in out Shared_Access) renames Core.Finalize;
+
+   -- Weak_Access operations
+   procedure Remove_Assignment
+      (Self : in out Weak_Access)
+       renames Core.Remove_Assignment;
+   function "="
+      (Left,Right : Weak_Access)
+       return Boolean
+       renames Core."=";
+   function Is_Assigned
+      (Self : in Weak_Access)
+       return Boolean
+       renames Core.Is_Assigned;
+   function Not_Assigned
+      (Self : in Weak_Access)
+       return Boolean
+       renames Core.Not_Assigned;
+   procedure Swap(Left, Right : in out Weak_Access) renames Core.Swap;
+   procedure Move (Target, Source : in out Weak_Access ) renames Core.Move;
+   procedure Adjust  (Self : in out Weak_Access) renames Core.Adjust;
+   procedure Finalize(Self : in out Weak_Access) renames Core.Finalize;
+
+   -- Unique_Access operations
+   procedure Set_Null
+      (Self : in out Unique_Access)
+       renames Core.Set_Null;
+   function Reference
+      (Self : in Unique_Access)
+       return Reference_Holder
+       renames Core.Reference;
+   function Constant_Reference
+      (Self : in Unique_Access)
+       return Constant_Reference_Holder
+       renames Core.Constant_Reference;
+   function Is_Null
+      (Self : in Unique_Access)
+       return Boolean
+       renames Core.Is_Null;
+   function Not_Null
+      (Self : in Unique_Access)
+       return Boolean
+       renames Core.Not_Null;
+   procedure Swap(Left, Right : in out Unique_Access) renames Core.Swap;
+   procedure Move (Target, Source : in out Unique_Access ) renames Core.Move;
+   procedure Finalize(Self : in out Unique_Access) renames Core.Finalize;
 
 end Bullfrog.Access_Types.Smart_Access;
