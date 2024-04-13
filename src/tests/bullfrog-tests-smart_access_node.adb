@@ -27,7 +27,7 @@ package body Bullfrog.Tests.Smart_Access_Node is
          & ","
          & Integer'Image(Node.Reference.Height)
          & ","
-         & Value_To_String(Make_Node.Shared_Access
+         & Value_To_String(Node_Smart_Access.Make.Shared_Access
                           (Node.Reference.Parent))
          & ","
          & Value_To_String(Node.Reference.Left)
@@ -55,7 +55,7 @@ package body Bullfrog.Tests.Smart_Access_Node is
              & To_String(Node)
              & ",P=>"
              & To_String
-                (Make_Node.Shared_Access(Node.Reference.Parent))
+                (Node_Smart_Access.Make.Shared_Access(Node.Reference.Parent))
              & ",L=>"
              & To_String(Node.Reference.Left)
              & ",R=>"
@@ -79,7 +79,7 @@ package body Bullfrog.Tests.Smart_Access_Node is
       Free(Memory);
    end Finalize;
 
-   function Make_A_Node(Value : Integer) return Node_Access is
+   function Make_Node(Value : Integer) return Node_Access is
       Temp : Node_Access := new Node'(Value => Value, others => <>);
    begin
       Put_Line
@@ -88,7 +88,7 @@ package body Bullfrog.Tests.Smart_Access_Node is
           & " => "
           & Integer'Image(Temp.Value));
       return Temp;
-   end Make_A_Node;
+   end Make_Node;
 
    function Max_Height
       (Left,Right : Node_Smart_Access.Shared_Access)
@@ -140,7 +140,7 @@ package body Bullfrog.Tests.Smart_Access_Node is
          Left.Reference.Parent.Swap(Root.Reference.Parent);
       else
          Left.Reference.Parent.Swap(Root.Reference.Parent);
-         Root.Reference.Parent := Make_Node.Weak_Access(Left);
+         Root.Reference.Parent := Node_Smart_Access.Make.Weak_Access(Left);
       end if;
 
 
@@ -173,7 +173,7 @@ package body Bullfrog.Tests.Smart_Access_Node is
          Right.Reference.Parent.Swap(Root.Reference.Parent);
       else
          Right.Reference.Parent.Swap(Root.Reference.Parent);
-         Root.Reference.Parent := Make_Node.Weak_Access(Right);
+         Root.Reference.Parent := Node_Smart_Access.Make.Weak_Access(Right);
       end if;
 
       -- Break potential circular reference first
@@ -267,8 +267,8 @@ package body Bullfrog.Tests.Smart_Access_Node is
 
       if Value < Root.Reference.Value then
          if Left.Is_Null then
-            Left := Make_Node.Shared_Access(Make_A_Node(Value));
-            Left.Reference.Parent := Make_Node.Weak_Access(Root);
+            Left := Node_Smart_Access.Make.Shared_Access(Make_Node(Value));
+            Left.Reference.Parent := Node_Smart_Access.Make.Weak_Access(Root);
          else
             Insert_Impl(Left,Value);
             Balance(Root);
@@ -285,8 +285,8 @@ package body Bullfrog.Tests.Smart_Access_Node is
 
       else
          if Right.Is_Null then
-            Right := Make_Node.Shared_Access(Make_A_Node(Value));
-            Right.Reference.Parent := Make_Node.Weak_Access(Root);
+            Right := Node_Smart_Access.Make.Shared_Access(Make_Node(Value));
+            Right.Reference.Parent := Node_Smart_Access.Make.Weak_Access(Root);
          else
             Insert_Impl(Right,Value);
             Balance(Root);
@@ -305,8 +305,8 @@ package body Bullfrog.Tests.Smart_Access_Node is
       if Object.Root.Not_Null then
          Insert_Impl(Object.Root,Value);
       else
-         Object.Root := Make_Node.Shared_Access
-            (Make_A_Node(Value));
+         Object.Root := Node_Smart_Access.Make.Shared_Access
+            (Make_Node(Value));
       end if;
    end Insert;
 
