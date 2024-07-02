@@ -60,6 +60,7 @@ private
    Placeholder : constant Dummy := (null record);
    
    function Get_Package_ID return Trait_Package_ID is 
-      (Trait_Package_ID(Placeholder'Address));
+      (Trait_Package_ID
+         (System.Storage_Elements.To_Integer (Placeholder'Address)));
    
 end Bullfrog.Access_Types.Advanced_Smart_Access_Traits;
