@@ -27,7 +27,7 @@
 --  covered by the GNU Public License.                                      --
 ------------------------------------------------------------------------------
 
-private with System;
+private with System.Storage_Elements;
 
 -- Base package for special access types
 package Bullfrog.Access_Types with Pure is
@@ -37,6 +37,6 @@ package Bullfrog.Access_Types with Pure is
 
 private
 
-   type Trait_Package_ID is new System.Address;
+   type Trait_Package_ID is new System.Storage_Elements.Integer_Address;
 
 end Bullfrog.Access_Types;
