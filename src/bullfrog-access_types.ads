@@ -27,16 +27,5 @@
 --  covered by the GNU Public License.                                      --
 ------------------------------------------------------------------------------
 
-private with System;
-
 -- Base package for special access types
-package Bullfrog.Access_Types with Pure is
-
-   -- An ID type used to validate that trait packages are correctly referenced
-   type Trait_Package_ID is private;
-
-private
-
-   type Trait_Package_ID is new System.Address;
-
-end Bullfrog.Access_Types;
+package Bullfrog.Access_Types with Pure is end Bullfrog.Access_Types;
