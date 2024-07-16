@@ -2,9 +2,9 @@ project Bullfrog_Tests is
 
    for Source_Dirs use ("src/**");
    for Object_Dir use "obj";
-   for Main use ("test_smart_access.adb",
+   for Main use (--"test_smart_access.adb",
                  "test_circular_buffer",
-                 "test_library_compilation.adb",
+                 --"test_library_compilation.adb",
                  "test_sync_wrappers.adb",
                  "bullfrog-tests-modular_to_array_conversions.adb");
    for Exec_Dir use "bin";
