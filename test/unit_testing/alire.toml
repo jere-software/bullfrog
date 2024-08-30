@@ -1,0 +1,16 @@
+name = "unit_test"
+description = ""
+version = "0.1.0-dev"
+
+authors = ["Jeremiah Breeden"]
+maintainers = []
+maintainers-logins = []
+licenses = "MPL-2.0"
+website = ""
+tags = []
+
+# look at default.gpr in base directory for settings
+project-files = ["alire/alire_default.gpr"] 
+
+[configuration]
+output_dir = "alire/config"
