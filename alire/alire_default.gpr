@@ -1,0 +1,14 @@
+with "config/bullfrog_config.gpr";
+
+aggregate project Alire_Default is
+
+   Build_Profile := Bullfrog_Config.Build_Profile;
+
+   for Project_Files use ("../bullfrog.gpr");
+
+   case Build_Profile is
+      when "release" => for External("BUILD") use "release";
+      when others    => for External("BUILD") use "development";
+   end case;
+
+end Alire_Default;

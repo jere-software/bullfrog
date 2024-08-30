@@ -10,9 +10,19 @@ The Bullfrog library currently builds and runs under mingw64 x86_64 FSF GNAT 13.
 
 __Windows 11__
 * FSF GNAT 13.2.0 (GPLv3 with Runtime Exception)
+* FSF GNAT 14.1.3 (GPLv3 with Runtime Exception)
 
 __Linux__
 * Untested
+
+### Building
+* **GPRBuild** - Simply type `gprbuild` at the root directory
+    * `gprbuild -XBUILD=development` is the default build type and uses compiler switches suitable for development.
+    * `gprbuild -XBUILD=release` builds the library with suitable production switches and optimization.
+* **Alire** - Simply type `alr build` at the root directory
+    * `alr build --development` is the default build type and uses compiler switches suitable for development.
+    * `alr build --release` builds the library with suitable production switches and optimization.
+    * `alr build --validation` is not yet supported and currently defaults to the same configuration as `alr --development`.
 
 ## Components
 ### Smart_Access Types
