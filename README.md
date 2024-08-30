@@ -3,7 +3,7 @@
 The Bullfrog library is an collection of various Ada packages, some useful and some just for play.  It includes packages that work with access types, containers, tasking, and low level memory access.
 
 ## License
-The license for the Bullfrog library, **GPL v3 with Link Exception**, is intended to be permissive.  I have chosen a license similar to that used in the Free Software Foundation's (FSF) GNAT Compiler.  The intent is that any changes made to the library are fed back to the community and the source code of the library itself is always available.  Alternatively, the exceptions provided to the license are meant to allow anyone to use it in closed source software if they like without the burden of making their own software GPL.  If someone were to ask for their source code, they would have to only provide the Bullfrog library or any other libraries they used with similar restrictions, but not their own source code.  However, any changes made to the library should be made available to the author of the library.  It is important to note that if other less permissive libraries are used, this library cannot be used to protect your software from those other license restrictions. 
+This project is licensed under the **Mozilla Public License (version 2.0)**.  A local copy of the license is available in this repository.  It can also be found at https://mozilla.org/MPL/2.0/
 
 ## Platforms
 The Bullfrog library currently builds and runs under GNAT Community 2019 (Note that this is a pure GPL compiler, so it's license will apply to your code) and the mingw64 x86_64 FSF GNAT 9.1 (The compiler license should be similar to this library's license).  I have not tested on linux or with other compilers than GNAT.  The following platforms have been tested:
@@ -99,3 +99,49 @@ In the **Bullfrog.Synchronization.Mutexes** package, the library provides both a
 
 ### Test and Debug Folders
 These folders hold various tests and debug packages used by the tests to verify functionality.  They aren't written to the same coding standard as the library (this will be fixed one day).  They might also be useful for finding examples.  There is a separate GNAT project file for compiling the tests.
+
+
+# Legal Stuff
+Warranty and Liablity sections for this project (pulled from the license document):
+```
+************************************************************************
+*                                                                      *
+*  6. Disclaimer of Warranty                                           *
+*  -------------------------                                           *
+*                                                                      *
+*  Covered Software is provided under this License on an "as is"       *
+*  basis, without warranty of any kind, either expressed, implied, or  *
+*  statutory, including, without limitation, warranties that the       *
+*  Covered Software is free of defects, merchantable, fit for a        *
+*  particular purpose or non-infringing. The entire risk as to the     *
+*  quality and performance of the Covered Software is with You.        *
+*  Should any Covered Software prove defective in any respect, You     *
+*  (not any Contributor) assume the cost of any necessary servicing,   *
+*  repair, or correction. This disclaimer of warranty constitutes an   *
+*  essential part of this License. No use of any Covered Software is   *
+*  authorized under this License except under this disclaimer.         *
+*                                                                      *
+************************************************************************
+
+************************************************************************
+*                                                                      *
+*  7. Limitation of Liability                                          *
+*  --------------------------                                          *
+*                                                                      *
+*  Under no circumstances and under no legal theory, whether tort      *
+*  (including negligence), contract, or otherwise, shall any           *
+*  Contributor, or anyone who distributes Covered Software as          *
+*  permitted above, be liable to You for any direct, indirect,         *
+*  special, incidental, or consequential damages of any character      *
+*  including, without limitation, damages for lost profits, loss of    *
+*  goodwill, work stoppage, computer failure or malfunction, or any    *
+*  and all other commercial damages or losses, even if such party      *
+*  shall have been informed of the possibility of such damages. This   *
+*  limitation of liability shall not apply to liability for death or   *
+*  personal injury resulting from such party's negligence to the       *
+*  extent applicable law prohibits such limitation. Some               *
+*  jurisdictions do not allow the exclusion or limitation of           *
+*  incidental or consequential damages, so this exclusion and          *
+*  limitation may not apply to You.                                    *
+*                                                                      *
+************************************************************************
