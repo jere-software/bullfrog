@@ -6,14 +6,10 @@ The Bullfrog library is an collection of various Ada packages, some useful and s
 This project is licensed under the **Mozilla Public License (version 2.0)**.  A local copy of the license is available in this repository.  It can also be found at https://mozilla.org/MPL/2.0/
 
 ## Platforms
-The Bullfrog library currently builds and runs under GNAT Community 2019 (Note that this is a pure GPL compiler, so it's license will apply to your code) and the mingw64 x86_64 FSF GNAT 9.1 (The compiler license should be similar to this library's license).  I have not tested on linux or with other compilers than GNAT.  The following platforms have been tested:
+The Bullfrog library currently builds and runs under mingw64 x86_64 FSF GNAT 13.2.  I have not tested on linux or with other compilers than GNAT.  The following platforms have been tested:
 
-__Windows 10__
-* GNAT Community 2018 (GPLv3)
-* GNAT Community 2019 (GPLv3)
-* FSF GNAT 8.2.0 (GPLv3 with Runtime Exception)
-* FSF GNAT 9.1.0 (GPLv3 with Runtime Exception)
-* FSF GNAT 10.3.0 (GPLv3 with Runtime Exception)
+__Windows 11__
+* FSF GNAT 13.2.0 (GPLv3 with Runtime Exception)
 
 __Linux__
 * Untested
