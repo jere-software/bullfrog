@@ -17,6 +17,7 @@ project Bullfrog_Tests is
    for Languages   use ("ada");
 
    package Compiler is
+   
       case Build_Profile is
          when "release" => 
             for Default_Switches("ada") use
@@ -34,6 +35,11 @@ project Bullfrog_Tests is
                 "-fstack-check", 
                 "-g");
       end case;
+
+      -- This file intentionally uses an unainitialized variable
+      for Switches("bullfrog-containers-limited_definite_holders.adb") use 
+         ("-gnatwV") & Compiler'Default_Switches("ada");
+
    end Compiler;
 
    package Binder is
