@@ -60,8 +60,8 @@ package body Bullfrog.Access_Types.Advanced_Smart_Access is
    procedure Swap
       (Left, Right : in out Shared_Access)
    is
-      Temp_Reference : Element_Access   := Left.Item_Reference;
-      Temp_Counts    : Counts_Access := Left.Counts_Reference;
+      Temp_Reference : Element_Access := Left.Item_Reference;
+      Temp_Counts    : Counts_Access  := Left.Counts_Reference;
    begin
       Left.Item_Reference    := Right.Item_Reference;
       Left.Counts_Reference  := Right.Counts_Reference;
@@ -71,6 +71,9 @@ package body Bullfrog.Access_Types.Advanced_Smart_Access is
 
    procedure Move (Target, Source : in out Shared_Access) is
    begin
+      if Target = Source then 
+         return;
+      end if;
       Target.Finalize;
       Target.Item_Reference   := Source.Item_Reference;
       Target.Counts_Reference := Source.Counts_Reference;

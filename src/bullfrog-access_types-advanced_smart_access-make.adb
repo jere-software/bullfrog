@@ -59,6 +59,10 @@ package body Bullfrog.Access_Types.Advanced_Smart_Access.Make is
        Source : in     Advanced_Smart_Access.Shared_Access)
    is
    begin
+      if Target = Source then
+         return;
+      end if;
+
       Target.Finalize;
       if Source.Item_Reference /= null then
          Reference_Counts.Increment(Source.Counts_Reference.Strong);
@@ -74,6 +78,9 @@ package body Bullfrog.Access_Types.Advanced_Smart_Access.Make is
    is
       use Access_Types.Reference_Counts;
    begin
+      if Utilities.Is_Assigned_To(Source, Target) then
+         return;
+      end if;
       Target.Finalize;
       if Source.Counts_Reference /= null then
          if Pre_Increment(Source.Counts_Reference.Strong) /= 0 then

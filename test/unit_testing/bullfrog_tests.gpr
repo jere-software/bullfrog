@@ -10,13 +10,15 @@ project Bullfrog_Tests is
    for Object_Dir use "obj";
    for Exec_Dir   use "bin";
    for Main use (--"test_smart_access.adb",
-                 "test_circular_buffer",
+                 "test_limited_holders.adb",
+                 "test_circular_buffer.adb",
                  "test_library_compilation.adb",
                  "test_sync_wrappers.adb",
                  "bullfrog-tests-modular_to_array_conversions.adb");
    for Languages   use ("ada");
 
    package Compiler is
+   
       case Build_Profile is
          when "release" => 
             for Default_Switches("ada") use
@@ -34,6 +36,11 @@ project Bullfrog_Tests is
                 "-fstack-check", 
                 "-g");
       end case;
+
+      -- This file intentionally uses an unainitialized variable
+      for Switches("bullfrog-containers-limited_definite_holders.adb") use 
+         ("-gnatwV") & Compiler'Default_Switches("ada");
+
    end Compiler;
 
    package Binder is
