@@ -9,14 +9,16 @@
 
 private with Bullfrog.Access_Types.Smart_Access;
 
+private with Ada.Finalization;
+
 -- Provides a holder for limited indefinite types
 generic
 
    -- Element type to hold
    type Element_Type(<>) is limited private;
 
-   -- Indicates if reference types are checked or
-   -- unchecked.  Default is checked.
+   -- Indicates if reference types are checked for
+   -- dangling or are unchecked.  Default is checked.
    Unchecked_References : Boolean := False;
 
 package Bullfrog.Containers.Limited_Indefinite_Holders is
@@ -40,9 +42,6 @@ package Bullfrog.Containers.Limited_Indefinite_Holders is
 
    -- Creates an empty holder
    function Empty return Holder;
-
-   -- An empty holder
-   Empty_Holder : constant Holder;
 
    -- Removes element from holder
    procedure Clear(Self : in out Holder);
@@ -126,19 +125,25 @@ private
    -- Local rename of Shared_Access type
    subtype Shared_Access is Smart_Access.Shared_Access;
 
-   type Holder is tagged limited record
+   -- Holde parent type
+   subtype Parent is Ada.Finalization.Limited_Controlled;
+
+   type Holder is new Parent with record
 
       -- Use a shared access type to hold the item
       Object : Shared_Access;  -- defaults to null
 
    end record;
 
-   Empty_Holder : constant Holder := (others => <>);
+   -- Finalization override
+   overriding procedure Finalize(Self : in out Holder);
 
    -- This ensures that refences always point to 
    -- valid memory.  They actually contain a shared
    -- access objet to the element so it cannot be deleted 
-   -- by the holder while the reference exists
+   -- by the holder while the reference exists.  Additionally
+   -- this allows the holder to verify there are not references
+   -- before finalizing any current elements
    type Base_Persistence(Disable : Boolean) is limited record
       case Disable is
          when False => Object : Shared_Access;

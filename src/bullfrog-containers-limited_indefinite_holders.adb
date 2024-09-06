@@ -11,6 +11,7 @@ package body Bullfrog.Containers.Limited_Indefinite_Holders is
 
    -- Bring in operators
    use type Shared_Access;
+   use type Smart_Access.Basic_Count;
 
    function Is_Empty(Self : Holder) return Boolean is
       (Self.Object.Is_Null);
@@ -26,15 +27,37 @@ package body Bullfrog.Containers.Limited_Indefinite_Holders is
    -- Local package rename
    package Make renames Smart_Access.Make;
 
+   -- Indicates if there are dangling references or not.  If 
+   -- Unchecked_References is set to True, this function always
+   -- returns False as they are unchecked
+   function Dangling_References(Self : Holder) return Boolean is
+      (if Unchecked_References then
+         False 
+       else
+         Utilities.Use_Count(Self.Object) > 1)
+   with Inline;
+
+   -- This operation verifies there are no dangling references
+   procedure Verify_No_Dangling_References(Self : Holder)
+      with Inline;
+   procedure Verify_No_Dangling_References(Self : Holder) is
+   begin
+      if Dangling_References(Self) then
+         raise Program_Error 
+            with "Attempted to finalize holder with an existing reference";
+      end if;
+   end Verify_No_Dangling_References;
+
    function To_Holder
       (Element : not null access function return Element_Type) 
        return Holder
-   is (Object => Make.Shared_Access(new Element_Type'(Element.all)));
+   is (Parent with Object => Make.Shared_Access(new Element_Type'(Element.all)));
 
-   function Empty return Holder is (others => <>);
+   function Empty return Holder is (Parent with others => <>);
 
    procedure Clear(Self : in out Holder) is 
    begin
+      Verify_No_Dangling_References(Self);
       Self.Object.Set_Null;
    end Clear;
 
@@ -42,6 +65,7 @@ package body Bullfrog.Containers.Limited_Indefinite_Holders is
       (Self    : in out Holder; 
        Element : not null access function return Element_Type)
    is begin
+      Verify_No_Dangling_References(Self);
       Make.Shared_Access
          (Target => Self.Object,
           Source => new Element_Type'(Element.all));
@@ -63,7 +87,11 @@ package body Bullfrog.Containers.Limited_Indefinite_Holders is
 
    procedure Move(Target, Source : in out Holder) is
    begin
-      Target.Object.Move(Source.Object);
+      if Target /= Source then
+         Verify_No_Dangling_References(Target);
+         Verify_No_Dangling_References(Source);
+         Target.Object.Move(Source.Object);
+      end if;
    end Move;
 
    procedure Swap(Target, Source : in out Holder) is
@@ -104,5 +132,10 @@ package body Bullfrog.Containers.Limited_Indefinite_Holders is
 
    function Unchecked_Access(Self : Holder) return Accessor is 
       (Accessor(Utilities.Raw_Access(Self.Object)));
+
+   procedure Finalize(Self : in out Holder) is
+   begin
+      Verify_No_Dangling_References(Self);
+   end Finalize;
 
 end Bullfrog.Containers.Limited_Indefinite_Holders;

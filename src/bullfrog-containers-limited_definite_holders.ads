@@ -15,8 +15,8 @@ generic
    -- Element type to hold
    type Element_Type is limited private;
 
-   -- Indicates if reference types are checked or
-   -- unchecked.  Default is checked.
+   -- Indicates if reference types are checked for
+   -- dangling or are unchecked.  Default is checked.
    Unchecked_References : Boolean := False;
 
 package Bullfrog.Containers.Limited_Definite_Holders is

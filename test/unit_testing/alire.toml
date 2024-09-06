@@ -9,6 +9,8 @@ licenses = "MPL-2.0"
 website = ""
 tags = []
 
+executables = ["test_limited_holders"]
+
 # look at default.gpr in base directory for settings
 project-files = ["alire/alire_default.gpr"] 
 
